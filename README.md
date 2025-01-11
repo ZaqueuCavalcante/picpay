@@ -106,6 +106,7 @@ Temos 2 tipos de usuários, os comuns e lojistas, ambos têm carteira com dinhei
 - Design Patterns
 - Foco em segurança e consistência
 - Nada hard-coded, tudo via configuração
+- Auditoria de todas as operacoes
 
 - Escala horizontal da API e do Worker (banco???)
 
@@ -129,6 +130,8 @@ Utilizar modelo C4?
 Ícones específicos e intuitivos para cada serviço/usuário/conceito
 
 - Api
+    - EF Core
+    - 
 - Worker
 - Web
 - Auth

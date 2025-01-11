@@ -1,0 +1,10 @@
+global using PicPay.Shared;
+global using PicPay.Api.Markers;
+global using PicPay.Api.Configs;
+global using PicPay.Api.Settings;
+global using PicPay.Api.Database;
+global using PicPay.Api.Extensions;
+global using PicPay.Api.Middlewares;
+global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore.Metadata.Builders;

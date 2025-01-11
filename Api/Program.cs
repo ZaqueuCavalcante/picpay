@@ -1,7 +1,19 @@
 var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
+builder.Host.AddLoggingConfigs();
+builder.Services.AddSettingsConfigs();
+builder.Services.AddServicesConfigs();
+builder.Services.AddAuthenticationConfigs();
+builder.Services.AddAuthorizationConfigs();
+builder.Services.AddHttpConfigs();
+builder.Services.AddEfCoreConfigs();
+builder.Services.AddOpenApi();
 
-app.MapGet("/", () => "Funciona muito bem");
-app.MapGet("/opa", () => "Opa, tudo bem?");
+var app = builder.Build();
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseStaticFiles();
+app.UseControllers();
+app.UseLogging();
 
 app.Run();
