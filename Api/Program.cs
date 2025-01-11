@@ -7,6 +7,7 @@ builder.Services.AddAuthorizationConfigs();
 builder.Services.AddHttpConfigs();
 builder.Services.AddEfCoreConfigs();
 builder.Services.AddOpenApi();
+builder.Services.AddDocsConfigs();
 
 var app = builder.Build();
 app.UseRouting();
@@ -15,5 +16,6 @@ app.UseAuthorization();
 app.UseStaticFiles();
 app.UseControllers();
 app.UseLogging();
+app.UseSwagger();
 
 app.Run();

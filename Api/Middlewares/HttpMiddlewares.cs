@@ -11,6 +11,7 @@ public static class HttpMiddlewares
             options.MapControllers();
 
             options.MapOpenApi();
+
             options.MapScalarApiReference(options =>
             {
                 options.WithModels(false);
