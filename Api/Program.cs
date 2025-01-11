@@ -18,4 +18,7 @@ app.UseControllers();
 app.UseLogging();
 app.UseSwagger();
 
+var ctx = app.Services.GetRequiredService<PicPayDbContext>();
+ctx.ResetDb();
+
 app.Run();
