@@ -5,7 +5,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <TargetFramework>net9.0</TargetFramework>
     <NoWarn>CS1591;CS8618;CS8602;CS8604;</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OneOf" Version="3.0.271" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
 
 </Project>

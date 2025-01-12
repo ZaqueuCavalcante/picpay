@@ -19,9 +19,9 @@ public class CreateUserRegisterController(CreateUserRegisterService service) : C
     [SwaggerResponseExample(400, typeof(ErrorsExamples))]
     public async Task<IActionResult> Create([FromBody] CreateUserRegisterIn data)
     {
-        var user = await service.Create(data);
+        var result = await service.Create(data);
 
-        return Ok(user);
+        return result.Match<IActionResult>(Ok, BadRequest);
     }
 }
 
