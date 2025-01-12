@@ -1,4 +1,4 @@
-namespace PicPay.Api.Features.Cross.CreateUserRegister;
+namespace PicPay.Api.Features.Cross.CreateUser;
 
 public class PicPayUserConfig : IEntityTypeConfiguration<PicPayUser>
 {

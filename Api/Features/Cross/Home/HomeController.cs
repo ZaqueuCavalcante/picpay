@@ -1,4 +1,4 @@
-namespace PicPay.Api.Features.Cross.CreateUserRegister;
+namespace PicPay.Api.Features.Cross.CreateUser;
 
 [ApiController]
 [ApiExplorerSettings(IgnoreApi = true)]

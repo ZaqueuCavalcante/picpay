@@ -1,10 +1,10 @@
 using Swashbuckle.AspNetCore.Filters;
 
-namespace PicPay.Api.Features.Cross.CreateUserRegister;
+namespace PicPay.Api.Features.Cross.CreateUser;
 
 [ApiController]
 [Consumes("application/json"), Produces("application/json")]
-public class CreateUserRegisterController(CreateUserRegisterService service) : ControllerBase
+public class CreateUserController(CreateUserService service) : ControllerBase
 {
     /// <summary>
     /// 🔓 Registrar usuário
@@ -17,7 +17,7 @@ public class CreateUserRegisterController(CreateUserRegisterService service) : C
     [ProducesResponseType(200)]
     [ProducesResponseType(typeof(ErrorOut), 400)]
     [SwaggerResponseExample(400, typeof(ErrorsExamples))]
-    public async Task<IActionResult> Create([FromBody] CreateUserRegisterIn data)
+    public async Task<IActionResult> Create([FromBody] CreateUserIn data)
     {
         var result = await service.Create(data);
 
@@ -25,13 +25,13 @@ public class CreateUserRegisterController(CreateUserRegisterService service) : C
     }
 }
 
-internal class RequestsExamples : IMultipleExamplesProvider<CreateUserRegisterIn>
+internal class RequestsExamples : IMultipleExamplesProvider<CreateUserIn>
 {
-    public IEnumerable<SwaggerExample<CreateUserRegisterIn>> GetExamples()
+    public IEnumerable<SwaggerExample<CreateUserIn>> GetExamples()
     {
         yield return SwaggerExample.Create(
 			"Cliente - João da Silva",
-			new CreateUserRegisterIn()
+			new CreateUserIn()
             {
                 Type = UserType.Customer,
                 Name = "João da Silva",
@@ -42,7 +42,7 @@ internal class RequestsExamples : IMultipleExamplesProvider<CreateUserRegisterIn
 		);
         yield return SwaggerExample.Create(
 			"Lojista - Gilbirdelson Lanches",
-			new CreateUserRegisterIn()
+			new CreateUserIn()
             {
                 Type = UserType.Merchant,
                 Name = "Gilbirdelson Lanches",

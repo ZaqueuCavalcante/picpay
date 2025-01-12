@@ -1,10 +1,10 @@
 using PicPay.Api.Security;
 
-namespace PicPay.Api.Features.Cross.CreateUserRegister;
+namespace PicPay.Api.Features.Cross.CreateUser;
 
-public class CreateUserRegisterService(PicPayDbContext ctx, IPasswordHasher hasher) : IPicPayService
+public class CreateUserService(PicPayDbContext ctx, IPasswordHasher hasher) : IPicPayService
 {
-    public async Task<OneOf<CreateUserRegisterOut, PicPayError>> Create(CreateUserRegisterIn data)
+    public async Task<OneOf<CreateUserOut, PicPayError>> Create(CreateUserIn data)
     {
         // Email invalido
         // Senha fraca

@@ -1,4 +1,4 @@
-namespace PicPay.Api.Features.Cross.CreateUserRegister;
+namespace PicPay.Api.Features.Cross.CreateUser;
 
 public class PicPayUser
 {
@@ -39,7 +39,7 @@ public class PicPayUser
 
     public void SetPasswordHash(string passwordHash) => PasswordHash = passwordHash;
 
-    public CreateUserRegisterOut ToCreateOut() => new()
+    public CreateUserOut ToCreateOut() => new()
     {
         Id = Id,
         Type = Type,

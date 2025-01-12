@@ -12,7 +12,7 @@ public partial class IntegrationTests : IntegrationTestBase
         // Arrange
         var client = _api.CreateClient();
 
-        var data = new CreateUserRegisterIn()
+        var data = new CreateUserIn()
         {
             Type = UserType.Customer,
             Name = "João da Silva",

@@ -1,6 +1,6 @@
 namespace PicPay.Shared;
 
-public class CreateUserRegisterIn
+public class CreateUserIn
 {
     public UserType Type { get; set; }
 

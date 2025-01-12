@@ -1,4 +1,4 @@
-using PicPay.Api.Features.Cross.CreateUserRegister;
+using PicPay.Api.Features.Cross.CreateUser;
 
 namespace PicPay.Api.Database;
 

@@ -1,6 +1,6 @@
 namespace PicPay.Shared;
 
-public class CreateUserRegisterOut
+public class CreateUserOut
 {
     public Guid Id { get; set; }
     public UserType Type { get; set; }
