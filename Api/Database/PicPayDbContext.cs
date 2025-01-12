@@ -29,7 +29,7 @@ public class PicPayDbContext(DbContextOptions<PicPayDbContext> options, Database
 
     public void ResetDb()
     {
-        if (Env.IsDevelopment())
+        if (!Env.IsTesting())
         {
             Database.EnsureDeleted();
             Database.EnsureCreated();

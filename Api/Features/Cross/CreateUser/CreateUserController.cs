@@ -58,10 +58,10 @@ internal class ErrorsExamples : IMultipleExamplesProvider<ErrorOut>
 {
     public IEnumerable<SwaggerExample<ErrorOut>> GetExamples()
     {
-        yield return new InvalidDocument().ToSwaggerExampleErrorOut();
-        yield return new DocumentAlreadyUsed().ToSwaggerExampleErrorOut();
-        yield return new InvalidEmail().ToSwaggerExampleErrorOut();
-        yield return new EmailAlreadyUsed().ToSwaggerExampleErrorOut();
-        yield return new WeakPassword().ToSwaggerExampleErrorOut();
+        yield return new InvalidDocument().ToExampleErrorOut();
+        yield return new DocumentAlreadyUsed().ToExampleErrorOut();
+        yield return new InvalidEmail().ToExampleErrorOut();
+        yield return new EmailAlreadyUsed().ToExampleErrorOut();
+        yield return new WeakPassword().ToExampleErrorOut();
     }
 }

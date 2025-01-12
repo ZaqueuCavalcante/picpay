@@ -45,12 +45,12 @@ public static class DocsConfigs
 
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                In = ParameterLocation.Header,
-                Description = "Please enter a valid token",
-                Name = "Authorization",
-                Type = SecuritySchemeType.Http,
-                BearerFormat = "JWT",
                 Scheme = "bearer",
+                BearerFormat = "JWT",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Description = "Please enter a valid token",
             });
 
             options.DescribeAllParametersInCamelCase();
