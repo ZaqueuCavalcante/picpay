@@ -2,7 +2,7 @@ using PicPay.Api.Errors;
 using System.Net.Http.Json;
 using PicPay.Tests.Extensions;
 
-namespace Syki.Tests.Integration;
+namespace PicPay.Tests.Integration;
 
 public partial class IntegrationTests : IntegrationTestBase
 {

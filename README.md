@@ -1,5 +1,7 @@
 # PicPay
 
+[![Tests](https://github.com/ZaqueuCavalcante/picpay/actions/workflows/tests.yml/badge.svg)](https://github.com/ZaqueuCavalcante/picpay/actions/workflows/tests.yml)
+
 Desafio do PicPay simplificado, feito em C# | DotNet
 
 ## Sumário
