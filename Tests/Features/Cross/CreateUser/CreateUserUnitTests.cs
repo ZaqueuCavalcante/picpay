@@ -12,7 +12,7 @@ public class CreateUserUnitTests
     public void Should_not_create_user_with_invalid_cpf(string cpf)
     {
         // Arrange
-        var result = PicPayUser.New(UserType.Customer, "Zezinho", cpf, "zezinho@gmail.com");
+        var result = PicPayUser.New(UserRole.Customer, "Zezinho", cpf, "zezinho@gmail.com");
 
         // Act / Assert
         result.ShouldBeError(new InvalidDocument());
@@ -23,7 +23,7 @@ public class CreateUserUnitTests
     public void Should_not_create_user_with_invalid_cnpj(string cnpj)
     {
         // Arrange
-        var result = PicPayUser.New(UserType.Customer, "Zezinho", cnpj, "zezinho@gmail.com");
+        var result = PicPayUser.New(UserRole.Customer, "Zezinho", cnpj, "zezinho@gmail.com");
 
         // Act / Assert
         result.ShouldBeError(new InvalidDocument());

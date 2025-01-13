@@ -10,4 +10,5 @@ global using PicPay.Api.Extensions;
 global using PicPay.Api.Middlewares;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
+global using Swashbuckle.AspNetCore.Filters;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;

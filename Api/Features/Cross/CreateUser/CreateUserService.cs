@@ -13,7 +13,7 @@ public class CreateUserService(PicPayDbContext ctx, IPasswordHasher hasher) : IP
 
         var document = data.Document.OnlyNumbers();
 
-        var result = PicPayUser.New(data.Type, data.Name, document, data.Email);
+        var result = PicPayUser.New(data.Role, data.Name, document, data.Email);
 
         if (result.IsError()) return result.GetError();
 

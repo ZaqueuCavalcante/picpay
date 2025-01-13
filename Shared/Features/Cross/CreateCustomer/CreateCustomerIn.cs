@@ -1,18 +1,16 @@
 namespace PicPay.Shared;
 
-public class CreateUserIn
+public class CreateCustomerIn
 {
-    public UserRole Role { get; set; }
-
     /// <summary>
     /// Nome completo
     /// </summary>
     public string Name { get; set; }
 
     /// <summary>
-    /// Documento (CPF ou CNPJ)
+    /// CPF
     /// </summary>
-    public string Document { get; set; }
+    public string Cpf { get; set; }
 
     /// <summary>
     /// Email
@@ -24,17 +22,20 @@ public class CreateUserIn
     /// </summary>
     public string Password { get; set; }
 
-    public CreateUserIn(
-        UserRole role,
+    public CreateCustomerIn(
         string name,
-        string document,
+        string cpf,
         string email,
         string password
     ) {
-        Role = role;
         Name = name;
-        Document = document;
+        Cpf = cpf;
         Email = email;
         Password = password;
+    }
+
+    public CreateUserIn ToCreateUserIn()
+    {
+        return new CreateUserIn(UserRole.Customer, Name, Cpf, Email, Password);
     }
 }

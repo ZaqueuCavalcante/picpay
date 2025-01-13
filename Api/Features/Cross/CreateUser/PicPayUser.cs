@@ -3,7 +3,7 @@ namespace PicPay.Api.Features.Cross.CreateUser;
 public class PicPayUser
 {
     public Guid Id { get; private set; }
-    public UserType Type { get; private set; }
+    public UserRole Role { get; private set; }
     public string Name { get; private set; }
     public string Document { get; private set; }
     public string Email { get; private set; }
@@ -13,13 +13,13 @@ public class PicPayUser
     private PicPayUser() { }
 
     private PicPayUser(
-        UserType type,
+        UserRole role,
         string name,
         string document,
         string email
     ) {
         Id = Guid.NewGuid();
-        Type = type;
+        Role = role;
         Name = name;
         Document = document;
         Email = email;
@@ -27,14 +27,14 @@ public class PicPayUser
     }
 
     public static OneOf<PicPayUser, PicPayError> New(
-        UserType type,
+        UserRole role,
         string name,
         string document,
         string email
     ) {
         if (!document.IsValidDocument()) return new InvalidDocument();
 
-        return new PicPayUser(type, name, document, email);
+        return new PicPayUser(role, name, document, email);
     }
 
     public void SetPasswordHash(string passwordHash) => PasswordHash = passwordHash;
@@ -42,10 +42,8 @@ public class PicPayUser
     public CreateUserOut ToCreateOut() => new()
     {
         Id = Id,
-        Type = Type,
         Name = Name,
         Document = Document,
         Email = Email,
-        CreatedAt = CreatedAt
     };
 }

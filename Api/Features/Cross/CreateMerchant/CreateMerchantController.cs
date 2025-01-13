@@ -1,23 +1,20 @@
-using Swashbuckle.AspNetCore.Filters;
-
-namespace PicPay.Api.Features.Cross.CreateUser;
+namespace PicPay.Api.Features.Cross.CreateMerchant;
 
 [ApiController]
 [Consumes("application/json"), Produces("application/json")]
-public class CreateUserController(CreateUserService service) : ControllerBase
+public class CreateMerchantController(CreateMerchantService service) : ControllerBase
 {
     /// <summary>
-    /// 🔓 Registrar usuário
+    /// 🔓 Registrar Lojista
     /// </summary>
     /// <remarks>
-    /// Cria um novo usuário. <br/>
-    /// Ele pode ser do tipo Cliente ou Lojista.
+    /// Cria um novo Lojista.
     /// </remarks>
-    [HttpPost("users")]
+    [HttpPost("merchants")]
     [ProducesResponseType(200)]
     [ProducesResponseType(typeof(ErrorOut), 400)]
     [SwaggerResponseExample(400, typeof(ErrorsExamples))]
-    public async Task<IActionResult> Create([FromBody] CreateUserIn data)
+    public async Task<IActionResult> Create([FromBody] CreateMerchantIn data)
     {
         var result = await service.Create(data);
 
@@ -25,23 +22,13 @@ public class CreateUserController(CreateUserService service) : ControllerBase
     }
 }
 
-internal class RequestsExamples : IMultipleExamplesProvider<CreateUserIn>
+internal class RequestsExamples : IMultipleExamplesProvider<CreateMerchantIn>
 {
-    public IEnumerable<SwaggerExample<CreateUserIn>> GetExamples()
+    public IEnumerable<SwaggerExample<CreateMerchantIn>> GetExamples()
     {
         yield return SwaggerExample.Create(
-			"Cliente - João da Silva",
-			new CreateUserIn(
-                UserType.Customer,
-                "João da Silva",
-                "084.128.108-48",
-                "joaodasilva@gmail.com",
-                "bfD43ae8c46cb9fd18")
-		);
-        yield return SwaggerExample.Create(
 			"Lojista - Gilbirdelson Lanches",
-			new CreateUserIn(
-                UserType.Merchant,
+			new CreateMerchantIn(
                 "Gilbirdelson Lanches",
                 "55.774.025/0001-34",
                 "gilbirdelson.lanches@gmail.com",
