@@ -19,7 +19,7 @@ Essa é minha resolução do desafio proposto pelo PicPay, que pode ser acessado
 
 O PicPay Simplificado é uma plataforma de pagamentos simplificada.
 Nela é possível depositar e realizar transferências de dinheiro entre usuários.
-Temos 2 tipos de usuários, os comuns e lojistas, ambos têm carteira com dinheiro e realizam transferências entre eles.
+Temos 2 tipos de usuários, Clientes e Lojistas, ambos têm Carteira com dinheiro e realizam Transferências entre elas.
 
 ## Regras de Negócio
 
@@ -28,10 +28,10 @@ Temos 2 tipos de usuários, os comuns e lojistas, ambos têm carteira com dinhei
     - Lojistas
 
 - Usuários possuem Nome, Documento, E-mail e Senha
-    - CPF/CNPJ e e-mails devem ser únicos no sistema
+    - Documentos e e-mails devem ser únicos no sistema
     - O sistema deve permitir apenas um cadastro com o mesmo Documento ou E-mail
 
-- Clientes podem enviar dinheiro (efetuar transferência)
+- Clientes realizar transferências
     - Para lojistas
     - Para outros clientes
 
@@ -43,8 +43,7 @@ Temos 2 tipos de usuários, os comuns e lojistas, ambos têm carteira com dinhei
     - Deve-se consultar um serviço autorizador externo
     - Use este mock https://util.devi.tools/api/v2/authorize para simular o serviço utilizando o verbo GET
 
-- A operação de transferência deve ser uma transação
-    - Ou seja, deve ser revertida em qualquer caso de inconsistência
+- A operação de transferência deve ser uma transação (reverter em qualquer caso de inconsistência)
 
 - No recebimento de pagamento
     - O cliente ou lojista precisa receber notificação (envio de email, sms) enviada por um serviço de terceiro
@@ -66,14 +65,14 @@ Temos 2 tipos de usuários, os comuns e lojistas, ambos têm carteira com dinhei
 
 - A notificação será feita de maneira assíncrona
     - Evento de pagamento efetuado
-    - Task para enviar email, sms, notification
+    - Task para enviar email, sms, push-notification
     - Retry automático de reenvio com delay
     - Garantir que apenas uma transação seja enviada
 
 - Deve existir um front-end
     - Clientes, Lojistas e Adm vão acessar
     - Deve respeitar todas as políticas de acesso da API
-    - Fazer na mesma paleta de cores do PicPay
+    - Mesma paleta de cores do PicPay
 
 - Cliente deve poder acessar
     - Seu saldo atual
@@ -111,11 +110,6 @@ Temos 2 tipos de usuários, os comuns e lojistas, ambos têm carteira com dinhei
 - Auditoria de todas as operacoes
 
 - Escala horizontal da API e do Worker (banco???)
-
-- Feature de bônus ao convidar um amigo
-    - Quem convidou ganha R$ 50
-    - Quem foi convidado ganha R$ 100
-    - Há um limite de 10 convites aceitos por cliente
 
 ## Conceitos e Decições
 

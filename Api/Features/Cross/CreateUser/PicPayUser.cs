@@ -1,3 +1,5 @@
+using Syki.Shared;
+
 namespace PicPay.Api.Features.Cross.CreateUser;
 
 public class PicPayUser
@@ -9,6 +11,8 @@ public class PicPayUser
     public string Email { get; private set; }
     public string PasswordHash { get; private set; }
     public DateTime CreatedAt { get; private set; }
+
+    public Wallet Wallet { get; private set; }
 
     private PicPayUser() { }
 
@@ -24,6 +28,8 @@ public class PicPayUser
         Document = document;
         Email = email;
         CreatedAt = DateTime.Now;
+
+        Wallet = new Wallet(Id, role.ToString().ToEnum<WalletType>());
     }
 
     public static OneOf<PicPayUser, PicPayError> New(
