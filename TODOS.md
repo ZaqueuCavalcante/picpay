@@ -1,9 +1,7 @@
 # TODOS
 
-- Endpoint para transferencia de dinheiro
+- Deposito do Adm
 
-
-
-
+- Transferencia de dinheiro
 
 

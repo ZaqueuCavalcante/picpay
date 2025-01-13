@@ -11,7 +11,8 @@ public class CreateCustomerController(CreateCustomerService service) : Controlle
     /// Cria um novo Cliente.
     /// </remarks>
     [HttpPost("customers")]
-    [ProducesResponseType(200)]
+    [ProducesResponseType(typeof(CreateCustomerOut), 200)]
+    [SwaggerResponseExample(200, typeof(ResponseExamples))]
     [ProducesResponseType(typeof(ErrorOut), 400)]
     [SwaggerResponseExample(400, typeof(ErrorsExamples))]
     public async Task<IActionResult> Create([FromBody] CreateCustomerIn data)
@@ -22,17 +23,31 @@ public class CreateCustomerController(CreateCustomerService service) : Controlle
     }
 }
 
-internal class RequestsExamples : IMultipleExamplesProvider<CreateCustomerIn>
+internal class RequestsExamples : IExamplesProvider<CreateCustomerIn>
 {
-    public IEnumerable<SwaggerExample<CreateCustomerIn>> GetExamples()
+    CreateCustomerIn IExamplesProvider<CreateCustomerIn>.GetExamples()
+    {
+        return new CreateCustomerIn(
+            "João da Silva",
+            "084.128.108-48",
+            "joao.da.silva@gmail.com",
+            "bfD43ae8c46cb9fd18");
+    }
+}
+
+internal class ResponseExamples : IMultipleExamplesProvider<CreateCustomerOut>
+{
+    public IEnumerable<SwaggerExample<CreateCustomerOut>> GetExamples()
     {
         yield return SwaggerExample.Create(
-			"Cliente - João da Silva",
-			new CreateCustomerIn(
-                "João da Silva",
-                "084.128.108-48",
-                "joao.da.silva@gmail.com",
-                "bfD43ae8c46cb9fd18")
+			"CreateCustomerOut",
+			new CreateCustomerOut
+			{
+				Id = Guid.NewGuid(),
+				Name = "João da Silva",
+                Cpf = "084.128.108-48",
+				Email = "joao.da.silva@gmail.com",
+			}
 		);
     }
 }

@@ -11,7 +11,8 @@ public class CreateMerchantController(CreateMerchantService service) : Controlle
     /// Cria um novo Lojista.
     /// </remarks>
     [HttpPost("merchants")]
-    [ProducesResponseType(200)]
+    [ProducesResponseType(typeof(CreateMerchantOut), 200)]
+    [SwaggerResponseExample(200, typeof(ResponseExamples))]
     [ProducesResponseType(typeof(ErrorOut), 400)]
     [SwaggerResponseExample(400, typeof(ErrorsExamples))]
     public async Task<IActionResult> Create([FromBody] CreateMerchantIn data)
@@ -22,17 +23,31 @@ public class CreateMerchantController(CreateMerchantService service) : Controlle
     }
 }
 
-internal class RequestsExamples : IMultipleExamplesProvider<CreateMerchantIn>
+internal class RequestsExamples : IExamplesProvider<CreateMerchantIn>
 {
-    public IEnumerable<SwaggerExample<CreateMerchantIn>> GetExamples()
+    CreateMerchantIn IExamplesProvider<CreateMerchantIn>.GetExamples()
+    {
+        return new CreateMerchantIn(
+            "Gilbirdelson Lanches",
+            "55.774.025/0001-34",
+            "gilbirdelson.lanches@gmail.com",
+            "dc9ab8a5960b44edbcd71ba5ec1a0f");
+    }
+}
+
+internal class ResponseExamples : IMultipleExamplesProvider<CreateMerchantOut>
+{
+    public IEnumerable<SwaggerExample<CreateMerchantOut>> GetExamples()
     {
         yield return SwaggerExample.Create(
-			"Lojista - Gilbirdelson Lanches",
-			new CreateMerchantIn(
-                "Gilbirdelson Lanches",
-                "55.774.025/0001-34",
-                "gilbirdelson.lanches@gmail.com",
-                "dc9ab8a5960b44edbcd71ba5ec1a0f")
+			"CreateMerchantOut",
+			new CreateMerchantOut
+			{
+				Id = Guid.NewGuid(),
+                Name = "Gilbirdelson Lanches",
+                Cnpj = "55.774.025/0001-34",
+                Email = "gilbirdelson.lanches@gmail.com",
+			}
 		);
     }
 }
