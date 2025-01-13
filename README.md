@@ -277,3 +277,6 @@ Realizada via POST /transfers
 
 - Comente se vc conhece mais desafios de empresas
 - O que faltou no projeto?
+- Faca um fork do projeto e teste na sua maquina!
+- Contribua com o projeto, abra um PR la!
+

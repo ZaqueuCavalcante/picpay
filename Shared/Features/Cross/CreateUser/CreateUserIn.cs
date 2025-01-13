@@ -23,4 +23,18 @@ public class CreateUserIn
     /// Senha
     /// </summary>
     public string Password { get; set; }
+
+    public CreateUserIn(
+        UserType type,
+        string name,
+        string document,
+        string email,
+        string password
+    ) {
+        Type = type;
+        Name = name;
+        Document = document;
+        Email = email;
+        Password = password;
+    }
 }

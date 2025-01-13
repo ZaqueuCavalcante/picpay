@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Api\Api.csproj" />
+    <ProjectReference Include="..\Web\Web.csproj" />
     <ProjectReference Include="..\Worker\Worker.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>

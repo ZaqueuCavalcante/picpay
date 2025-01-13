@@ -31,25 +31,21 @@ internal class RequestsExamples : IMultipleExamplesProvider<CreateUserIn>
     {
         yield return SwaggerExample.Create(
 			"Cliente - João da Silva",
-			new CreateUserIn()
-            {
-                Type = UserType.Customer,
-                Name = "João da Silva",
-                Document = "084.128.108-48",
-                Email = "joaodasilva@gmail.com",
-                Password = "bfD43ae8c46cb9fd18"
-            }
+			new CreateUserIn(
+                UserType.Customer,
+                "João da Silva",
+                "084.128.108-48",
+                "joaodasilva@gmail.com",
+                "bfD43ae8c46cb9fd18")
 		);
         yield return SwaggerExample.Create(
 			"Lojista - Gilbirdelson Lanches",
-			new CreateUserIn()
-            {
-                Type = UserType.Merchant,
-                Name = "Gilbirdelson Lanches",
-                Document = "55.774.025/0001-34",
-                Email = "gilbirdelson.lanches@gmail.com",
-                Password = "dc9ab8a5960b44edbcd71ba5ec1a0f"
-            }
+			new CreateUserIn(
+                UserType.Merchant,
+                "Gilbirdelson Lanches",
+                "55.774.025/0001-34",
+                "gilbirdelson.lanches@gmail.com",
+                "dc9ab8a5960b44edbcd71ba5ec1a0f")
 		);
     }
 }
