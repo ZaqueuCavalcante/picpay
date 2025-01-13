@@ -20,4 +20,14 @@ public class Wallet
         Balance = 0;
         CreatedAt = DateTime.Now;
     }
+
+    public void Put(long amount)
+    {
+        Balance += amount;
+    }
+
+    public void Take(long amount)
+    {
+        Balance -= amount;
+    }
 }

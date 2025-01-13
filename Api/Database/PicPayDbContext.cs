@@ -4,6 +4,7 @@ namespace PicPay.Api.Database;
 
 public class PicPayDbContext(DbContextOptions<PicPayDbContext> options, DatabaseSettings settings) : DbContext(options)
 {
+    public DbSet<Wallet> Wallets { get; set; }
     public DbSet<PicPayUser> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
