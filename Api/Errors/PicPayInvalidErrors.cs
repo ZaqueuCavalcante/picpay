@@ -17,3 +17,9 @@ public class InvalidDepositAmount : PicPayError
     public override string Code { get; set; } = nameof(InvalidDepositAmount);
     public override string Message { get; set; } = "O valor do depósito deve ser maior que zero.";
 }
+
+public class InvalidTransferAmount : PicPayError
+{
+    public override string Code { get; set; } = nameof(InvalidTransferAmount);
+    public override string Message { get; set; } = "O valor da transferência deve ser maior que zero.";
+}

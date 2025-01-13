@@ -10,7 +10,7 @@ public class DepositController(DepositService service) : ControllerBase
     /// <remarks>
     /// Cria um novo Depósito para a Carteira informada.
     /// </remarks>
-    [HttpPost("adm/deposit")]
+    [HttpPost("adm/deposits")]
     [ProducesResponseType(typeof(DepositOut), 200)]
     [SwaggerResponseExample(200, typeof(ResponseExamples))]
     [ProducesResponseType(typeof(ErrorOut), 400)]

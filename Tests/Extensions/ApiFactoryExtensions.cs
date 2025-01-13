@@ -1,6 +1,8 @@
 using PicPay.Api.Database;
 using PicPay.Api.Features.Cross.CreateUser;
 using Microsoft.Extensions.DependencyInjection;
+using PicPay.Tests.Clients;
+using PicPay.Tests.Data;
 
 namespace PicPay.Tests.Extensions;
 
@@ -27,7 +29,7 @@ public static class ApiFactoryExtensions
     {
         await using var ctx = factory.GetDbContext();
         var service = factory.GetService<CreateUserService>();
-        
+
         var userIn = new CreateUserIn(
             UserRole.Adm,
             "Admilson",
@@ -37,5 +39,19 @@ public static class ApiFactoryExtensions
         );
 
         await service.Create(userIn);
+    }
+
+    public static async Task<CustomerHttpClient> LoggedAsCustomer(this ApiFactory factory)
+    {
+        var client = factory.GetClient();
+
+        var cpf = Documents.GetRandomCpf();
+        var email = Emails.New;
+        var password = Guid.NewGuid().ToString();
+        await client.CreateCustomer(cpf: cpf, email: email, password: password);
+
+        await client.Login(email, password);
+
+        return new(client);
     }
 }

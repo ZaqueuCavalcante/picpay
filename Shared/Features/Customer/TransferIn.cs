@@ -1,18 +1,18 @@
 namespace PicPay.Shared;
 
-public class TransferIn
+public class DepositIn
 {
     /// <summary>
-    /// Valor da transferência
+    /// Valor do depósito
     /// </summary>
     public long Amount { get; set; }
 
     /// <summary>
-    /// Carteira de destino da transferência
+    /// Carteira de destino do depósito
     /// </summary>
     public Guid WalletId { get; set; }
 
-    public TransferIn(
+    public DepositIn(
         long amount,
         Guid walletId
     ) {

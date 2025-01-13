@@ -85,4 +85,77 @@ public static class Documents
             yield return [cnpj];
         }
     }
+
+    public static string GetRandomCpf()
+    {
+        int sum = 0;
+        int[] mult1 = [10, 9, 8, 7, 6, 5, 4, 3, 2];
+        int[] mult2 = [11, 10, 9, 8, 7, 6, 5, 4, 3, 2];
+
+        var rnd = new Random();
+        string seed = rnd.Next(100000000, 999999999).ToString();
+
+        for (int i = 0; i < 9; i++)
+            sum += int.Parse(seed[i].ToString()) * mult1[i];
+
+        var rest = sum % 11;
+        if (rest < 2)
+            rest = 0;
+        else
+            rest = 11 - rest;
+
+        seed += rest;
+        sum = 0;
+
+        for (int i = 0; i < 10; i++)
+            sum += int.Parse(seed[i].ToString()) * mult2[i];
+
+        rest = sum % 11;
+
+        if (rest < 2)
+            rest = 0;
+        else
+            rest = 11 - rest;
+
+        return seed + rest;
+    }
+
+    public static string GetRandomCnpj()
+    {
+        int sum = 0;
+        int[] mult1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+        int[] mult2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+
+        var rnd = new Random();
+        string seed = rnd.Next(10000000, 99999999) + "0001";
+
+        for (int i = 0; i < 12; i++)
+            sum += int.Parse(seed[i].ToString()) * mult1[i];
+
+        int rest = sum % 11;
+        if (rest < 2)
+            rest = 0;
+        else
+            rest = 11 - rest;
+
+        seed += rest;
+        sum = 0;
+
+        for (int i = 0; i < 13; i++)
+            sum += int.Parse(seed[i].ToString()) * mult2[i];
+
+        rest = sum % 11;
+
+        if (rest < 2)
+            rest = 0;
+        else
+            rest = 11 - rest;
+
+        return seed + rest;
+    }
+
+    public static string GetRandomKey()
+    {
+        return Guid.NewGuid().ToString().Replace("-", "");
+    }
 }

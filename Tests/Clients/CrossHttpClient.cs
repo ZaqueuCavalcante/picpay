@@ -1,3 +1,4 @@
+using PicPay.Web.Features.Cross.Login;
 using PicPay.Web.Features.Cross.CreateCustomer;
 using PicPay.Web.Features.Cross.CreateMerchant;
 
@@ -25,5 +26,26 @@ public static class CrossHttpClient
     ) {
         var client = new CreateMerchantClient(http);
         return await client.Create(name, cnpj, email, password);
+    }
+
+    public static async Task<OneOf<LoginOut, ErrorOut>> Login(this HttpClient http, string email, string password)
+    {
+        var client = new LoginClient(http);
+        var response = await client.Login(email, password);
+
+        http.Logout();
+        http.AddAuthToken(response.IsSuccess() ? response.GetSuccess().AccessToken : "");
+
+        return response;
+    }
+
+    public static void Logout(this HttpClient client)
+    {
+        client.DefaultRequestHeaders.Remove("Authorization");
+    }
+
+    public static void AddAuthToken(this HttpClient client, string token)
+    {
+        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
     }
 }
