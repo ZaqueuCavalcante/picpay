@@ -1,4 +1,5 @@
 using PicPay.Api.Database;
+using PicPay.Api.Features.Cross.CreateUser;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace PicPay.Tests.Extensions;
@@ -14,5 +15,27 @@ public static class ApiFactoryExtensions
     {
         var scope = factory.Services.CreateScope();
         return scope.ServiceProvider.GetRequiredService<PicPayDbContext>();
+    }
+
+    public static T GetService<T>(this ApiFactory factory) where T : notnull
+    {
+        var scope = factory.Services.CreateScope();
+        return scope.ServiceProvider.GetRequiredService<T>();
+    }
+
+    public static async Task RegisterAdm(this ApiFactory factory)
+    {
+        await using var ctx = factory.GetDbContext();
+        var service = factory.GetService<CreateUserService>();
+        
+        var userIn = new CreateUserIn(
+            UserRole.Adm,
+            "Admilson",
+            "22.896.431/0001-10",
+            "admilson@picpay.com",
+            "efd46375c2a74fe6bcfc7d20f67e23ab"
+        );
+
+        await service.Create(userIn);
     }
 }

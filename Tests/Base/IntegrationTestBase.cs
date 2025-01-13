@@ -1,4 +1,5 @@
 using PicPay.Api.Database;
+using PicPay.Tests.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace PicPay.Tests.Base;
@@ -15,6 +16,7 @@ public class IntegrationTestBase
         var ctx = scope.ServiceProvider.GetRequiredService<PicPayDbContext>();
 
         await ctx.ResetDbAsync();
+        await _api.RegisterAdm();
     }
 
     [OneTimeTearDown]
