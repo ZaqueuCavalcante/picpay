@@ -1,5 +1,3 @@
-using Syki.Shared;
-
 namespace PicPay.Api.Features.Cross.CreateUser;
 
 public class PicPayUser

@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace Syki.Shared;
+namespace PicPay.Shared;
 
 public static class EnumExtensions
 {

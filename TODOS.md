@@ -1,7 +1,7 @@
 # TODOS
 
-- Deposito do Adm
+- Teste com service Auth fora do ar (timeout bem pequeno, 1s)
+- Teste com endpoint /auth retornando false
 
-- Transferencia de dinheiro
 
 
