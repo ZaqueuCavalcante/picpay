@@ -17,7 +17,7 @@ public class TransferController(TransferService service) : ControllerBase
     [SwaggerResponseExample(400, typeof(ErrorsExamples))]
     public async Task<IActionResult> Transfer([FromBody] TransferIn data)
     {
-        var result = await service.Transfer(data);
+        var result = await service.Transfer(User.Id(), data);
 
         return result.Match<IActionResult>(Ok, BadRequest);
     }

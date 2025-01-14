@@ -23,3 +23,9 @@ public class WrongEmailOrPassword : PicPayError
     public override string Code { get; set; } = nameof(WrongEmailOrPassword);
     public override string Message { get; set; } = "Email ou senha incorretos.";
 }
+
+public class InsufficientWalletBalance : PicPayError
+{
+    public override string Code { get; set; } = nameof(InsufficientWalletBalance);
+    public override string Message { get; set; } = "Saldo insuficiente.";
+}

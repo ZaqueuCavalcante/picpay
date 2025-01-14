@@ -1,8 +1,8 @@
+using PicPay.Tests.Data;
 using PicPay.Api.Database;
+using PicPay.Tests.Clients;
 using PicPay.Api.Features.Cross.CreateUser;
 using Microsoft.Extensions.DependencyInjection;
-using PicPay.Tests.Clients;
-using PicPay.Tests.Data;
 
 namespace PicPay.Tests.Extensions;
 

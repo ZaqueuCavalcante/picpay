@@ -4,14 +4,25 @@ namespace PicPay.Api.Features.Adm.Transfer;
 
 public class TransferService(PicPayDbContext ctx) : IPicPayService
 {
-    public async Task<OneOf<TransferOut, PicPayError>> Transfer(TransferIn data)
+    public async Task<OneOf<TransferOut, PicPayError>> Transfer(Guid userId, TransferIn data)
     {
         if (data.Amount <= 0) return new InvalidTransferAmount();
 
-        var wallet = await ctx.Wallets.FirstAsync(w => w.Id == data.WalletId);
-        wallet.Put(data.Amount);
+        var sourceWallet = await ctx.Wallets.FirstAsync(w => w.UserId == userId);
+        if (data.WalletId == sourceWallet.Id) return new InvalidTargetWallet();
 
-        var transaction = new Transaction(wallet.Id, TransactionType.Transfer, data.Amount);
+        var targetWallet = await ctx.Wallets.FirstOrDefaultAsync(w => w.Id == data.WalletId);
+        if (targetWallet == null) return new WalletNotFound();
+
+        if (sourceWallet.Balance < data.Amount) return new InsufficientWalletBalance();
+
+
+
+
+
+        targetWallet.Put(data.Amount);
+
+        var transaction = new Transaction(targetWallet.Id, TransactionType.Transfer, data.Amount);
         ctx.Add(transaction);
 
         await ctx.SaveChangesAsync();
@@ -20,26 +31,13 @@ public class TransferService(PicPayDbContext ctx) : IPicPayService
     }
 }
 
-// - Chamada não autenticada deve receber 403
 
-// - Apenas Clientes podem transferir
-//     - Lojista deve receber 401
-//     - Adm deve receber 401
-
-// - Não pode transferir valor <= zero
-//     - Validar amount enviado
-
-// - Não pode transferir para si próprio
-//     - Validar o target e o id do usuário logado
-
-// - Nâo pode transferir pra uma Carteira inexistente
-//     - Validar no banco se o target existe
-
-// - Não pode transferir sem saldo suficiente
-//     - Validar se tem saldo suficiente
 
 // - Não pode transferir caso seja não autorizado
 //     - Caso chamada pro Auth retorne não autorizado, retornar erro
 
 // - Não pode transferir caso o autorizador esteja fora do ar
 //     - Caso chamada pro Auth erro/timeout, retornar erro
+
+
+
