@@ -11,5 +11,7 @@ public static class HttpConfigs
         );
 
         services.AddRouting(options => options.LowercaseUrls = true);
+
+        services.AddHttpClient();
     }
 }

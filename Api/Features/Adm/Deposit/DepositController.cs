@@ -17,7 +17,7 @@ public class DepositController(DepositService service) : ControllerBase
     [SwaggerResponseExample(400, typeof(ErrorsExamples))]
     public async Task<IActionResult> Deposit([FromBody] DepositIn data)
     {
-        var result = await service.Deposit(data);
+        var result = await service.Deposit(User.Id(), data);
 
         return result.Match<IActionResult>(Ok, BadRequest);
     }

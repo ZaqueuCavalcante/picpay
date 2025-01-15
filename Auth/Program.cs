@@ -4,9 +4,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 
-app.MapGet("/api/v2/authorize", (bool? response) =>
+builder.WebHost.UseUrls("http://*:5004");
+
+app.MapGet("/api/v2/authorize", async (long? amount) =>
 {
-    var authorize = response ?? new Random().NextDouble() > 0.5;
+    if (amount != null && amount.Value == 374_58) await Task.Delay(5_000);
+
+    bool authorize = false;
+
+    authorize = (amount != null && new long[] { 159_75 }.Contains(amount.Value)) ? false : new Random().NextDouble() > 0.5;
 
     return new AuthorizeOut
     {
@@ -16,3 +22,5 @@ app.MapGet("/api/v2/authorize", (bool? response) =>
 });
 
 app.Run();
+
+public partial class Program;

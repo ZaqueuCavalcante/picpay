@@ -62,4 +62,44 @@ public partial class IntegrationTests : IntegrationTestBase
         // Assert
         response.ShouldBeError(new InsufficientWalletBalance());
     }
+
+    [Test]
+    public async Task Should_not_transfer_when_auth_service_is_down()
+    {
+        // Arrange
+        var sourceClient = await _api.LoggedAsCustomer();
+        var sourceWallet = await sourceClient.GetWallet();
+
+        var admClient = await _api.LoggedAsAdm();
+        await admClient.Deposit(420_00, sourceWallet.Id);
+
+        var targetClient = await _api.LoggedAsCustomer();
+        var targetWallet = await targetClient.GetWallet();
+
+        // Act
+        var response = await sourceClient.Transfer(374_58, targetWallet.Id);
+
+        // Assert
+        response.ShouldBeError(new AuthorizeServiceDown());
+    }
+
+    [Test]
+    public async Task Should_not_transfer_when_auth_service_return_false()
+    {
+        // Arrange
+        var sourceClient = await _api.LoggedAsCustomer();
+        var sourceWallet = await sourceClient.GetWallet();
+
+        var admClient = await _api.LoggedAsAdm();
+        await admClient.Deposit(420_00, sourceWallet.Id);
+
+        var targetClient = await _api.LoggedAsCustomer();
+        var targetWallet = await targetClient.GetWallet();
+
+        // Act
+        var response = await sourceClient.Transfer(159_75, targetWallet.Id);
+
+        // Assert
+        response.ShouldBeError(new TransactionNotAuthorized());
+    }
 }

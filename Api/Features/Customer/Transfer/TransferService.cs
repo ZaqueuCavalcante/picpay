@@ -1,8 +1,9 @@
+using PicPay.Api.Features.Cross.Authorize;
 using PicPay.Api.Features.Cross.CreateTransaction;
 
 namespace PicPay.Api.Features.Adm.Transfer;
 
-public class TransferService(PicPayDbContext ctx) : IPicPayService
+public class TransferService(PicPayDbContext ctx, AuthorizeService service) : IPicPayService
 {
     public async Task<OneOf<TransferOut, PicPayError>> Transfer(Guid userId, TransferIn data)
     {
@@ -16,10 +17,10 @@ public class TransferService(PicPayDbContext ctx) : IPicPayService
 
         if (sourceWallet.Balance < data.Amount) return new InsufficientWalletBalance();
 
+        var response = await service.Authorize(data.Amount);
+        if (response.IsError()) return response.GetError();
 
-
-
-
+        sourceWallet.Take(data.Amount);
         targetWallet.Put(data.Amount);
 
         var transaction = new Transaction(targetWallet.Id, TransactionType.Transfer, data.Amount);
@@ -38,6 +39,3 @@ public class TransferService(PicPayDbContext ctx) : IPicPayService
 
 // - Não pode transferir caso o autorizador esteja fora do ar
 //     - Caso chamada pro Auth erro/timeout, retornar erro
-
-
-

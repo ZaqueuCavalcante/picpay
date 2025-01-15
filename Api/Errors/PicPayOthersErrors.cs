@@ -29,3 +29,15 @@ public class InsufficientWalletBalance : PicPayError
     public override string Code { get; set; } = nameof(InsufficientWalletBalance);
     public override string Message { get; set; } = "Saldo insuficiente.";
 }
+
+public class AuthorizeServiceDown : PicPayError
+{
+    public override string Code { get; set; } = nameof(AuthorizeServiceDown);
+    public override string Message { get; set; } = "Autorizador fora do ar.";
+}
+
+public class TransactionNotAuthorized : PicPayError
+{
+    public override string Code { get; set; } = nameof(TransactionNotAuthorized);
+    public override string Message { get; set; } = "Transação não autorizada.";
+}

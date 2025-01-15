@@ -41,6 +41,15 @@ public static class ApiFactoryExtensions
         await service.Create(userIn);
     }
 
+    public static async Task<AdmHttpClient> LoggedAsAdm(this ApiFactory factory)
+    {
+        var client = factory.GetClient();
+
+        await client.Login("admilson@picpay.com", "efd46375c2a74fe6bcfc7d20f67e23ab");
+
+        return new(client);
+    }
+
     public static async Task<CustomerHttpClient> LoggedAsCustomer(this ApiFactory factory)
     {
         var client = factory.GetClient();
