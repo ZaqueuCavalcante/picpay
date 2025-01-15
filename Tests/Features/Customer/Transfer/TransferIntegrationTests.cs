@@ -104,7 +104,7 @@ public partial class IntegrationTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task Should_not_transfer_more_than_wallet_balance_in_parallel_requests()
+    public async Task Should_not_transfer_more_than_source_wallet_balance_in_parallel_requests()
     {
         // Arrange
         var sourceClient = await _api.LoggedAsCustomer();
@@ -126,13 +126,80 @@ public partial class IntegrationTests : IntegrationTestBase
         // Assert
         await using var ctx = _api.GetDbContext();
 
-        var transactionId = transfers.Single(t => t.IsSuccess()).GetSuccess().TransactionId;
-        var transaction = await ctx.Transactions.FirstAsync(t => t.Id == transactionId);
+        var error = transfers.Single(t => t.IsError());
+        error.ShouldBeError(new InsufficientWalletBalance());
+
+        var success = transfers.Single(t => t.IsSuccess()).GetSuccess();
+        var transaction = await ctx.Transactions.FirstAsync(t => t.Id == success.TransactionId);
 
         var sourceWalletAfter = await sourceClient.GetWallet();
         var targetWalletAfter = await targetClient.GetWallet();
 
         sourceWalletAfter.Balance.Should().Be(sourceWalletBefore.Balance - transaction.Amount);
         targetWalletAfter.Balance.Should().Be(targetWalletBefore.Balance + transaction.Amount);
+    }
+
+    [Test]
+    public async Task Should_assert_correct_target_wallet_balance_in_same_source_parallel_requests()
+    {
+        // Arrange
+        var sourceClient = await _api.LoggedAsCustomer();
+        var sourceWalletBefore = await sourceClient.GetWallet();
+
+        var admClient = await _api.LoggedAsAdm();
+        await admClient.Deposit(420_00, sourceWalletBefore.Id);
+
+        var targetClient = await _api.LoggedAsCustomer();
+        var targetWalletBefore = await targetClient.GetWallet();
+
+        // Act
+        var transfer01 = sourceClient.Transfer(200_00, targetWalletBefore.Id);
+        var transfer02 = sourceClient.Transfer(150_00, targetWalletBefore.Id);
+
+        var transfers = await Task.WhenAll(transfer01, transfer02);
+
+        // Assert
+        transfers.Should().AllSatisfy(t => t.IsSuccess());
+
+        var sourceWalletAfter = await sourceClient.GetWallet();
+        var targetWalletAfter = await targetClient.GetWallet();
+
+        sourceWalletAfter.Balance.Should().Be(70_00);
+        targetWalletAfter.Balance.Should().Be(350_00);
+    }
+
+    [Test]
+    public async Task Should_assert_correct_target_wallet_balance_in_different_sources_parallel_requests()
+    {
+        // Arrange
+        var admClient = await _api.LoggedAsAdm();
+
+        var sourceClientA = await _api.LoggedAsCustomer();
+        var sourceWalletABefore = await sourceClientA.GetWallet();
+        await admClient.Deposit(420_00, sourceWalletABefore.Id);
+
+        var sourceClientB = await _api.LoggedAsCustomer();
+        var sourceWalletBBefore = await sourceClientB.GetWallet();
+        await admClient.Deposit(520_00, sourceWalletBBefore.Id);
+
+        var targetClient = await _api.LoggedAsCustomer();
+        var targetWalletBefore = await targetClient.GetWallet();
+
+        // Act
+        var transfer01 = sourceClientA.Transfer(200_00, targetWalletBefore.Id);
+        var transfer02 = sourceClientB.Transfer(350_00, targetWalletBefore.Id);
+
+        var transfers = await Task.WhenAll(transfer01, transfer02);
+
+        // Assert
+        transfers.Should().AllSatisfy(t => t.IsSuccess());
+
+        var sourceWalletAAfter = await sourceClientA.GetWallet();
+        var sourceWalletBAfter = await sourceClientB.GetWallet();
+        var targetWalletAfter = await targetClient.GetWallet();
+
+        sourceWalletAAfter.Balance.Should().Be(220_00);
+        sourceWalletBAfter.Balance.Should().Be(170_00);
+        targetWalletAfter.Balance.Should().Be(550_00);
     }
 }

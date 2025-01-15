@@ -14,7 +14,7 @@ public class TransferService(PicPayDbContext ctx, AuthorizeService service) : IP
         var sourceWallet = await ctx.Wallets.FromSql($"SELECT * FROM picpay.wallets WHERE user_id = {userId} FOR UPDATE").FirstAsync();
         if (data.WalletId == sourceWallet.Id) return new InvalidTargetWallet();
 
-        var targetWallet = await ctx.Wallets.FirstOrDefaultAsync(w => w.Id == data.WalletId);
+        var targetWallet = await ctx.Wallets.FromSql($"SELECT * FROM picpay.wallets WHERE id = {data.WalletId} FOR UPDATE").FirstOrDefaultAsync();
         if (targetWallet == null) return new WalletNotFound();
 
         if (sourceWallet.Balance < data.Amount) return new InsufficientWalletBalance();
