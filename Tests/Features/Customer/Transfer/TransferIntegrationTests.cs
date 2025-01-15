@@ -102,4 +102,37 @@ public partial class IntegrationTests : IntegrationTestBase
         // Assert
         response.ShouldBeError(new TransactionNotAuthorized());
     }
+
+    [Test]
+    public async Task Should_not_transfer_more_than_wallet_balance_in_parallel_requests()
+    {
+        // Arrange
+        var sourceClient = await _api.LoggedAsCustomer();
+        var sourceWalletBefore = await sourceClient.GetWallet();
+
+        var admClient = await _api.LoggedAsAdm();
+        await admClient.Deposit(420_00, sourceWalletBefore.Id);
+        sourceWalletBefore = await sourceClient.GetWallet();
+
+        var targetClient = await _api.LoggedAsCustomer();
+        var targetWalletBefore = await targetClient.GetWallet();
+
+        // Act
+        var transfer01 = sourceClient.Transfer(400_00, targetWalletBefore.Id);
+        var transfer02 = sourceClient.Transfer(300_00, targetWalletBefore.Id);
+
+        var transfers = await Task.WhenAll(transfer01, transfer02);
+
+        // Assert
+        await using var ctx = _api.GetDbContext();
+
+        var transactionId = transfers.Single(t => t.IsSuccess()).GetSuccess().TransactionId;
+        var transaction = await ctx.Transactions.FirstAsync(t => t.Id == transactionId);
+
+        var sourceWalletAfter = await sourceClient.GetWallet();
+        var targetWalletAfter = await targetClient.GetWallet();
+
+        sourceWalletAfter.Balance.Should().Be(sourceWalletBefore.Balance - transaction.Amount);
+        targetWalletAfter.Balance.Should().Be(targetWalletBefore.Balance + transaction.Amount);
+    }
 }

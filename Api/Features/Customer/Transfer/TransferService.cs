@@ -9,7 +9,9 @@ public class TransferService(PicPayDbContext ctx, AuthorizeService service) : IP
     {
         if (data.Amount <= 0) return new InvalidTransferAmount();
 
-        var sourceWallet = await ctx.Wallets.FirstAsync(w => w.UserId == userId);
+        await ctx.Database.BeginTransactionAsync();
+
+        var sourceWallet = await ctx.Wallets.FromSql($"SELECT * FROM picpay.wallets WHERE user_id = {userId} FOR UPDATE").FirstAsync();
         if (data.WalletId == sourceWallet.Id) return new InvalidTargetWallet();
 
         var targetWallet = await ctx.Wallets.FirstOrDefaultAsync(w => w.Id == data.WalletId);
@@ -28,14 +30,8 @@ public class TransferService(PicPayDbContext ctx, AuthorizeService service) : IP
 
         await ctx.SaveChangesAsync();
 
+        await ctx.Database.CommitTransactionAsync();
+
         return new TransferOut { TransactionId = transaction.Id };
     }
 }
-
-
-
-// - Não pode transferir caso seja não autorizado
-//     - Caso chamada pro Auth retorne não autorizado, retornar erro
-
-// - Não pode transferir caso o autorizador esteja fora do ar
-//     - Caso chamada pro Auth erro/timeout, retornar erro

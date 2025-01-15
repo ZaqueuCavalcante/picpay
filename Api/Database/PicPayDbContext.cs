@@ -1,4 +1,5 @@
 using PicPay.Api.Features.Cross.CreateUser;
+using PicPay.Api.Features.Cross.CreateTransaction;
 
 namespace PicPay.Api.Database;
 
@@ -6,6 +7,7 @@ public class PicPayDbContext(DbContextOptions<PicPayDbContext> options, Database
 {
     public DbSet<Wallet> Wallets { get; set; }
     public DbSet<PicPayUser> Users { get; set; }
+    public DbSet<Transaction> Transactions { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
