@@ -27,7 +27,7 @@ public class TransferService(PicPayDbContext ctx, AuthorizeService service) : IP
         sourceWallet.Take(data.Amount);
         targetWallet.Put(data.Amount);
 
-        var transaction = new Transaction(targetWallet.Id, TransactionType.Transfer, data.Amount);
+        var transaction = new Transaction(sourceWallet.Id, targetWallet.Id, TransactionType.Transfer, data.Amount);
         ctx.Add(transaction);
 
         await ctx.SaveChangesAsync();

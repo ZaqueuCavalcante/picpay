@@ -11,10 +11,10 @@ public class DepositService(PicPayDbContext ctx) : IPicPayService
         var sourceWallet = await ctx.Wallets.FirstAsync(w => w.UserId == userId);
         sourceWallet.Take(data.Amount);
 
-        var wallet = await ctx.Wallets.FirstAsync(w => w.Id == data.WalletId);
-        wallet.Put(data.Amount);
+        var targetWallet = await ctx.Wallets.FirstAsync(w => w.Id == data.WalletId);
+        targetWallet.Put(data.Amount);
 
-        var transaction = new Transaction(wallet.Id, TransactionType.Deposit, data.Amount);
+        var transaction = new Transaction(sourceWallet.Id, targetWallet.Id, TransactionType.Deposit, data.Amount);
         ctx.Add(transaction);
 
         await ctx.SaveChangesAsync();
