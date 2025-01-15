@@ -11,10 +11,12 @@ public class TransferService(PicPayDbContext ctx, AuthorizeService service) : IP
 
         await ctx.Database.BeginTransactionAsync();
 
-        var sourceWallet = await ctx.Wallets.FromSql($"SELECT * FROM picpay.wallets WHERE user_id = {userId} FOR UPDATE").FirstAsync();
+        var wallets = await ctx.Wallets.FromSql($"SELECT * FROM picpay.wallets WHERE user_id = {userId} OR id = {data.WalletId} FOR UPDATE").ToListAsync();
+
+        var sourceWallet = wallets.First(w => w.UserId == userId);
         if (data.WalletId == sourceWallet.Id) return new InvalidTargetWallet();
 
-        var targetWallet = await ctx.Wallets.FromSql($"SELECT * FROM picpay.wallets WHERE id = {data.WalletId} FOR UPDATE").FirstOrDefaultAsync();
+        var targetWallet = wallets.FirstOrDefault(w => w.Id == data.WalletId);
         if (targetWallet == null) return new WalletNotFound();
 
         if (sourceWallet.Balance < data.Amount) return new InsufficientWalletBalance();

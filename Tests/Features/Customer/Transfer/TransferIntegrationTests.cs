@@ -215,7 +215,7 @@ public partial class IntegrationTests : IntegrationTestBase
 
         var clientB = await _api.LoggedAsCustomer();
         var clientBWalletBefore = await clientB.GetWallet();
-        await admClient.Deposit(100_00, clientAWalletBefore.Id);
+        await admClient.Deposit(100_00, clientBWalletBefore.Id);
 
         // Act
         var transfer01 = clientA.Transfer(60_00, clientBWalletBefore.Id);
