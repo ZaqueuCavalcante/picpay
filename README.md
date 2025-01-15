@@ -217,6 +217,8 @@ Realizada via POST /transfers
 
 - (lock) Quem enviar e recebe ao mesmo tempo deve acabar com o saldo correto
 
+- (lock) Quando A tenta enviar pra B e B tentar enviar pra A, ao mesmo tempo
+    - Npgsql.PostgresException : 40P01: deadlock detected
 
 - Ao final, ambos devem ser notificados da transação
 

@@ -26,6 +26,11 @@ public class IntegrationTestBase
     [OneTimeTearDown]
     public async Task OneTimeTearDown()
     {
+        await using var ctx = _api.GetDbContext();
+
+        var sum = await ctx.Wallets.SumAsync(w => w.Balance);
+        sum.Should().Be(0);
+
         await _api.DisposeAsync();
         await _auth.DisposeAsync();
     }

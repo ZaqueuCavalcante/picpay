@@ -202,4 +202,34 @@ public partial class IntegrationTests : IntegrationTestBase
         sourceWalletBAfter.Balance.Should().Be(170_00);
         targetWalletAfter.Balance.Should().Be(550_00);
     }
+
+    [Test]
+    public async Task Should_assert_correct_source_and_target_wallet_balances_in_cross_parallel_requests()
+    {
+        // Arrange
+        var admClient = await _api.LoggedAsAdm();
+
+        var clientA = await _api.LoggedAsCustomer();
+        var clientAWalletBefore = await clientA.GetWallet();
+        await admClient.Deposit(400_00, clientAWalletBefore.Id);
+
+        var clientB = await _api.LoggedAsCustomer();
+        var clientBWalletBefore = await clientB.GetWallet();
+        await admClient.Deposit(100_00, clientAWalletBefore.Id);
+
+        // Act
+        var transfer01 = clientA.Transfer(60_00, clientBWalletBefore.Id);
+        var transfer02 = clientB.Transfer(20_00, clientAWalletBefore.Id);
+
+        var transfers = await Task.WhenAll(transfer01, transfer02);
+
+        // Assert
+        transfers.Should().AllSatisfy(t => t.IsSuccess());
+
+        var clientAWalletAfter = await clientA.GetWallet();
+        var clientBWalletAfter = await clientB.GetWallet();
+
+        clientAWalletAfter.Balance.Should().Be(360_00);
+        clientBWalletAfter.Balance.Should().Be(140_00);
+    }
 }
