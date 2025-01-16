@@ -140,7 +140,7 @@ public partial class IntegrationTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task Should_assert_correct_target_wallet_balance_in_same_source_parallel_requests()
+    public async Task Should_assert_correct_wallet_balances_in_same_source_transfer_parallel_requests()
     {
         // Arrange
         var sourceClient = await _api.LoggedAsCustomer();
@@ -169,7 +169,7 @@ public partial class IntegrationTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task Should_assert_correct_target_wallet_balance_in_different_sources_parallel_requests()
+    public async Task Should_assert_correct_wallet_balances_in_different_sources_transfer_parallel_requests()
     {
         // Arrange
         var admClient = await _api.LoggedAsAdm();
@@ -204,7 +204,7 @@ public partial class IntegrationTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task Should_assert_correct_source_and_target_wallet_balances_in_cross_parallel_requests()
+    public async Task Should_assert_correct_source_and_target_wallet_balances_in_cross_transfer_parallel_requests()
     {
         // Arrange
         var admClient = await _api.LoggedAsAdm();

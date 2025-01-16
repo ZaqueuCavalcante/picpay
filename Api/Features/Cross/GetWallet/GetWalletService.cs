@@ -1,4 +1,4 @@
-namespace PicPay.Api.Features.Adm.GetWallet;
+namespace PicPay.Api.Features.Cross.GetWallet;
 
 public class GetWalletService(PicPayDbContext ctx) : IPicPayService
 {

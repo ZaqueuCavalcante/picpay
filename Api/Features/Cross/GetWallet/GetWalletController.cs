@@ -1,6 +1,8 @@
-namespace PicPay.Api.Features.Adm.GetWallet;
+using Microsoft.AspNetCore.Authorization;
 
-[ApiController, AuthCustomer]
+namespace PicPay.Api.Features.Cross.GetWallet;
+
+[ApiController, Authorize]
 [Consumes("application/json"), Produces("application/json")]
 public class GetWalletController(GetWalletService service) : ControllerBase
 {
@@ -8,9 +10,9 @@ public class GetWalletController(GetWalletService service) : ControllerBase
     /// Carteira
     /// </summary>
     /// <remarks>
-    /// Retorna a Carteira do Cliente.
+    /// Retorna a Carteira do usuário.
     /// </remarks>
-    [HttpGet("customer/wallet")]
+    [HttpGet("wallet")]
     public async Task<IActionResult> GetWallet()
     {
         var result = await service.GetWallet(User.Id());

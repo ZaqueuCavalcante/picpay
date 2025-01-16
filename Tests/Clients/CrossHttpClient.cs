@@ -1,4 +1,5 @@
 using PicPay.Web.Features.Cross.Login;
+using PicPay.Web.Features.Cross.GetWallet;
 using PicPay.Web.Features.Cross.CreateCustomer;
 using PicPay.Web.Features.Cross.CreateMerchant;
 
@@ -37,6 +38,12 @@ public static class CrossHttpClient
         http.AddAuthToken(response.IsSuccess() ? response.GetSuccess().AccessToken : "");
 
         return response;
+    }
+
+    public static async Task<GetWalletOut> GetWallet(this HttpClient http)
+    {
+        var client = new GetWalletClient(http);
+        return await client.Get();
     }
 
     public static void Logout(this HttpClient client)

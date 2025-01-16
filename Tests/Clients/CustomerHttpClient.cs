@@ -1,5 +1,4 @@
 using PicPay.Web.Features.Cross.Transfer;
-using PicPay.Web.Features.Cross.GetWallet;
 
 namespace PicPay.Tests.Clients;
 
@@ -15,7 +14,6 @@ public class CustomerHttpClient(HttpClient http)
 
     public async Task<GetWalletOut> GetWallet()
     {
-        var client = new GetWalletClient(Http);
-        return await client.Get();
+        return await Http.GetWallet();
     }
 }

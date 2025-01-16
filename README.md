@@ -1,67 +1,86 @@
-# PicPay
+# Desafio do PicPay simplificado, feito em C# | DotNet
 
 [![Tests](https://github.com/ZaqueuCavalcante/picpay/actions/workflows/tests.yml/badge.svg)](https://github.com/ZaqueuCavalcante/picpay/actions/workflows/tests.yml)
 
-Desafio do PicPay simplificado, feito em C# | DotNet
+Essa é minha resolução do [desafio proposto pelo PicPay](https://github.com/PicPay/picpay-desafio-backend):
+
+- O PicPay Simplificado é uma plataforma de pagamentos simplificada.
+- Nela é possível depositar e realizar transferências de dinheiro entre usuários.
+- Temos 2 tipos de usuários, Clientes e Lojistas, ambos têm Carteira com dinheiro e podem realizar Transferências.
+- A realização de transferências depende de um serviço autorizador externo
+- Em caso de sucesso, o recebedor deve ser notificado da transação, via outro serviço externo
+
+Temos 3 pontos principais neste projeto:
+
+- A consistência dos dados é fundamental (o dinheiro não pode sumir nem surgir do nada)
+- A segurança dos dados também é fundamental (apenas você pode transferir/consultar seu dinheiro)
+- O envio de notificações deve ser feito de maneira assíncrona, tornando nosso sistema resiliente a falhas de integração
+
+Segue um resumo do que implementei:
+
+- Frontend feito em Blazor Wasm
+- Api C#/DotNet + documentação com Scalar
+- 250 Testes automatizados (com cenários reais de produção)
+- Deploy no Railway (Api + Web + Postgres + Worker + Auth + Notify)
+- Processamento assíncrono de eventos e tarefas
+- Gestão de erros e reprocessamento de eventos/tarefas
+- Políticas de retry
+- Concorrência e paralelismo (lock)
+- Rinha de backend
+- Concorrência e consistência dos valores (lock)
+- Documentação da API com o Scalar
+- CI/CD com o GitHub Actions
+- Deploy no Railway (picpay.zaqbit.com)
+- Logs
+- Observability
+- Docker compose
+- Testes de carga com K6
+- Rate limit
+- Diagrama do banco de dados
+- Testes automatizados rodando cenários iguais aos de produção
+- Report de cobertura de testes
+- Testes de mutação
+- Design Patterns
+- Foco em segurança e consistência
+- Nada hard-coded, tudo via configuração
+- Auditoria de todas as operacoes
 
 ## Sumário
 
-- Contexto
 - Regras de Negócio
 - Casos de Uso
 - Testes
 - Arquitetura
 - Referências
 
-## 0 - Contexto
-
-Essa é minha resolução do desafio proposto pelo PicPay, que pode ser acessado [aqui](https://github.com/PicPay/picpay-desafio-backend).
-
-O PicPay Simplificado é uma plataforma de pagamentos simplificada.
-Nela é possível depositar e realizar transferências de dinheiro entre usuários.
-Temos 2 tipos de usuários, Clientes e Lojistas, ambos têm Carteira com dinheiro e realizam Transferências entre elas.
-
 ## Regras de Negócio
 
-- Existem dois tipos de usuários no sistema
-    - Clientes
-    - Lojistas
+- Existem dois tipos de usuários no sistema: Clientes e Lojistas
 
-- Usuários possuem Nome, Documento, E-mail e Senha
+- Usuários possuem Nome, Documento, E-mail e Senha:
     - Documentos e e-mails devem ser únicos no sistema
     - O sistema deve permitir apenas um cadastro com o mesmo Documento ou E-mail
 
-- Clientes realizar transferências
-    - Para lojistas
-    - Para outros clientes
+- Clientes podem realizar transferências para Lojistas ou outros Clientes
 
-- Lojistas só recebem transferências, não enviam dinheiro para ninguém
+- Lojistas só recebem transferências, não enviam
 
-- Validar se o cliente tem saldo antes da transferência
+- Antes de finalizar a transferência, deve-se consultar um serviço autorizador externo (https://util.devi.tools/api/v2/authorize)
 
-- Antes de finalizar a transferência
-    - Deve-se consultar um serviço autorizador externo
-    - Use este mock https://util.devi.tools/api/v2/authorize para simular o serviço utilizando o verbo GET
-
-- A operação de transferência deve ser uma transação (reverter em qualquer caso de inconsistência)
-
-- No recebimento de pagamento
-    - O cliente ou lojista precisa receber notificação (envio de email, sms) enviada por um serviço de terceiro
+- Após a transferência:
+    - O cliente ou lojista precisa receber uma notificação (email, sms) enviada por um serviço externo (https://util.devi.tools/api/v1/notify)
     - Eventualmente este serviço pode estar indisponível/instável
-    - Use este mock https://util.devi.tools/api/v1/notify para simular o envio da notificação utilizando o verbo POST
 
 > As seguintes regras eu que adicionei para deixar o projeto mais desafiador
 
-- Existe um terceiro tipo de usuário no sistema, o Adm
+- Existe um terceiro tipo de usuário no sistema, o Adm:
     - Ele será responsável pela gestão do sistema como um todo, tendo acesso aos dados de clientes e lojistas
+    - Ele pode realizar um Depósito para uma carteira qualquer
 
-- A API terá autenticação e autorização
+- A API terá autenticação e autorização:
     - Endpoins para cadastro de clientes e lojistas
     - Endpoint para login
     - Garantir via testes de segurança que nenhum dado alheio possa ser acessado
-
-- Feature de depósito
-    - O Adm pode realizar um depósito para uma carteira qualquer
 
 - A notificação será feita de maneira assíncrona
     - Evento de pagamento efetuado
@@ -89,27 +108,6 @@ Temos 2 tipos de usuários, Clientes e Lojistas, ambos têm Carteira com dinheir
     - Status de todos os serviços
     - Filas, eventos e tasks
     - Reprocessamento de tasks com erros
-
-- Rinha de backend
-- Concorrência e consistência dos valores (lock)
-- Documentação da API com o Scalar
-- CI/CD com o GitHub Actions
-- Deploy no Railway (picpay.zaqbit.com)
-- Logs
-- Observability
-- Docker compose
-- Testes de carga com K6
-- Rate limit
-- Diagrama do banco de dados
-- Testes automatizados rodando cenários iguais aos de produção
-- Report de cobertura de testes
-- Testes de mutação
-- Design Patterns
-- Foco em segurança e consistência
-- Nada hard-coded, tudo via configuração
-- Auditoria de todas as operacoes
-
-- Escala horizontal da API e do Worker (banco???)
 
 ## Conceitos e Decições
 
@@ -169,8 +167,7 @@ Casos de uso mapeados, facilitando a implementação e os testes.
 
 ### Cadastro do usuário Adm
 - Deve ser feito direto no banco de dados
-- O saldo dele deve ser 1.000.000.000.000
-- A soma de todos os saldos SEMPRE VAI SER constante
+- A soma de todos os saldos SEMPRE VAI SER ZERO
 
 ### Cadastro de Clientes ou Lojistas
     - Validar se os documentos são válidos
@@ -209,8 +206,6 @@ Realizada via POST /transfers
 - Não pode transferir caso o autorizador esteja fora do ar
     - Caso chamada pro Auth erro/timeout, retornar erro
 
-
-
 - (lock) Não deve transferir em paralelo, gastando mais que o saldo
 
 - (lock) Quem recebe duas ao mesmo tempo deve acabar com o saldo correto
@@ -220,7 +215,7 @@ Realizada via POST /transfers
 - (lock) Quando A tenta enviar pra B e B tentar enviar pra A, ao mesmo tempo
     - Npgsql.PostgresException : 40P01: deadlock detected
 
-- Ao final, ambos devem ser notificados da transação
+- Ao final, o recebedor deve ser notificado da transação
 
 - Cliente pode transferir para um Lojista
     - Cliente possui R$ 100 de saldo
@@ -275,4 +270,3 @@ Realizada via POST /transfers
 - O que faltou no projeto?
 - Faca um fork do projeto e teste na sua maquina!
 - Contribua com o projeto, abra um PR la!
-

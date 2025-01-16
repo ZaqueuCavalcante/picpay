@@ -11,4 +11,9 @@ public class AdmHttpClient(HttpClient http)
         var client = new DepositClient(Http);
         return await client.Deposit(amount, walletId);
     }
+
+    public async Task<GetWalletOut> GetWallet()
+    {
+        return await Http.GetWallet();
+    }
 }
