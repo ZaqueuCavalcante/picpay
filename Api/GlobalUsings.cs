@@ -1,5 +1,7 @@
 global using OneOf;
 global using PicPay.Shared;
+global using PicPay.Api.Tasks;
+global using PicPay.Api.Events;
 global using PicPay.Api.Errors;
 global using PicPay.Api.Markers;
 global using PicPay.Api.Configs;

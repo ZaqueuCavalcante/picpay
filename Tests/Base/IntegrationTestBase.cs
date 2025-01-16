@@ -7,6 +7,7 @@ namespace PicPay.Tests.Base;
 public class IntegrationTestBase
 {
     protected ApiFactory _api = null!;
+    protected WorkerFactory _worker = null!;
     protected AuthFactory _auth = null!;
 
     [OneTimeSetUp]
@@ -16,8 +17,11 @@ public class IntegrationTestBase
         using var scope = _api.Services.CreateScope();
         var ctx = scope.ServiceProvider.GetRequiredService<PicPayDbContext>();
 
+        _worker = new WorkerFactory();
+        using var _ = _worker.Services.CreateScope();
+
         _auth = new AuthFactory();
-        using var _ = _auth.Services.CreateScope();
+        using var __ = _auth.Services.CreateScope();
 
         await ctx.ResetDbAsync();
         await _api.RegisterAdm();
@@ -32,6 +36,7 @@ public class IntegrationTestBase
         sum.Should().Be(0);
 
         await _api.DisposeAsync();
+        await _worker.DisposeAsync();
         await _auth.DisposeAsync();
     }
 }

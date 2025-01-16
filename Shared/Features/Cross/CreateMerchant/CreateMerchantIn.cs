@@ -36,6 +36,6 @@ public class CreateMerchantIn
 
     public CreateUserIn ToCreateUserIn()
     {
-        return new CreateUserIn(UserRole.Customer, Name, Cnpj, Email, Password);
+        return new CreateUserIn(UserRole.Merchant, Name, Cnpj, Email, Password);
     }
 }

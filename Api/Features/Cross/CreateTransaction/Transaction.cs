@@ -1,11 +1,12 @@
+using PicPay.Api.Features.Adm.Transfer;
+
 namespace PicPay.Api.Features.Cross.CreateTransaction;
 
-public class Transaction
+public class Transaction : Entity
 {
     public Guid Id { get; private set; }
     public Guid SourceWalletId { get; private set; }
     public Guid TargetWalletId { get; private set; }
-    public Guid WalletId { get; private set; }
     public TransactionType Type { get; private set; }
     public long Amount { get; private set; }
     public DateTime CreatedAt { get; private set; }
@@ -24,5 +25,10 @@ public class Transaction
         Type = type;
         Amount = amount;
         CreatedAt = DateTime.Now;
+
+        if (type == TransactionType.Transfer)
+        {
+            AddDomainEvent(new TransferCreatedDomainEvent(Id));
+        }
     }
 }

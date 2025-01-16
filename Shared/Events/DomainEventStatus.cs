@@ -1,0 +1,18 @@
+using System.ComponentModel;
+
+namespace PicPay.Shared;
+
+public enum DomainEventStatus
+{
+    [Description("Pendente")]
+    Pending,
+
+    [Description("Processando")]
+    Processing,
+
+    [Description("Sucesso")]
+    Success,
+
+    [Description("Erro")]
+    Error,
+}

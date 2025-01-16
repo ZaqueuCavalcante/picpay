@@ -242,7 +242,7 @@ Realizada via POST /transfers
 
 - Adicionar description nos testes, mostrar no log de execução
 - Testes com as APIs externas fora do ar (timeout baixo)
-- Testes de carga com o K6
+- Testes de carga com o K6 (quantas transações podem ser efetuadas por s/min/h/dia)
 
 - Uso do pattern Facade nos testes, abstraindo as chamadas pra API
 - Para cada caso de uso, colocar um print ou code sniped do teste

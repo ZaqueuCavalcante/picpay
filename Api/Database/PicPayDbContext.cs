@@ -1,5 +1,6 @@
 using PicPay.Api.Features.Cross.CreateUser;
 using PicPay.Api.Features.Cross.CreateTransaction;
+using PicPay.Api.Features.Cross.CreateNotification;
 
 namespace PicPay.Api.Database;
 
@@ -8,6 +9,7 @@ public class PicPayDbContext(DbContextOptions<PicPayDbContext> options, Database
     public DbSet<Wallet> Wallets { get; set; }
     public DbSet<PicPayUser> Users { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
+    public DbSet<Notification> Notifications { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -28,6 +30,16 @@ public class PicPayDbContext(DbContextOptions<PicPayDbContext> options, Database
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
         configurationBuilder.Properties<Enum>().HaveConversion<string>();
+    }
+
+    public async Task SaveTasksAsync(Guid eventId, params IPicPayTask[] tasks)
+    {
+        foreach (var task in tasks)
+        {
+            Add(new PicPayTask(eventId, task));
+        }
+
+        await SaveChangesAsync();
     }
 
     public void ResetDb()

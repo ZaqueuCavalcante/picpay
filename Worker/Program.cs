@@ -1,6 +1,15 @@
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
+﻿namespace PicPay.Worker;
 
-app.MapGet("/", () => "Hello World!");
+public static class Program
+{
+    public static void Main(string[] args)
+    {
+        CreateHostBuilder(args).Build().Run();
+    }
 
-app.Run();
+    private static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+                webBuilder.UseStartup<Startup>()
+            );
+}
