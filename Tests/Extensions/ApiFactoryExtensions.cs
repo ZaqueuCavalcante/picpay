@@ -63,4 +63,18 @@ public static class ApiFactoryExtensions
 
         return new(client);
     }
+
+    public static async Task<MerchantHttpClient> LoggedAsMerchant(this ApiFactory factory)
+    {
+        var client = factory.GetClient();
+
+        var cnpj = Documents.GetRandomCnpj();
+        var email = Emails.New;
+        var password = Guid.NewGuid().ToString();
+        await client.CreateMerchant(cnpj: cnpj, email: email, password: password);
+
+        await client.Login(email, password);
+
+        return new(client);
+    }
 }

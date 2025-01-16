@@ -44,7 +44,7 @@ public partial class IntegrationTests : IntegrationTestBase
         var response = await client.Deposit(456, wallet.Id);
 
         // Assert
-        response.ShouldBeError(new InvalidTargetWallet());
+        response.ShouldBeError(new InvalidTargetTransferWallet());
     }
 
     [Test]
@@ -53,7 +53,7 @@ public partial class IntegrationTests : IntegrationTestBase
         // Arrange
         var admClient = await _api.LoggedAsAdm();
 
-        var targetClient = await _api.LoggedAsCustomer();
+        var targetClient = await _api.LoggedAsMerchant();
         var targetWalletBefore = await targetClient.GetWallet();
 
         // Act
@@ -78,7 +78,7 @@ public partial class IntegrationTests : IntegrationTestBase
         var targetClientA = await _api.LoggedAsCustomer();
         var targetWalletABefore = await targetClientA.GetWallet();
 
-        var targetClientB = await _api.LoggedAsCustomer();
+        var targetClientB = await _api.LoggedAsMerchant();
         var targetWalletBBefore = await targetClientB.GetWallet();
 
         // Act

@@ -44,7 +44,26 @@ public partial class IntegrationTests : IntegrationTestBase
         var response = await client.Transfer(456, wallet.Id);
 
         // Assert
-        response.ShouldBeError(new InvalidTargetWallet());
+        response.ShouldBeError(new InvalidTargetTransferWallet());
+    }
+
+    [Test]
+    public async Task Should_not_transfer_to_adm_wallet()
+    {
+        // Arrange
+        var sourceClient = await _api.LoggedAsCustomer();
+        var sourceWallet = await sourceClient.GetWallet();
+
+        var admClient = await _api.LoggedAsAdm();
+        await admClient.Deposit(420_00, sourceWallet.Id);
+
+        var targetWallet = await admClient.GetWallet();
+
+        // Act
+        var response = await sourceClient.Transfer(260_00, targetWallet.Id);
+
+        // Assert
+        response.ShouldBeError(new InvalidTargetTransferWallet());
     }
 
     [Test]
@@ -53,7 +72,7 @@ public partial class IntegrationTests : IntegrationTestBase
         // Arrange
         var sourceClient = await _api.LoggedAsCustomer();
 
-        var targetClient = await _api.LoggedAsCustomer();
+        var targetClient = await _api.LoggedAsMerchant();
         var targetWallet = await targetClient.GetWallet();
 
         // Act
@@ -93,7 +112,7 @@ public partial class IntegrationTests : IntegrationTestBase
         var admClient = await _api.LoggedAsAdm();
         await admClient.Deposit(420_00, sourceWallet.Id);
 
-        var targetClient = await _api.LoggedAsCustomer();
+        var targetClient = await _api.LoggedAsMerchant();
         var targetWallet = await targetClient.GetWallet();
 
         // Act
@@ -149,7 +168,7 @@ public partial class IntegrationTests : IntegrationTestBase
         var admClient = await _api.LoggedAsAdm();
         await admClient.Deposit(420_00, sourceWalletBefore.Id);
 
-        var targetClient = await _api.LoggedAsCustomer();
+        var targetClient = await _api.LoggedAsMerchant();
         var targetWalletBefore = await targetClient.GetWallet();
 
         // Act
@@ -182,7 +201,7 @@ public partial class IntegrationTests : IntegrationTestBase
         var sourceWalletBBefore = await sourceClientB.GetWallet();
         await admClient.Deposit(520_00, sourceWalletBBefore.Id);
 
-        var targetClient = await _api.LoggedAsCustomer();
+        var targetClient = await _api.LoggedAsMerchant();
         var targetWalletBefore = await targetClient.GetWallet();
 
         // Act
