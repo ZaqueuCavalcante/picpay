@@ -21,7 +21,7 @@ public class DepositService(PicPayDbContext ctx) : IPicPayService
         sourceWallet.Take(data.Amount);
         targetWallet.Put(data.Amount);
 
-        var transaction = new Transaction(sourceWallet.Id, targetWallet.Id, TransactionType.Transfer, data.Amount);
+        var transaction = new Transaction(sourceWallet.Id, targetWallet.Id, TransactionType.Deposit, data.Amount);
         ctx.Add(transaction);
 
         await ctx.SaveChangesAsync();

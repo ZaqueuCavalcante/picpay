@@ -20,8 +20,8 @@ public class IntegrationTestBase
         await ctx.ResetDbAsync();
         await _api.RegisterAdm();
 
-        // _worker = new WorkerFactory();
-        // using var _ = _worker.Services.CreateScope();
+        _worker = new WorkerFactory();
+        using var _ = _worker.Services.CreateScope();
 
         _auth = new AuthFactory();
         using var __ = _auth.Services.CreateScope();
@@ -36,7 +36,7 @@ public class IntegrationTestBase
         sum.Should().Be(0);
 
         await _api.DisposeAsync();
-        // await _worker.DisposeAsync();
+        await _worker.DisposeAsync();
         await _auth.DisposeAsync();
     }
 }

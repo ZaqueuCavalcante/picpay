@@ -12,8 +12,8 @@ public class NotificationConfig : IEntityTypeConfiguration<Notification>
         notification.Property(n => n.Id).ValueGeneratedNever();
 
         notification.HasOne<PicPayUser>()
-            .WithOne()
-            .HasPrincipalKey<PicPayUser>(u => u.Id)
-            .HasForeignKey<Notification>(n => n.UserId);
+            .WithMany()
+            .HasPrincipalKey(u => u.Id)
+            .HasForeignKey(n => n.UserId);
     }
 }

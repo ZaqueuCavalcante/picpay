@@ -17,7 +17,7 @@ public class SendTransferNotificationTaskHandler(PicPayDbContext ctx) : IPicPayT
             var sourceName = await ctx.Users.FromSql(@$"
                     SELECT name
                     FROM picpay.users u
-                    INNER JOIN picpay.wallets w ON w.user_id = w.id
+                    INNER JOIN picpay.wallets w ON w.user_id = u.id
                     WHERE w.id = {transaction.SourceWalletId}")
                 .Select(x => x.Name)
                 .FirstAsync();
@@ -25,7 +25,7 @@ public class SendTransferNotificationTaskHandler(PicPayDbContext ctx) : IPicPayT
             notification = new Notification(
                 targetWallet.UserId,
                 transaction.Id,
-                $"Você recebeu uma transferência de R$ {transaction.Amount.ToMoneyFormat()} | {sourceName.ToUpper()}"
+                $"Você recebeu uma transferência de R$ {transaction.Amount.ToMoneyFormat()} de {sourceName}"
             );
 
             ctx.Add(notification);
