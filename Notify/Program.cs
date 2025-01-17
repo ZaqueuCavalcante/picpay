@@ -12,3 +12,4 @@ builder.WebHost.UseUrls("http://*:5005");
 app.Run();
 
 public partial class Program;
+public class NotifyProgram : Program { }

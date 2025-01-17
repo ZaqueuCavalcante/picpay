@@ -12,3 +12,4 @@ builder.WebHost.UseUrls("http://*:5004");
 app.Run();
 
 public partial class Program;
+public class AuthProgram : Program { }

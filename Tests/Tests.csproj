@@ -30,6 +30,7 @@
     <ProjectReference Include="..\Api\Api.csproj" />
     <ProjectReference Include="..\Web\Web.csproj" />
     <ProjectReference Include="..\Auth\Auth.csproj" />
+    <ProjectReference Include="..\Notify\Notify.csproj" />
     <ProjectReference Include="..\Worker\Worker.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>

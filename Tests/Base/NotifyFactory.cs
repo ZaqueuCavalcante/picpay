@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Hosting.Server.Features;
 
 namespace PicPay.Tests.Base;
 
-public class AuthFactory : WebApplicationFactory<AuthProgram>
+public class NotifyFactory : WebApplicationFactory<NotifyProgram>
 {
     private bool _disposed;
     private IHost? _kestrelServerHost;

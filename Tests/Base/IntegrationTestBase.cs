@@ -9,6 +9,7 @@ public class IntegrationTestBase
     protected ApiFactory _api = null!;
     protected WorkerFactory _worker = null!;
     protected AuthFactory _auth = null!;
+    protected NotifyFactory _notify = null!;
 
     [OneTimeSetUp]
     public async Task OneTimeSetUp()
@@ -25,6 +26,9 @@ public class IntegrationTestBase
 
         _auth = new AuthFactory();
         using var __ = _auth.Services.CreateScope();
+
+        _notify = new NotifyFactory();
+        using var ___ = _notify.Services.CreateScope();
     }
 
     [OneTimeTearDown]
@@ -38,5 +42,6 @@ public class IntegrationTestBase
         await _api.DisposeAsync();
         await _worker.DisposeAsync();
         await _auth.DisposeAsync();
+        await _notify.DisposeAsync();
     }
 }
