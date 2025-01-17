@@ -11,6 +11,9 @@ public class PicPayDbContext(DbContextOptions<PicPayDbContext> options, Database
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<Notification> Notifications { get; set; }
 
+    public DbSet<DomainEvent> Events { get; set; }
+    public DbSet<PicPayTask> Tasks { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSnakeCaseNamingConvention();
@@ -30,33 +33,5 @@ public class PicPayDbContext(DbContextOptions<PicPayDbContext> options, Database
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
         configurationBuilder.Properties<Enum>().HaveConversion<string>();
-    }
-
-    public async Task SaveTasksAsync(Guid eventId, params IPicPayTask[] tasks)
-    {
-        foreach (var task in tasks)
-        {
-            Add(new PicPayTask(eventId, task));
-        }
-
-        await SaveChangesAsync();
-    }
-
-    public void ResetDb()
-    {
-        if (!Env.IsTesting())
-        {
-            Database.EnsureDeleted();
-            Database.EnsureCreated();
-        }
-    }
-
-    public async Task ResetDbAsync()
-    {
-        if (Env.IsTesting())
-        {
-            await Database.EnsureDeletedAsync();
-            await Database.EnsureCreatedAsync();
-        }
     }
 }

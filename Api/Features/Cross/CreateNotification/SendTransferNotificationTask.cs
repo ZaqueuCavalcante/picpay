@@ -14,19 +14,9 @@ public class SendTransferNotificationTaskHandler(PicPayDbContext ctx) : IPicPayT
         {
             var targetWallet = await ctx.Wallets.AsNoTracking().FirstAsync(x => x.Id == transaction.TargetWalletId);
 
-            var sourceName = await ctx.Users.FromSql(@$"
-                    SELECT name
-                    FROM picpay.users u
-                    INNER JOIN picpay.wallets w ON w.user_id = u.id
-                    WHERE w.id = {transaction.SourceWalletId}")
-                .Select(x => x.Name)
-                .FirstAsync();
+            var sourceName = await ctx.GetWalletOwnerName(transaction.SourceWalletId);
 
-            notification = new Notification(
-                targetWallet.UserId,
-                transaction.Id,
-                $"Você recebeu uma transferência de R$ {transaction.Amount.ToMoneyFormat()} de {sourceName}"
-            );
+            notification = Notification.NewTransfer(targetWallet.UserId, transaction.Id, transaction.Amount, sourceName);
 
             ctx.Add(notification);
             await ctx.SaveChangesAsync();
