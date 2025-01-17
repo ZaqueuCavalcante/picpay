@@ -11,6 +11,8 @@ public class AuthorizeService(AuthorizeSettings settings, IHttpClientFactory fac
         try
         {
             var response = await client.GetAsync($"api/v2/authorize?amount={amount}");
+            if (!response.IsSuccessStatusCode) return new AuthorizeServiceDown();
+
             var authorizeOut = await response.DeserializeTo<AuthorizeOut>() ?? new AuthorizeOut();
             return authorizeOut.Data.Authorization ? true : new TransactionNotAuthorized();
         }

@@ -7,7 +7,7 @@ var app = builder.Build();
 app.UseRouting();
 app.UseEndpoints(options => options.MapControllers());
 
-builder.WebHost.UseUrls("http://*:5004");
+builder.WebHost.UseUrls("http://*:5005");
 
 app.Run();
 
