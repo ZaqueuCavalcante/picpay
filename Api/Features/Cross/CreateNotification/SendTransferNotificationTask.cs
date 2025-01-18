@@ -40,6 +40,10 @@ public class SendTransferNotificationTaskHandler(PicPayDbContext ctx, NotifyServ
             notification.Fail();
         }
 
+        // Tentar 3 vezes com o polly?
+        // Se falhar as 3, reprocessar manualmente depois?
+        // Circuit Break?
+
         await ctx.SaveChangesAsync();
     }
 }

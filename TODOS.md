@@ -1,3 +1,10 @@
 # TODOS
 
-- TESTE COM DELAY PARA VER SE OS SERVICOS FICAM DISPONIVEIS EM LOCAL HOST
+-- TESTES
+
+- Notification enviada com sucesso
+
+- Notification n enviada, Notify Service is down
+
+
+

@@ -8,4 +8,9 @@ public class MerchantHttpClient(HttpClient http)
     {
         return await Http.GetWallet();
     }
+
+    public async Task<List<GetNotificationOut>> GetNotifications()
+    {
+        return await Http.GetNotifications();
+    }
 }

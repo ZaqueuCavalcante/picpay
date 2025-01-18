@@ -52,4 +52,14 @@ public class Notification
     {
         Status = NotificationStatus.Failed;
     }
+
+    public GetNotificationOut ToOut()
+    {
+        return new GetNotificationOut
+        {
+            Id = Id,
+            Status = Status,
+            Message = Message,
+        };
+    }
 }
