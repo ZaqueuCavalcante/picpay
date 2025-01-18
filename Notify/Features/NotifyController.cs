@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using PicPay.Notify.Extensions;
 
 namespace PicPay.Notify.Features;
 
@@ -7,13 +8,14 @@ namespace PicPay.Notify.Features;
 public class NotifyController : ControllerBase
 {
     [HttpPost("api/v1/notify")]
-    public IActionResult Notify([FromQuery] long? amount)
+    public IActionResult Notify([FromBody] NotifyIn data)
     {
         bool notify;
-        if (amount != null)
+        if (data != null)
         {
             long[] fails = [58_90];
-            notify = !fails.Contains(amount.Value);
+            var amount = long.Parse(data.Message.OnlyNumbers());
+            notify = !fails.Contains(amount);
         }
         else
         {

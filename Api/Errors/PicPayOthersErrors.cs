@@ -41,3 +41,9 @@ public class TransactionNotAuthorized : PicPayError
     public override string Code { get; set; } = nameof(TransactionNotAuthorized);
     public override string Message { get; set; } = "Transação não autorizada.";
 }
+
+public class NotifyServiceDown : PicPayError
+{
+    public override string Code { get; set; } = nameof(NotifyServiceDown);
+    public override string Message { get; set; } = "Notificador fora do ar.";
+}

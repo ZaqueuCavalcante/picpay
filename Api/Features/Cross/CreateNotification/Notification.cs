@@ -34,7 +34,7 @@ public class Notification
         return new Notification(
             userId,
             transactionId,
-            $"Você recebeu uma transferência de R$ {amount.ToMoneyFormat()} de {sourceName}"
+            $"Você recebeu uma transferência de {amount.ToMoneyFormat()} de {sourceName}"
         );
     } 
 
