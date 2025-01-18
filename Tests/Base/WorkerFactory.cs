@@ -1,5 +1,4 @@
 using PicPay.Worker;
-using PicPay.Api.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -11,8 +10,6 @@ public class WorkerFactory : WebApplicationFactory<Startup>
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        Env.SetAsTesting();
-
         builder.UseTestServer();
 
         builder.ConfigureAppConfiguration(config =>
