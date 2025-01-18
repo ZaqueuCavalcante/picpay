@@ -10,24 +10,14 @@ public class SendTransferNotificationTaskHandler(PicPayDbContext ctx, NotifyServ
     public async Task Handle(SendTransferNotificationTask task)
     {
         var transaction = await ctx.Transactions.AsNoTracking().FirstAsync(x => x.Id == task.TransactionId);
-        var notification = await ctx.Notifications.FirstOrDefaultAsync(x => x.TransactionId == task.TransactionId);
 
         var targetWallet = await ctx.Wallets.AsNoTracking().FirstAsync(x => x.Id == transaction.TargetWalletId);
         var targetUser = await ctx.Users.AsNoTracking().FirstAsync(x => x.Id == targetWallet.UserId);
 
-        if (notification == null)
-        {
-            var sourceName = await ctx.GetWalletOwnerName(transaction.SourceWalletId);
+        var sourceName = await ctx.GetWalletOwnerName(transaction.SourceWalletId);
+        var notification = Notification.NewTransfer(targetWallet.UserId, transaction.Id, transaction.Amount, sourceName);
 
-            notification = Notification.NewTransfer(targetWallet.UserId, transaction.Id, transaction.Amount, sourceName);
-
-            ctx.Add(notification);
-            await ctx.SaveChangesAsync();
-        }
-        else
-        {
-            notification.Retry();
-        }
+        ctx.Add(notification);
 
         var response = await service.Notify(new NotificationIn { Email = targetUser.Email, Message = notification.Message });
 
@@ -39,10 +29,6 @@ public class SendTransferNotificationTaskHandler(PicPayDbContext ctx, NotifyServ
         {
             notification.Fail();
         }
-
-        // Tentar 3 vezes com o polly?
-        // Se falhar as 3, reprocessar manualmente depois?
-        // Circuit Break?
 
         await ctx.SaveChangesAsync();
     }
