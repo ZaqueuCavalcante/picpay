@@ -1,6 +1,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+namespace PicPay.Web.Extensions;
+
 public static class HttpClientExtensions
 {
     private static readonly JsonSerializerOptions Options = new JsonSerializerOptions

@@ -1,8 +1,127 @@
-﻿@inherits LayoutComponentBase
-<div>
-    <main>
-        <article>
-            @Body
-        </article>
-    </main>
-</div>
+﻿@using PicPay.Web.Features.Cross.GetNotifications
+
+@namespace PicPay.Web.Layout
+
+@inherits LayoutComponentBase
+
+<MudPopoverProvider />
+<MudSnackbarProvider />
+<MudThemeProvider Theme="@_theme" IsDarkMode="@_isDark" />
+<MudDialogProvider CloseOnEscapeKey="true" CloseButton="true" />
+
+<AuthorizeView>
+    <Authorized>
+        <MudLayout>
+            <MudAppBar Elevation="0" Dense="true" ToolBarClass="pl-1 pr-1">
+                <HomeButton />
+                <MudSpacer />
+                <AuthorizeView Roles="Customer, Merchant" Context="authContext">
+                    <NotificationsIconButton />
+                </AuthorizeView>
+                <ThemeIconButton @bind-IsDark="@_isDark" OnClick="@ToggleTheme" />
+                <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Inherit" />
+            </MudAppBar>
+            <MudMainContent Class="pb-12">
+                @Body
+            </MudMainContent>
+        </MudLayout>
+    </Authorized>
+    <NotAuthorized>
+        @if (IsAnonymous())
+        {
+            <MudAppBar Elevation="1" Dense="true">
+                <MudStack Row="true" Class="d-flex justify-space-around flex-grow-1">
+                    <HomeButton />
+                    <MudSpacer />
+                    <ThemeIconButton @bind-IsDark="@_isDark" OnClick="@ToggleTheme" />
+                </MudStack>
+            </MudAppBar>
+            <CascadingValue Name="IsDarkTheme" Value="@_isDark">
+                <MudMainContent>
+                    @Body
+                </MudMainContent>
+            </CascadingValue>
+        }
+        else
+        {
+            <PicPayRedirect />
+        }
+    </NotAuthorized>
+</AuthorizeView>
+
+@inject NavigationManager Nav
+@inject ILocalStorageService LocalStorage
+@inject PicPayAuthStateProvider AuthStateProvider
+@inject ApexCharts.IApexChartService ApexChartService
+@inject IBrowserViewportService BrowserViewportService
+
+@code
+{
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState { get; set; }
+
+    private bool _isDark = true;
+    private Breakpoint _breakpoint;
+
+    private MudTheme _theme = new MudTheme()
+    {
+        PaletteLight = new PaletteLight()
+        {
+            Primary = Colors.Green.Accent2,
+            AppbarBackground = Colors.Green.Default,
+        },
+        PaletteDark = new PaletteDark()
+        {
+            Primary = Colors.Green.Darken2,
+            AppbarBackground = Colors.Green.Default,
+        },
+    };
+
+    private bool IsAnonymous()
+    {
+        var uri = Nav.Uri.ToLower();
+        return uri.EndsWith("/") || uri.Contains("register") || uri.Contains("login");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _breakpoint = await BrowserViewportService.GetCurrentBreakpointAsync();
+        var isDark = await LocalStorage.GetItemAsync("IsDark");
+        _isDark = isDark == null || bool.Parse(isDark);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        await UpdateChartsTheme();
+    }
+
+    private async Task ToggleTheme()
+    {
+        _isDark = !_isDark;
+
+        await UpdateChartsTheme();
+
+        await LocalStorage.SetItemAsync("IsDark", _isDark.ToString()); 
+    }
+
+    private async Task UpdateChartsTheme()
+    {
+        var options = new ApexCharts.ApexChartBaseOptions
+        {
+            Theme = new ApexCharts.Theme
+            {
+                Mode = _isDark ? ApexCharts.Mode.Dark : ApexCharts.Mode.Light
+            }
+        };
+
+        await ApexChartService.SetGlobalOptionsAsync(options, true);
+    }
+
+    private async Task Logout()
+    {
+        await LocalStorage.RemoveItemAsync("AccessToken");
+        AuthStateProvider.MarkUserAsLoggedOut();
+        Nav.NavigateTo("/");
+    }
+}
