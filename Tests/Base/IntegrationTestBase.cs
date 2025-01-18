@@ -1,4 +1,5 @@
 using PicPay.Api.Database;
+using PicPay.Api.Extensions;
 using PicPay.Tests.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +15,8 @@ public class IntegrationTestBase
     [OneTimeSetUp]
     public async Task OneTimeSetUp()
     {
+        Env.SetAsTesting();
+
         _api = new ApiFactory();
         using var scope = _api.Services.CreateScope();
         var ctx = scope.ServiceProvider.GetRequiredService<PicPayDbContext>();
