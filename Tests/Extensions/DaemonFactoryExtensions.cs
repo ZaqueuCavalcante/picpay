@@ -11,6 +11,12 @@ public static class WorkerFactoryExtensions
         return scope.ServiceProvider.GetRequiredService<PicPayDbContext>();
     }
 
+    public static async Task ProcessAll(this WorkerFactory factory)
+    {
+        await factory.AwaitEventsProcessing();
+        await factory.AwaitTasksProcessing();
+    }
+
     public static async Task AwaitEventsProcessing(this WorkerFactory factory)
     {
         await using var ctx = factory.GetDbContext();

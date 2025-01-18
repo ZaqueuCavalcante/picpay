@@ -8,20 +8,15 @@ public partial class IntegrationTests : IntegrationTestBase
     public async Task Should_send_transfer_notification_with_success()
     {
         // Arrange
-        var sourceClient = await _api.LoggedAsCustomer();
-        var sourceWalletBefore = await sourceClient.GetWallet();
-
-        var admClient = await _api.LoggedAsAdm();
-        await admClient.Deposit(420_00, sourceWalletBefore.Id);
+        var sourceClient = await _api.LoggedAsCustomer(420_00);
 
         var targetClient = await _api.LoggedAsMerchant();
         var targetWalletBefore = await targetClient.GetWallet();
 
-        await sourceClient.Transfer(200_00, targetWalletBefore.Id);
+        await sourceClient.Transfer(220_00, targetWalletBefore.Id);
 
         // Act
-        await _worker.AwaitEventsProcessing();
-        await _worker.AwaitTasksProcessing();
+        await _worker.ProcessAll();
 
         // Assert
         var notifications = await targetClient.GetNotifications();
@@ -33,20 +28,15 @@ public partial class IntegrationTests : IntegrationTestBase
     public async Task Should_try_send_transfer_notification_with_error()
     {
         // Arrange
-        var sourceClient = await _api.LoggedAsCustomer();
-        var sourceWalletBefore = await sourceClient.GetWallet();
-
-        var admClient = await _api.LoggedAsAdm();
-        await admClient.Deposit(420_00, sourceWalletBefore.Id);
+        var sourceClient = await _api.LoggedAsCustomer(420_00);
 
         var targetClient = await _api.LoggedAsMerchant();
         var targetWalletBefore = await targetClient.GetWallet();
 
-        await sourceClient.Transfer(58_90, targetWalletBefore.Id);
+        await sourceClient.Transfer(50_00, targetWalletBefore.Id);
 
         // Act
-        await _worker.AwaitEventsProcessing();
-        await _worker.AwaitTasksProcessing();
+        await _worker.ProcessAll();
 
         // Assert
         var notifications = await targetClient.GetNotifications();

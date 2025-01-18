@@ -44,6 +44,7 @@ Segue um resumo do que implementei:
 - Foco em segurança e consistência
 - Nada hard-coded, tudo via configuração
 - Auditoria de todas as operacoes
+- Ao final da suite de testes, garanto que a soma de todos os saldo da zero
 
 ## Sumário
 

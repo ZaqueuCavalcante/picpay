@@ -57,7 +57,7 @@ public partial class IntegrationTests : IntegrationTestBase
         var targetWalletBefore = await targetClient.GetWallet();
 
         // Act
-        var transfer01 = admClient.Deposit(200_00, targetWalletBefore.Id);
+        var transfer01 = admClient.Deposit(250_00, targetWalletBefore.Id);
         var transfer02 = admClient.Deposit(150_00, targetWalletBefore.Id);
 
         var transfers = await Task.WhenAll(transfer01, transfer02);
@@ -66,7 +66,7 @@ public partial class IntegrationTests : IntegrationTestBase
         transfers.Should().AllSatisfy(t => t.IsSuccess());
 
         var targetWalletAfter = await targetClient.GetWallet();
-        targetWalletAfter.Balance.Should().Be(350_00);
+        targetWalletAfter.Balance.Should().Be(400_00);
     }
 
     [Test]

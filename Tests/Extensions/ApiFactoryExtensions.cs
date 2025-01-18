@@ -50,30 +50,46 @@ public static class ApiFactoryExtensions
         return new(client);
     }
 
-    public static async Task<CustomerHttpClient> LoggedAsCustomer(this ApiFactory factory)
+    public static async Task<CustomerHttpClient> LoggedAsCustomer(this ApiFactory factory, long? balance = 0)
     {
         var client = factory.GetClient();
 
         var cpf = Documents.GetRandomCpf();
+        var name = Person.GetRandomName();
         var email = Emails.New;
         var password = Guid.NewGuid().ToString();
-        await client.CreateCustomer(cpf: cpf, email: email, password: password);
+        await client.CreateCustomer(cpf: cpf, name: name, email: email, password: password);
 
         await client.Login(email, password);
+
+        if (balance != null)
+        {
+            var wallet = await client.GetWallet();
+            var admClient = await factory.LoggedAsAdm();
+            await admClient.Deposit(balance.Value, wallet.Id);
+        }
 
         return new(client);
     }
 
-    public static async Task<MerchantHttpClient> LoggedAsMerchant(this ApiFactory factory)
+    public static async Task<MerchantHttpClient> LoggedAsMerchant(this ApiFactory factory, long? balance = 0)
     {
         var client = factory.GetClient();
 
         var cnpj = Documents.GetRandomCnpj();
+        var name = Company.GetRandomName();
         var email = Emails.New;
         var password = Guid.NewGuid().ToString();
-        await client.CreateMerchant(cnpj: cnpj, email: email, password: password);
+        await client.CreateMerchant(cnpj: cnpj, name: name, email: email, password: password);
 
         await client.Login(email, password);
+
+        if (balance != null)
+        {
+            var wallet = await client.GetWallet();
+            var admClient = await factory.LoggedAsAdm();
+            await admClient.Deposit(balance.Value, wallet.Id);
+        }
 
         return new(client);
     }

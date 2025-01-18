@@ -7,7 +7,6 @@ public class Notification
     public Guid TransactionId { get; private set; }
     public string Message { get; private set; }
     public NotificationStatus Status { get; private set; }
-    public int Retries { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
     private Notification() { }
@@ -37,11 +36,6 @@ public class Notification
             $"Você recebeu uma transferência de {amount.ToMoneyFormat()} de {sourceName}"
         );
     } 
-
-    public void Retry()
-    {
-        Retries ++;
-    }
 
     public void Success()
     {

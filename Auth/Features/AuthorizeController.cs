@@ -9,12 +9,12 @@ public class AuthorizeController : ControllerBase
     [HttpGet("api/v2/authorize")]
     public IActionResult Authorize([FromQuery] long? amount)
     {
-        if (amount != null && amount.Value == 374_58) return new StatusCodeResult(504);
+        if (amount != null && amount.Value == 100_00) return new StatusCodeResult(504);
 
         bool authorize;
         if (amount != null)
         {
-            long[] fails = [159_75];
+            long[] fails = [200_00];
             authorize = !fails.Contains(amount.Value);
         }
         else
