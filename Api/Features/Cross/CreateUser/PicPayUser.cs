@@ -36,7 +36,9 @@ public class PicPayUser
         string document,
         string email
     ) {
-        if (!document.IsValidDocument()) return new InvalidDocument();
+        var docType = role == UserRole.Customer ? DocType.CPF : DocType.CNPJ;
+
+        if (!document.IsValidDocument(docType)) return new InvalidDocument();
 
         return new PicPayUser(role, name, document, email);
     }

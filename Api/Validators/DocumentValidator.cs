@@ -5,9 +5,12 @@ public static class DocumentValidator
     private static readonly int[] _firstKeyValidators = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
     private static readonly int[] _secondKeyValidators = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
 
-    public static bool IsValidDocument(this string value)
+    public static bool IsValidDocument(this string value, DocType docType)
     {
         value = value.OnlyNumbers();
+
+        if (docType == DocType.CPF && value.Length != 11) return false;
+        if (docType == DocType.CNPJ && value.Length != 14) return false;
 
         if (value.Length == 11) return ValidCpf(value);
 
