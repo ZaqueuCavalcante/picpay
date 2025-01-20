@@ -6,7 +6,7 @@
 
 <MudPopoverProvider />
 <MudSnackbarProvider />
-<MudThemeProvider Theme="@_theme" IsDarkMode="@_isDark" />
+<MudThemeProvider Theme="@_theme" />
 <MudDialogProvider CloseOnEscapeKey="true" CloseButton="true" />
 
 <AuthorizeView>
@@ -18,7 +18,6 @@
                 <AuthorizeView Roles="Customer, Merchant" Context="authContext">
                     <NotificationsIconButton />
                 </AuthorizeView>
-                <ThemeIconButton @bind-IsDark="@_isDark" OnClick="@ToggleTheme" />
                 <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Inherit" />
             </MudAppBar>
             <MudMainContent Class="pb-12">
@@ -33,14 +32,11 @@
                 <MudStack Row="true" Class="d-flex justify-space-around flex-grow-1">
                     <HomeButton />
                     <MudSpacer />
-                    <ThemeIconButton @bind-IsDark="@_isDark" OnClick="@ToggleTheme" />
                 </MudStack>
             </MudAppBar>
-            <CascadingValue Name="IsDarkTheme" Value="@_isDark">
                 <MudMainContent>
                     @Body
                 </MudMainContent>
-            </CascadingValue>
         }
         else
         {
@@ -60,7 +56,6 @@
     [CascadingParameter]
     public Task<AuthenticationState> AuthState { get; set; }
 
-    private bool _isDark = true;
     private Breakpoint _breakpoint;
 
     private MudTheme _theme = new MudTheme()
@@ -68,11 +63,6 @@
         PaletteLight = new PaletteLight()
         {
             Primary = Colors.Green.Accent2,
-            AppbarBackground = Colors.Green.Default,
-        },
-        PaletteDark = new PaletteDark()
-        {
-            Primary = Colors.Green.Darken2,
             AppbarBackground = Colors.Green.Default,
         },
     };
@@ -86,8 +76,6 @@
     protected override async Task OnInitializedAsync()
     {
         _breakpoint = await BrowserViewportService.GetCurrentBreakpointAsync();
-        var isDark = await LocalStorage.GetItemAsync("IsDark");
-        _isDark = isDark == null || bool.Parse(isDark);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -96,22 +84,13 @@
         await UpdateChartsTheme();
     }
 
-    private async Task ToggleTheme()
-    {
-        _isDark = !_isDark;
-
-        await UpdateChartsTheme();
-
-        await LocalStorage.SetItemAsync("IsDark", _isDark.ToString()); 
-    }
-
     private async Task UpdateChartsTheme()
     {
         var options = new ApexCharts.ApexChartBaseOptions
         {
             Theme = new ApexCharts.Theme
             {
-                Mode = _isDark ? ApexCharts.Mode.Dark : ApexCharts.Mode.Light
+                Mode = ApexCharts.Mode.Light
             }
         };
 

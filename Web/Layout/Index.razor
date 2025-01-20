@@ -1,41 +1,37 @@
 ﻿@namespace PicPay.Web.Layout
 
 <MudContainer MaxWidth="MaxWidth.Large">
-    <MudGrid Class="mt-0 mb-6">
-        <MudItem xs="12" sm="12" md="5" lg="5">
-            <MudStack Justify="Justify.Center" Style="height: 100%">
-                <MudItem>
-                    <MudText Typo="Typo.h3" Class="mb-6">
-                        <strong>Com PicPay, a experiência é outra</strong>
-                    </MudText>
-                    <MudButton
-                        Class="px-8"
-                        EndIcon="@Icons.Material.Filled.ArrowForward"
-                        IconSize="Size.Large"
-                        Variant="Variant.Filled"
-                        Style="height: 60px;"
-                        Color="Color.Primary"
-                        Href="/register"
-                    >
-                        <MudText Typo="Typo.h6">
-                            Abrir conta
-                        </MudText>
-                    </MudButton>
-                </MudItem>
-            </MudStack>
-        </MudItem>
-
-        <MudItem xs="12" sm="12" md="7" lg="7">
-            <MudPaper Class="pa-2" Elevation="3">
-                <img src="veveta.webp" width="100%" style="border-radius: 1%">
-            </MudPaper>
-        </MudItem>
-
-    </MudGrid>
+    <MudStack Justify="Justify.Center" AlignItems="AlignItems.Center">
+        <MudText Typo="Typo.h4" Class="my-12">
+            <strong>Com PicPay, a experiência é outra</strong>
+        </MudText>
+    </MudStack>
+    <MudStack Justify="Justify.Center" AlignItems="AlignItems.Center">
+            <MudButton
+                Class="px-8 mb-3"
+                StartIcon="@Icons.Material.Filled.Assignment"
+                IconSize="Size.Large"
+                Variant="Variant.Filled"
+                Style="width: 250px; height: 60px;"
+                Color="Color.Primary"
+                Href="/register"
+            >
+                <MudText Typo="Typo.h6">
+                    Abrir conta
+                </MudText>
+            </MudButton>
+            <MudButton
+                Class="px-8"
+                StartIcon="@Icons.Material.Filled.Login"
+                IconSize="Size.Large"
+                Variant="Variant.Filled"
+                Style="width: 250px; height: 60px;"
+                Color="Color.Primary"
+                Href="/login"
+            >
+                <MudText Typo="Typo.h6">
+                    Entrar
+                </MudText>
+            </MudButton>
+    </MudStack>
 </MudContainer>
-
-@code
-{
-    [CascadingParameter(Name = "IsDarkTheme")]
-    public bool IsDarkTheme { get; set; }
-}
