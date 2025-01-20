@@ -31,7 +31,7 @@ internal class RequestsExamples : IExamplesProvider<CreateMerchantIn>
             "Gilbirdelson Lanches",
             "55.774.025/0001-34",
             "gilbirdelson.lanches@gmail.com",
-            "dc9ab8a5960b44edbcd71ba5ec1a0f");
+            "dc9ab8a59@60b44edbcd71ba5Ec1a0f");
     }
 }
 

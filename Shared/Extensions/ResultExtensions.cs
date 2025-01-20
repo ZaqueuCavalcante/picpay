@@ -1,5 +1,3 @@
-using OneOf;
-
 namespace PicPay.Shared;
 
 public static class ResultExtensions

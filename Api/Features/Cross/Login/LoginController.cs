@@ -31,13 +31,13 @@ internal class RequestsExamples : IMultipleExamplesProvider<LoginIn>
 			"Cliente - João da Silva",
 			new LoginIn(
                 "joao.da.silva@gmail.com",
-                "bfD43ae8c46cb9fd18")
+                "bfD43ae@8c46cb9fd18")
 		);
         yield return SwaggerExample.Create(
 			"Lojista - Gilbirdelson Lanches",
 			new LoginIn(
                 "gilbirdelson.lanches@gmail.com",
-                "dc9ab8a5960b44edbcd71ba5ec1a0f")
+                "dc9ab8a59@60b44edbcd71ba5Ec1a0f")
 		);
     }
 }

@@ -31,7 +31,7 @@ internal class RequestsExamples : IExamplesProvider<CreateCustomerIn>
             "João da Silva",
             "084.128.108-48",
             "joao.da.silva@gmail.com",
-            "bfD43ae8c46cb9fd18");
+            "bfD43ae@8c46cb9fd18");
     }
 }
 

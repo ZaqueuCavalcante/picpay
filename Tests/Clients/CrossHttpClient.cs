@@ -13,7 +13,7 @@ public static class CrossHttpClient
         string name = "João da Silva",
         string cpf = "833.779.773-84",
         string email = "joao.da.silva@gmail.com",
-        string password = "bfD43ae8c46cb9fd18"
+        string password = "bfD43ae@8c46cb9fd18"
     ) {
         var client = new CreateCustomerClient(http);
         return await client.Create(name, cpf, email, password);
@@ -24,7 +24,7 @@ public static class CrossHttpClient
         string name = "Gilbirdelson Lanches",
         string cnpj = "55.774.025/0001-34",
         string email = "gilbirdelson.lanches@gmail.com",
-        string password = "dc9ab8a5960b44edbcd71ba5ec1a0f"
+        string password = "dc9ab8a59@60b44edbcd71ba5Ec1a0f"
     ) {
         var client = new CreateMerchantClient(http);
         return await client.Create(name, cnpj, email, password);

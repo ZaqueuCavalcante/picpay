@@ -35,7 +35,7 @@ public static class ApiFactoryExtensions
             "Admilson",
             "22.896.431/0001-10",
             "admilson@picpay.com",
-            "efd46375c2a74fe6bcfc7d20f67e23ab"
+            "efd46375c2A74fe6b@cfc7d20f67e23ab"
         );
 
         await service.Create(userIn);
@@ -45,7 +45,7 @@ public static class ApiFactoryExtensions
     {
         var client = factory.GetClient();
 
-        await client.Login("admilson@picpay.com", "efd46375c2a74fe6bcfc7d20f67e23ab");
+        await client.Login("admilson@picpay.com", "efd46375c2A74fe6b@cfc7d20f67e23ab");
 
         return new(client);
     }
@@ -57,7 +57,7 @@ public static class ApiFactoryExtensions
         var cpf = Documents.GetRandomCpf();
         var name = Person.GetRandomName();
         var email = Emails.New;
-        var password = Guid.NewGuid().ToString();
+        var password = "bfD43ae@8c46cb9fd18";
         await client.CreateCustomer(cpf: cpf, name: name, email: email, password: password);
 
         await client.Login(email, password);
@@ -79,7 +79,7 @@ public static class ApiFactoryExtensions
         var cnpj = Documents.GetRandomCnpj();
         var name = Company.GetRandomName();
         var email = Emails.New;
-        var password = Guid.NewGuid().ToString();
+        var password = "bfD43ae@8c46cb9fd18";
         await client.CreateMerchant(cnpj: cnpj, name: name, email: email, password: password);
 
         await client.Login(email, password);

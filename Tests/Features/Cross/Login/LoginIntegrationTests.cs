@@ -14,7 +14,7 @@ public partial class IntegrationTests : IntegrationTestBase
 
         var cpf = "660.097.553-95";
         var email = Emails.New;
-        var password = Guid.NewGuid().ToString();
+        var password = "bfD43ae@8c46cb9fd18";
         await client.CreateCustomer(cpf: cpf, email: email, password: password);
 
         // Act
@@ -32,7 +32,7 @@ public partial class IntegrationTests : IntegrationTestBase
 
         var cnpj = "14.208.727/0001-73";
         var email = Emails.New;
-        var password = Guid.NewGuid().ToString();
+        var password = "bfD43ae@8c46cb9fd18";
         await client.CreateMerchant(cnpj: cnpj, email: email, password: password);
 
         // Act
