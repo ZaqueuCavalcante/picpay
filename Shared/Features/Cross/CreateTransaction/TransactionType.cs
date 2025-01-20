@@ -4,8 +4,8 @@ namespace PicPay.Shared;
 
 public enum TransactionType
 {
-    [Description("Depósito")]
-    Deposit,
+    [Description("Bônus")]
+    Bonus,
 
     [Description("Transferência")]
     Transfer,

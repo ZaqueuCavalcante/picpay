@@ -8,47 +8,47 @@ public partial class IntegrationTests : IntegrationTestBase
     [Test]
     [TestCase(0)]
     [TestCase(-123)]
-    public async Task Should_not_deposit_invalid_amount(long amount)
+    public async Task Should_not_bonus_invalid_amount(long amount)
     {
         // Arrange
         var client = await _api.LoggedAsAdm();
 
         // Act
-        var response = await client.Deposit(amount, Guid.NewGuid());
+        var response = await client.Bonus(amount, Guid.NewGuid());
 
         // Assert
-        response.ShouldBeError(new InvalidDepositAmount());
+        response.ShouldBeError(new InvalidBonusAmount());
     }
 
     [Test]
-    public async Task Should_not_deposit_to_non_existent_wallet()
+    public async Task Should_not_bonus_to_non_existent_wallet()
     {
         // Arrange
         var client = await _api.LoggedAsAdm();
 
         // Act
-        var response = await client.Deposit(123, Guid.NewGuid());
+        var response = await client.Bonus(123, Guid.NewGuid());
 
         // Assert
         response.ShouldBeError(new WalletNotFound());
     }
 
     [Test]
-    public async Task Should_not_deposit_to_self_wallet()
+    public async Task Should_not_bonus_to_self_wallet()
     {
         // Arrange
         var client = await _api.LoggedAsAdm();
         var wallet = await client.GetWallet();
 
         // Act
-        var response = await client.Deposit(456, wallet.Id);
+        var response = await client.Bonus(456, wallet.Id);
 
         // Assert
         response.ShouldBeError(new InvalidTargetTransferWallet());
     }
 
     [Test]
-    public async Task Should_assert_correct_wallet_balances_in_same_target_deposit_parallel_requests()
+    public async Task Should_assert_correct_wallet_balances_in_same_target_bonus_parallel_requests()
     {
         // Arrange
         var admClient = await _api.LoggedAsAdm();
@@ -57,8 +57,8 @@ public partial class IntegrationTests : IntegrationTestBase
         var targetWalletBefore = await targetClient.GetWallet();
 
         // Act
-        var transfer01 = admClient.Deposit(250_00, targetWalletBefore.Id);
-        var transfer02 = admClient.Deposit(150_00, targetWalletBefore.Id);
+        var transfer01 = admClient.Bonus(250_00, targetWalletBefore.Id);
+        var transfer02 = admClient.Bonus(150_00, targetWalletBefore.Id);
 
         var transfers = await Task.WhenAll(transfer01, transfer02);
 
@@ -70,7 +70,7 @@ public partial class IntegrationTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task Should_assert_correct_wallet_balances_in_different_targets_deposit_parallel_requests()
+    public async Task Should_assert_correct_wallet_balances_in_different_targets_bonus_parallel_requests()
     {
         // Arrange
         var admClient = await _api.LoggedAsAdm();
@@ -82,8 +82,8 @@ public partial class IntegrationTests : IntegrationTestBase
         var targetWalletBBefore = await targetClientB.GetWallet();
 
         // Act
-        var transfer01 = admClient.Deposit(200_00, targetWalletABefore.Id);
-        var transfer02 = admClient.Deposit(350_00, targetWalletBBefore.Id);
+        var transfer01 = admClient.Bonus(200_00, targetWalletABefore.Id);
+        var transfer02 = admClient.Bonus(350_00, targetWalletBBefore.Id);
 
         var transfers = await Task.WhenAll(transfer01, transfer02);
 

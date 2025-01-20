@@ -66,7 +66,7 @@ public static class ApiFactoryExtensions
         {
             var wallet = await client.GetWallet();
             var admClient = await factory.LoggedAsAdm();
-            await admClient.Deposit(balance.Value, wallet.Id);
+            await admClient.Bonus(balance.Value, wallet.Id);
         }
 
         return new(client);
@@ -88,7 +88,7 @@ public static class ApiFactoryExtensions
         {
             var wallet = await client.GetWallet();
             var admClient = await factory.LoggedAsAdm();
-            await admClient.Deposit(balance.Value, wallet.Id);
+            await admClient.Bonus(balance.Value, wallet.Id);
         }
 
         return new(client);

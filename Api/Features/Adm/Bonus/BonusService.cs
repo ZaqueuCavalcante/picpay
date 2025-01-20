@@ -1,12 +1,12 @@
 using PicPay.Api.Features.Cross.CreateTransaction;
 
-namespace PicPay.Api.Features.Adm.Deposit;
+namespace PicPay.Api.Features.Adm.Bonus;
 
-public class DepositService(PicPayDbContext ctx) : IPicPayService
+public class BonusService(PicPayDbContext ctx) : IPicPayService
 {
-    public async Task<OneOf<DepositOut, PicPayError>> Deposit(Guid userId, DepositIn data)
+    public async Task<OneOf<BonusOut, PicPayError>> Bonus(Guid userId, BonusIn data)
     {
-        if (data.Amount <= 0) return new InvalidDepositAmount();
+        if (data.Amount <= 0) return new InvalidBonusAmount();
 
         await ctx.Database.BeginTransactionAsync();
 
@@ -21,13 +21,13 @@ public class DepositService(PicPayDbContext ctx) : IPicPayService
         sourceWallet.Take(data.Amount);
         targetWallet.Put(data.Amount);
 
-        var transaction = new Transaction(sourceWallet.Id, targetWallet.Id, TransactionType.Deposit, data.Amount);
+        var transaction = new Transaction(sourceWallet.Id, targetWallet.Id, TransactionType.Bonus, data.Amount);
         ctx.Add(transaction);
 
         await ctx.SaveChangesAsync();
 
         await ctx.Database.CommitTransactionAsync();
 
-        return new DepositOut { TransactionId = transaction.Id };
+        return new BonusOut { TransactionId = transaction.Id };
     }
 }

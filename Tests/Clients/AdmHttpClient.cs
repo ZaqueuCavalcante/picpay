@@ -1,4 +1,4 @@
-using PicPay.Web.Features.Cross.Deposit;
+using PicPay.Web.Features.Cross.Bonus;
 
 namespace PicPay.Tests.Clients;
 
@@ -6,10 +6,10 @@ public class AdmHttpClient(HttpClient http)
 {
     public readonly HttpClient Http = http;
 
-    public async Task<OneOf<DepositOut, ErrorOut>> Deposit(long amount, Guid walletId)
+    public async Task<OneOf<BonusOut, ErrorOut>> Bonus(long amount, Guid walletId)
     {
-        var client = new DepositClient(Http);
-        return await client.Deposit(amount, walletId);
+        var client = new BonusClient(Http);
+        return await client.Bonus(amount, walletId);
     }
 
     public async Task<GetWalletOut> GetWallet()
