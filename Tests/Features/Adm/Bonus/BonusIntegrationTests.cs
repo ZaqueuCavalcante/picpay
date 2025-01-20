@@ -44,7 +44,7 @@ public partial class IntegrationTests : IntegrationTestBase
         var response = await client.Bonus(456, wallet.Id);
 
         // Assert
-        response.ShouldBeError(new InvalidTargetTransferWallet());
+        response.ShouldBeError(new InvalidTargetWallet());
     }
 
     [Test]

@@ -44,7 +44,7 @@ public partial class IntegrationTests : IntegrationTestBase
         var response = await client.Transfer(34_00, wallet.Id);
 
         // Assert
-        response.ShouldBeError(new InvalidTargetTransferWallet());
+        response.ShouldBeError(new InvalidTargetWallet());
     }
 
     [Test]
@@ -60,7 +60,7 @@ public partial class IntegrationTests : IntegrationTestBase
         var response = await sourceClient.Transfer(56_00, targetWallet.Id);
 
         // Assert
-        response.ShouldBeError(new InvalidTargetTransferWallet());
+        response.ShouldBeError(new InvalidTargetWallet());
     }
 
     [Test]

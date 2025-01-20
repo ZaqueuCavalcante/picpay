@@ -2,12 +2,12 @@
 
 - Register
     - Customer
-        - Validacao dos dados
-        - Unicidade de email e cpf
+        - ✅ Validacao dos dados
+        - ✅ Unicidade de email e cpf
         - Bonus de R$ 10,00 ao se cadastrar (direto ou evento?)
     - Merchant
-        - Validacao dos dados
-        - Unicidade de email e cpf
+        - ✅ Validacao dos dados
+        - ✅ Unicidade de email e cnpj
 
 - Login
     - Adm, Customer and Merchant

@@ -24,8 +24,8 @@ public class InvalidTransferAmount : PicPayError
     public override string Message { get; set; } = "O valor da transferência deve ser maior que zero.";
 }
 
-public class InvalidTargetTransferWallet : PicPayError
+public class InvalidTargetWallet : PicPayError
 {
-    public override string Code { get; set; } = nameof(InvalidTargetTransferWallet);
-    public override string Message { get; set; } = "Carteira de destino da transferência inválida.";
+    public override string Code { get; set; } = nameof(InvalidTargetWallet);
+    public override string Message { get; set; } = "Carteira de destino inválida.";
 }

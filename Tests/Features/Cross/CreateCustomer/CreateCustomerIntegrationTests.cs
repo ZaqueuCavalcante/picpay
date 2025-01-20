@@ -1,6 +1,6 @@
 using PicPay.Api.Errors;
-using PicPay.Tests.Clients;
 using PicPay.Tests.Data;
+using PicPay.Tests.Clients;
 using PicPay.Tests.Extensions;
 
 namespace PicPay.Tests.Integration;
