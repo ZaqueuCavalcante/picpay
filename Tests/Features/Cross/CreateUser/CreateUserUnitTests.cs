@@ -19,6 +19,17 @@ public class CreateUserUnitTests
     }
 
     [Test]
+    [TestCaseSource(typeof(Documents), nameof(Documents.ValidCpfs))]
+    public void Should_create_user_with_valid_cpf(string cpf)
+    {
+        // Arrange
+        var result = PicPayUser.New(UserRole.Customer, "Zezinho", cpf, "zezinho@gmail.com");
+
+        // Act / Assert
+        result.ShouldBeSuccess();
+    }
+
+    [Test]
     [TestCaseSource(typeof(Documents), nameof(Documents.InvalidCnpjs))]
     public void Should_not_create_user_with_invalid_cnpj(string cnpj)
     {
@@ -27,5 +38,16 @@ public class CreateUserUnitTests
 
         // Act / Assert
         result.ShouldBeError(new InvalidDocument());
+    }
+
+    [Test]
+    [TestCaseSource(typeof(Documents), nameof(Documents.ValidCnpjs))]
+    public void Should_create_user_with_valid_cnpj(string cnpj)
+    {
+        // Arrange
+        var result = PicPayUser.New(UserRole.Customer, "Zezinho", cnpj, "zezinho@gmail.com");
+
+        // Act / Assert
+        result.ShouldBeSuccess();
     }
 }

@@ -43,4 +43,10 @@ public static class JsonExtensions
         oneOf.GetError().Code.Should().Be(expected.Code);
         oneOf.GetError().Message.Should().Be(expected.Message);
     }
+
+    public static void ShouldBeSuccessr<S>(this OneOf<S, PicPayError> oneOf)
+    {
+        oneOf.IsSuccess().Should().BeTrue();
+        oneOf.IsError().Should().BeFalse();
+    }
 }

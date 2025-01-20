@@ -7,7 +7,7 @@ public class CreateUserService(PicPayDbContext ctx, IPasswordHasher hasher) : IP
     public async Task<OneOf<CreateUserOut, PicPayError>> Create(CreateUserIn data)
     {
         // Email invalido
-        // Senha fraca
+        // Senha fraca (regras do syki)
         // Documento ja usado
         // Email ja usado
 
