@@ -18,6 +18,7 @@ public class Startup
 
         services.AddOpenApi();
         services.AddDocsConfigs();
+        services.AddCorsConfigs();
     }
 
     public static void Configure(IApplicationBuilder app, PicPayDbContext ctx)
@@ -25,6 +26,7 @@ public class Startup
         ctx.ResetDb();
 
         app.UseRouting();
+        app.UseCors();
 
         app.UseAuthentication();
         app.UseAuthorization();

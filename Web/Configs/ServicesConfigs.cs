@@ -5,6 +5,8 @@ public static class ServicesConfigs
     public static void AddServicesConfigs(this WebAssemblyHostBuilder builder)
     {
         builder.Services.AddServiceConfigs(typeof(IPicPayClient));
+
+        builder.Services.AddScoped<ClipboardService>();
     }
 
     private static void AddServiceConfigs(this IServiceCollection services, Type? marker)

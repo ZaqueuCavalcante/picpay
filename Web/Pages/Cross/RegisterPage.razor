@@ -1,0 +1,67 @@
+﻿@namespace PicPay.Web.Pages.Cross
+
+@page "/register"
+
+<PicPayPageTitle Title="Cadastro" />
+
+<MudContainer Class="mt-4 mb-8" MaxWidth="MaxWidth.ExtraSmall">
+    <MudOverlay @bind-Visible="@_loading" LightBackground="true" Absolute="false">
+        <MudProgressCircular Color="Color.Info" Indeterminate="true" Size="Size.Large" />
+    </MudOverlay>
+    <MudForm @ref="@_form">
+        <MudCard Class="px-4 pt-0 pb-4">
+            <MudImage Src="picpay-logo.png" Alt="PicPay" Elevation="25" Class="rounded-lg mx-20 mt-10 mb-10"/>
+            <MudCardContent Class="px-0 mx-4 pt-8 pb-0">
+                <PicPayTextField Label="Nome" @bind-Value="@_name" />
+                <PicPayTextField Label="Cpf" @bind-Value="@_cpf" Mask="@(new PatternMask("000.000.000-00"))" />
+                <PicPayTextField Label="Email" @bind-Value="@_email" />
+                <PasswordTextField Required="true" @bind-Value="@_password" />
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton
+                    OnClick="@Submit"
+                    Size="Size.Large"
+                    Color="Color.Primary"
+                    Variant="Variant.Filled"
+                    Class="mx-auto mb-4 px-12 my-0"
+                >
+                    Cadastrar
+                </MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudForm>
+</MudContainer>
+
+@inject ISnackbar Snackbar
+@inject NavigationManager Nav
+@inject CreateCustomerClient CreateCustomerClient
+
+@code
+{
+    private bool _saved;
+    private bool _loading;
+    private MudForm _form;
+
+    private string _name;
+    private string _cpf;
+    private string _email;
+    private string _password;
+
+    private async Task Submit()
+    {
+        await _form.Validate();
+        if (!_form.IsValid) return;
+
+        _loading = true;
+        var response = await CreateCustomerClient.Create(_name, _cpf, _email, _password);
+        if (response.IsSuccess())
+        {
+            _saved = true;
+        }
+        else
+        {
+            Snackbar.Add(response.GetError().Message, Severity.Error);
+        }
+        _loading = false;
+    }
+}

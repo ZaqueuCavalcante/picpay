@@ -7,3 +7,5 @@ global using PicPay.Web.Extensions;
 global using OneOf;
 global using System.Net.Http.Json;
 global using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+
+global using PicPay.Web.Features.Cross.CreateCustomer;

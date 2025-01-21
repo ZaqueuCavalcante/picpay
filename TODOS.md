@@ -4,13 +4,13 @@
     - Customer
         - ✅ Validacao dos dados
         - ✅ Unicidade de email e cpf
-        - Bonus de R$ 10,00 ao se cadastrar (direto ou evento?)
+        - ✅ Bonus de R$ 10,00 ao fazer primeiro login
     - Merchant
         - ✅ Validacao dos dados
         - ✅ Unicidade de email e cnpj
 
 - Login
-    - Adm, Customer and Merchant
+    - ✅ Adm, Customer and Merchant
 
 - Customer
     - Olá, [UserName]
@@ -50,8 +50,6 @@
 
 
 
-- BONUS AO CRIAR CONTA
-- CHAVE PIX
 - SCANEAR QR CODE
 - LINK DE PAGAMENTO (ESSENCIAL!!!!!)
 

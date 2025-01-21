@@ -1,0 +1,59 @@
+@namespace PicPay.Web.Components.Custom
+
+<MudTextField
+    T="string"
+    Class="@Class"
+    Label="@Label"
+    Value="@Value"
+    Mask="@Mask"
+    Required="true"
+    Immediate="true"
+    ReadOnly="@ReadOnly"
+    Margin="Margin.Dense"
+    MaxLength="@MaxLength"
+    AutoFocus="@AutoFocus"
+    RequiredError="Informe!"
+    OnlyValidateIfDirty="true"
+    Variant="Variant.Outlined"
+    ValueChanged="@ValueChanged"
+    OnAdornmentClick="@OnAdornmentClick"
+	AdornmentIcon="@Icons.Material.Filled.ContentCopy"
+    Adornment="@(CopyAdornment ? Adornment.End : Adornment.None)"
+/>
+
+@inject ClipboardService ClipboardService
+
+@code
+{
+    [Parameter]
+    public string Value { get; set; }
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    [Parameter]
+    public string Label { get; set; }
+
+    [Parameter]
+    public string Class { get; set; } = "pb-2";
+    
+    [Parameter]
+    public bool AutoFocus { get; set; }
+
+    [Parameter]
+    public bool ReadOnly { get; set; }
+    
+    [Parameter]
+    public int MaxLength { get; set; } = 100;
+
+	[Parameter]
+	public bool CopyAdornment { get; set; }
+
+    [Parameter]
+    public IMask Mask { get; set; }
+
+	private async Task OnAdornmentClick()
+	{
+		await ClipboardService.CopyToClipboard(Value);
+	}
+}

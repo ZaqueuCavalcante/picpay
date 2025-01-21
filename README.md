@@ -14,7 +14,7 @@ Temos 3 pontos principais neste projeto:
 
 - A consistência dos dados é fundamental (o dinheiro não pode sumir nem surgir do nada)
 - A segurança dos dados também é fundamental (apenas você pode transferir/consultar seu dinheiro)
-- O envio de notificações deve ser feito de maneira assíncrona, tornando nosso sistema resiliente a falhas de integração
+- O envio de notificações deve ser feito de maneira assíncrona, tornando o sistema resiliente a falhas de integração
 
 Segue um resumo do que implementei:
 
@@ -42,8 +42,6 @@ Segue um resumo do que implementei:
 - Testes de mutação
 - Design Patterns
 - Foco em segurança e consistência
-- Nada hard-coded, tudo via configuração
-- Auditoria de todas as operacoes
 - Ao final da suite de testes, garanto que a soma de todos os saldo da zero
 
 ## Sumário
