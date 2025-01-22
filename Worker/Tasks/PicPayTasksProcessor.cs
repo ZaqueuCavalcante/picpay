@@ -18,24 +18,7 @@ public class PicPayTasksProcessor(IConfiguration configuration, IServiceScopeFac
         await using var dataSource = NpgsqlDataSource.Create(configuration.Database().ConnectionString);
         await using var connection = await dataSource.OpenConnectionAsync();
 
-        const string sql = @"
-            UPDATE picpay.tasks
-            SET processor_id = @ProcessorId, status = 'Processing'
-            WHERE id IN (
-                SELECT id
-                FROM picpay.tasks
-                WHERE processor_id IS NULL
-                ORDER BY created_at
-                LIMIT 100
-            );
-
-            SELECT id, type, data
-            FROM picpay.tasks
-            WHERE processor_id = @ProcessorId AND processed_at IS NULL
-            ORDER BY created_at;
-        ";
-
-        var tasks = await connection.QueryAsync<PicPayTask>(sql, new { ProcessorId = Guid.NewGuid() });
+        var tasks = await connection.QueryAsync<PicPayTask>(Sql, new { ProcessorId = Guid.NewGuid() });
 
         var sw = Stopwatch.StartNew();
 
@@ -56,12 +39,6 @@ public class PicPayTasksProcessor(IConfiguration configuration, IServiceScopeFac
                 error = ex.Message + ex.InnerException?.Message;
             }
 
-            const string update = @"
-                UPDATE picpay.tasks
-                SET processed_at = now(), status = @Status, error = @Error, duration = @Duration
-                WHERE id = @Id
-            ";
-
             var parameters = new
             {
                 task.Id,
@@ -71,7 +48,7 @@ public class PicPayTasksProcessor(IConfiguration configuration, IServiceScopeFac
             };
             sw.Stop();
 
-            await connection.ExecuteAsync(update, parameters);
+            await connection.ExecuteAsync(Update, parameters);
         }
 
         if (tasks.Count() == 100)
@@ -93,4 +70,27 @@ public class PicPayTasksProcessor(IConfiguration configuration, IServiceScopeFac
         dynamic handler = scope.ServiceProvider.GetRequiredService(handlerType);
         return handler;
     }
+
+    private static readonly string Sql = @"
+        UPDATE picpay.tasks
+        SET processor_id = @ProcessorId, status = 'Processing'
+        WHERE id IN (
+            SELECT id
+            FROM picpay.tasks
+            WHERE processor_id IS NULL
+            ORDER BY created_at
+            LIMIT 100
+        );
+
+        SELECT id, type, data
+        FROM picpay.tasks
+        WHERE processor_id = @ProcessorId AND processed_at IS NULL
+        ORDER BY created_at;
+    ";
+
+    private static readonly string Update = @"
+        UPDATE picpay.tasks
+        SET processed_at = now(), status = @Status, error = @Error, duration = @Duration
+        WHERE id = @Id
+    ";
 }

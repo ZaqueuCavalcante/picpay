@@ -18,24 +18,7 @@ public class DomainEventsProcessor(IConfiguration configuration, IServiceScopeFa
         await using var dataSource = NpgsqlDataSource.Create(configuration.Database().ConnectionString);
         await using var connection = await dataSource.OpenConnectionAsync();
 
-        const string sql = @"
-            UPDATE picpay.domain_events
-            SET processor_id = @ProcessorId, status = 'Processing'
-            WHERE id IN (
-                SELECT id
-                FROM picpay.domain_events
-                WHERE processor_id IS NULL
-                ORDER BY occurred_at
-                LIMIT 100
-            );
-
-            SELECT id, type, data
-            FROM picpay.domain_events
-            WHERE processor_id = @ProcessorId AND processed_at IS NULL
-            ORDER BY occurred_at;
-        ";
-
-        var events = await connection.QueryAsync<DomainEvent>(sql, new { ProcessorId = Guid.NewGuid() });
+        var events = await connection.QueryAsync<DomainEvent>(Sql, new { ProcessorId = Guid.NewGuid() });
 
         var sw = Stopwatch.StartNew();
 
@@ -56,12 +39,6 @@ public class DomainEventsProcessor(IConfiguration configuration, IServiceScopeFa
                 error = ex.Message + ex.InnerException?.Message;
             }
 
-            const string update = @"
-                UPDATE picpay.domain_events
-                SET processed_at = now(), status = @Status, error = @Error, duration = @Duration
-                WHERE id = @Id
-            ";
-
             var parameters = new
             {
                 evt.Id,
@@ -70,7 +47,7 @@ public class DomainEventsProcessor(IConfiguration configuration, IServiceScopeFa
                 Status = error.HasValue() ? DomainEventStatus.Error.ToString() : DomainEventStatus.Success.ToString(),
             };
             sw.Stop();
-            await connection.ExecuteAsync(update, parameters);
+            await connection.ExecuteAsync(Update, parameters);
         }
 
         if (events.Count() == 100)
@@ -92,4 +69,27 @@ public class DomainEventsProcessor(IConfiguration configuration, IServiceScopeFa
         dynamic handler = scope.ServiceProvider.GetRequiredService(handlerType);
         return handler;
     }
+
+    private static readonly string Sql = @"
+        UPDATE picpay.domain_events
+        SET processor_id = @ProcessorId, status = 'Processing'
+        WHERE id IN (
+            SELECT id
+            FROM picpay.domain_events
+            WHERE processor_id IS NULL
+            ORDER BY occurred_at
+            LIMIT 100
+        );
+
+        SELECT id, type, data
+        FROM picpay.domain_events
+        WHERE processor_id = @ProcessorId AND processed_at IS NULL
+        ORDER BY occurred_at;
+    ";
+
+    private static readonly string Update = @"
+        UPDATE picpay.domain_events
+        SET processed_at = now(), status = @Status, error = @Error, duration = @Duration
+        WHERE id = @Id
+    ";
 }
