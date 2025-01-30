@@ -1,4 +1,4 @@
-namespace PicPay.Auth.Features;
+namespace PicPay.Vendors.Auth;
 
 public class AuthorizeOut
 {

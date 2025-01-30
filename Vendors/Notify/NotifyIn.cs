@@ -1,4 +1,4 @@
-namespace PicPay.Notify.Features;
+namespace PicPay.Vendors.Notify;
 
 public class NotifyIn
 {

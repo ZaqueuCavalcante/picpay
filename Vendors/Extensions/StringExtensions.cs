@@ -1,4 +1,4 @@
-namespace PicPay.Notify.Extensions;
+namespace PicPay.Vendors.Extensions;
 
 public static class StringExtensions
 {

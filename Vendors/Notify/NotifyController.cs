@@ -1,20 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
-using PicPay.Notify.Extensions;
+using PicPay.Vendors.Extensions;
 
-namespace PicPay.Notify.Features;
+namespace PicPay.Vendors.Notify;
 
 [ApiController]
 [Consumes("application/json"), Produces("application/json")]
 public class NotifyController : ControllerBase
 {
     [HttpPost("api/v1/notify")]
-    public IActionResult Notify([FromBody] NotifyIn data)
+    public IActionResult Notify([FromBody] NotifyIn? data)
     {
         bool notify;
         if (data != null)
         {
             long[] fails = [50_00];
-            var amount = long.Parse(data.Message.OnlyNumbers());
+            var value = data.Message.OnlyNumbers();
+            var amount = long.Parse(value.Length > 0 ? value : "0");
             notify = !fails.Contains(amount);
         }
         else

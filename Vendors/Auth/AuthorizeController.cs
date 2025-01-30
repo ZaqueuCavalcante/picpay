@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace PicPay.Auth.Features;
+namespace PicPay.Vendors.Auth;
 
 [ApiController]
 [Consumes("application/json"), Produces("application/json")]
