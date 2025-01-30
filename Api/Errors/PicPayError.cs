@@ -1,8 +1,4 @@
-using Swashbuckle.AspNetCore.Filters;
-
 namespace PicPay.Api.Errors;
-
-public class PicPaySuccess { }
 
 public abstract class PicPayError
 {

@@ -45,7 +45,7 @@ public class PicPayTasksProcessorDbListener(IConfiguration configuration) : Back
 
             CREATE OR REPLACE TRIGGER notify_new_task_trigger
             AFTER INSERT ON picpay.tasks
-            FOR EACH ROW EXECUTE PROCEDURE notify_new_task_trigger();
+            EXECUTE PROCEDURE notify_new_task_trigger();
         ";
 
         await connection.ExecuteAsync(sql);

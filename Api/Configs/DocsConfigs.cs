@@ -3,7 +3,6 @@ using PicPay.Api.Filters;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Interfaces;
-using Swashbuckle.AspNetCore.Filters;
 
 namespace PicPay.Api.Configs;
 
@@ -31,9 +30,9 @@ public static class DocsConfigs
             options.TagActionsBy(api =>
             {
                 var group = api.RelativePath.Split("/")[0];
+                if (group == "adm") return ["🛡️ Adm"];
                 if (group == "customer") return ["🙍🏻‍♂️ Cliente"];
                 if (group == "merchant") return ["🛒 Lojista"];
-                if (group == "adm") return ["🛡️ Adm"];
                 return ["🧱 Cross"];
             });
             options.DocInclusionPredicate((name, api) => true);

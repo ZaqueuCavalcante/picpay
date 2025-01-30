@@ -2,20 +2,20 @@ namespace PicPay.Api.Events;
 
 public abstract class Entity
 {
-    private List<IDomainEvent> _domainEvents = [];
+    private List<IDomainEvent> _events = [];
 
     public void AddDomainEvent(IDomainEvent domainEvent)
     {
-        _domainEvents.Add(domainEvent);
+        _events.Add(domainEvent);
     }
 
     public void ClearDomainEvents()
     {
-        _domainEvents.Clear();
+        _events.Clear();
     }
 
     public IReadOnlyList<IDomainEvent> GetDomainEvents()
     {
-        return [.. _domainEvents];
+        return [.. _events];
     }
 }

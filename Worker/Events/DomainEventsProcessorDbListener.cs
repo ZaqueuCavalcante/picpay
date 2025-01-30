@@ -45,7 +45,7 @@ public class DomainEventsProcessorDbListener(IConfiguration configuration) : Bac
 
             CREATE OR REPLACE TRIGGER notify_new_domain_event_trigger
             AFTER INSERT ON picpay.domain_events
-            FOR EACH ROW EXECUTE PROCEDURE notify_new_domain_event_trigger();
+            EXECUTE PROCEDURE notify_new_domain_event_trigger();
         ";
 
         await connection.ExecuteAsync(sql);

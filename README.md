@@ -6,22 +6,22 @@ Essa é minha resolução do [desafio proposto pelo PicPay](https://github.com/P
 
 - O PicPay Simplificado é uma plataforma de pagamentos simplificada.
 - Nela é possível depositar e realizar transferências de dinheiro entre usuários.
-- Temos 2 tipos de usuários, Clientes e Lojistas, ambos têm Carteira com dinheiro e podem realizar Transferências.
-- A realização de transferências depende de um serviço autorizador externo
-- Em caso de sucesso, o recebedor deve ser notificado da transação, via outro serviço externo
+- Temos 2 tipos de usuários, Clientes e Lojistas, ambos têm carteira com dinheiro e podem realizar transferências.
+- A realização de transferências depende de um serviço autorizador externo.
+- Em caso de sucesso, o recebedor deve ser notificado da transação, via um serviço externo de notificação.
+- Ambos os serviços externos podem estar estar indisponíveis no momento que são chamados (precisamos tratar esses casos no código).
 
 Temos 3 pontos principais neste projeto:
 
 - A consistência dos dados é fundamental (o dinheiro não pode sumir nem surgir do nada)
 - A segurança dos dados também é fundamental (apenas você pode transferir/consultar seu dinheiro)
-- O envio de notificações deve ser feito de maneira assíncrona, tornando o sistema resiliente a falhas de integração
+- O envio de notificações deve ser feito de maneira assíncrona, tornando o sistema resiliente a falhas
 
 Segue um resumo do que implementei:
 
-- Frontend feito em Blazor Wasm
-- Api C#/DotNet + documentação com Scalar
-- 250 Testes automatizados (com cenários reais de produção)
-- Deploy no Railway (Api + Web + Postgres + Worker + Auth + Notify)
+- API C#/DotNet + documentação com Scalar
+- 3548641861 Testes automatizados (com cenários reais de produção)
+- Deploy no Railway (Api + Postgres + Worker)
 - Processamento assíncrono de eventos e tarefas
 - Gestão de erros e reprocessamento de eventos/tarefas
 - Políticas de retry
@@ -30,7 +30,6 @@ Segue um resumo do que implementei:
 - Concorrência e consistência dos valores (lock)
 - Documentação da API com o Scalar
 - CI/CD com o GitHub Actions
-- Deploy no Railway (picpay.zaqbit.com)
 - Logs
 - Observability
 - Docker compose
