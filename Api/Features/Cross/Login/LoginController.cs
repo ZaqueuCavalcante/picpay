@@ -15,9 +15,9 @@ public class LoginController(LoginService service) : ControllerBase
     [SwaggerResponseExample(200, typeof(ResponseExamples))]
     [ProducesResponseType(typeof(ErrorOut), 400)]
     [SwaggerResponseExample(400, typeof(ErrorsExamples))]
-    public async Task<IActionResult> Create([FromBody] LoginIn data)
+    public async Task<IActionResult> Login([FromBody] LoginIn data)
     {
-        var result = await service.Create(data);
+        var result = await service.Login(data);
 
         return result.Match<IActionResult>(Ok, BadRequest);
     }
@@ -61,6 +61,6 @@ internal class ErrorsExamples : IMultipleExamplesProvider<ErrorOut>
     public IEnumerable<SwaggerExample<ErrorOut>> GetExamples()
     {
         yield return new UserNotFound().ToExampleErrorOut();
-        yield return new WrongEmailOrPassword().ToExampleErrorOut();
+        yield return new WrongPassword().ToExampleErrorOut();
     }
 }

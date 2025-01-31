@@ -12,12 +12,11 @@ public static class HttpMiddlewares
 
             options.MapOpenApi();
 
-            options.MapScalarApiReference(options =>
+            options.MapScalarApiReference("/docs/v1", options =>
             {
                 options.WithModels(false);
                 options.WithDownloadButton(false);
                 options.WithTitle("PicPay API Docs");
-                options.WithEndpointPrefix("/docs/{documentName}");
                 options.WithOpenApiRoutePattern("/swagger/v1/swagger.json");
                 options
                     .WithPreferredScheme("Bearer")

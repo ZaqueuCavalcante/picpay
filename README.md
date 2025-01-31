@@ -169,6 +169,14 @@ Casos de uso mapeados, facilitando a implementação e os testes.
     - Ver se o documento ou email já está sendo usado por outro usuário
     - Dois requests com os mesmos dados feitos no mesmo instante devem cadastrar apenas um usuário
 
+### Login
+    - Não deve logar quando o usuário não existir
+    - Não deve logar quando a senha estiver incorreta
+
+
+
+
+
 
 
 ### Transferência de dinheiro

@@ -18,10 +18,10 @@ public class WeakPassword : PicPayError
     public override string Message { get; set; } = "Senha fraca.";
 }
 
-public class WrongEmailOrPassword : PicPayError
+public class WrongPassword : PicPayError
 {
-    public override string Code { get; set; } = nameof(WrongEmailOrPassword);
-    public override string Message { get; set; } = "Email ou senha incorretos.";
+    public override string Code { get; set; } = nameof(WrongPassword);
+    public override string Message { get; set; } = "Senha incorreta.";
 }
 
 public class InsufficientWalletBalance : PicPayError
