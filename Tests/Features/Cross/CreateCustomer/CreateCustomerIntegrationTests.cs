@@ -111,7 +111,7 @@ public partial class IntegrationTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task Should_not_create_customer_with_duplicated_cpf_and_email_parallel_requests()
+    public async Task Should_not_create_customer_with_duplicated_cpf_and_email_in_parallel_requests()
     {
         // Arrange
         var client = _api.GetClient();

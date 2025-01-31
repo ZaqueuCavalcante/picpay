@@ -126,8 +126,7 @@ Utilizar modelo C4?
     - 
 - Worker
 - Web
-- Auth
-- Notify
+- Vendors
 - Postgres
 
 - Users
@@ -163,14 +162,14 @@ Utilizar modelo C4?
 
 Casos de uso mapeados, facilitando a implementação e os testes.
 
-### Cadastro do usuário Adm
-- Deve ser feito direto no banco de dados
-- A soma de todos os saldos SEMPRE VAI SER ZERO
-
 ### Cadastro de Clientes ou Lojistas
-    - Validar se os documentos são válidos
-    - Validar se o email é válido
-    - Validar se já existe no banco (índice de unicidade no doc e no email)
+    - Ver se o documento é válido
+    - Ver se o email é válido
+    - Ver se a senha informada é forte
+    - Ver se o documento ou email já está sendo usado por outro usuário
+    - Dois requests com os mesmos dados feitos no mesmo instante devem cadastrar apenas um usuário
+
+
 
 ### Transferência de dinheiro
 

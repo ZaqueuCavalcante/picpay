@@ -3,7 +3,7 @@ namespace PicPay.Shared;
 public class CreateCustomerIn
 {
     /// <summary>
-    /// Nome completo
+    /// Nome
     /// </summary>
     public string Name { get; set; }
 
