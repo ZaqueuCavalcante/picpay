@@ -35,7 +35,19 @@ public class Notification
             transactionId,
             $"Você recebeu uma transferência de {amount.ToMoneyFormat()} de {sourceName}"
         );
-    } 
+    }
+
+    public static Notification NewWelcomeBonus(
+        Guid userId,
+        Guid transactionId,
+        long amount
+    ) {
+        return new Notification(
+            userId,
+            transactionId,
+            $"Bônus de Boas-Vindas no valor de {amount.ToMoneyFormat()}"
+        );
+    }
 
     public void Success()
     {
@@ -49,7 +61,7 @@ public class Notification
 
     public GetNotificationOut ToOut()
     {
-        return new GetNotificationOut
+        return new()
         {
             Id = Id,
             Status = Status,

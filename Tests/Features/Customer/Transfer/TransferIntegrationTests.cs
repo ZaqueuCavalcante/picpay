@@ -144,7 +144,7 @@ public partial class IntegrationTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task Should_assert_correct_wallet_balances_in_same_source_transfer_parallel_requests()
+    public async Task Should_assert_correct_wallet_balances_in_same_source_transfer_in_parallel_requests()
     {
         // Arrange
         var sourceClient = await _api.LoggedAsCustomer();
@@ -169,7 +169,7 @@ public partial class IntegrationTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task Should_assert_correct_wallet_balances_in_different_sources_transfer_parallel_requests()
+    public async Task Should_assert_correct_wallet_balances_in_different_sources_transfer_in_parallel_requests()
     {
         // Arrange
         var sourceClientA = await _api.LoggedAsCustomer();
@@ -220,5 +220,45 @@ public partial class IntegrationTests : IntegrationTestBase
 
         clientAWalletAfter.Balance.Should().Be(6_00);
         clientBWalletAfter.Balance.Should().Be(14_00);
+    }
+
+    [Test]
+    public async Task Should_send_transfer_notification_with_success()
+    {
+        // Arrange
+        var sourceClient = await _api.LoggedAsCustomer();
+
+        var targetClient = await _api.LoggedAsMerchant();
+        var targetWalletBefore = await targetClient.GetWallet();
+
+        await sourceClient.Transfer(2_20, targetWalletBefore.Id);
+
+        // Act
+        await _worker.ProcessAll();
+
+        // Assert
+        var notifications = await targetClient.GetNotifications();
+        notifications.Should().ContainSingle();
+        notifications.First().Status.Should().Be(NotificationStatus.Success);
+    }
+
+    [Test]
+    public async Task Should_try_send_transfer_notification_with_error()
+    {
+        // Arrange
+        var sourceClient = await _api.LoggedAsCustomer();
+
+        var targetClient = await _api.LoggedAsMerchant();
+        var targetWalletBefore = await targetClient.GetWallet();
+
+        await sourceClient.Transfer(1_23, targetWalletBefore.Id);
+
+        // Act
+        await _worker.ProcessAll();
+
+        // Assert
+        var notifications = await targetClient.GetNotifications();
+        notifications.Should().ContainSingle();
+        notifications.First().Status.Should().Be(NotificationStatus.Failed);
     }
 }

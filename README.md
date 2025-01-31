@@ -175,7 +175,10 @@ Casos de uso mapeados, facilitando a implementação e os testes.
 
 ### Bônus de Boas-Vindas
     - Clientes novos devem receber um bônus de R$ 10,00
-    - Uma notificação deve ser enviada com a menssagem: Bônus de Boas-Vindas
+    - A criação de clientes em paralelo deve manter os saldos consistentes
+    - Uma notificação deve ser enviada com a menssagem: "Bônus de Boas-Vindas no valor de R$ 10,00"
+
+
 
 
 

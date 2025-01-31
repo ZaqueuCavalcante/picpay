@@ -9,6 +9,6 @@ public class TransferCreatedDomainEventHandler(PicPayDbContext ctx) : IDomainEve
 {
     public async Task Handle(Guid eventId, TransferCreatedDomainEvent evt)
     {
-        await ctx.SaveTasksAsync(eventId, new SendTransferNotificationTask(evt.TransactionId));
+        await ctx.SaveTasksAsync(eventId, new SendTransferCreatedNotificationTask(evt.TransactionId));
     }
 }

@@ -134,13 +134,14 @@ public partial class IntegrationTests : IntegrationTestBase
     public async Task Should_not_create_customer_with_duplicated_cpf_and_email_in_parallel_requests()
     {
         // Arrange
-        var client = _api.GetClient();
+        var client01 = _api.GetClient();
+        var client02 = _api.GetClient();
         var cpf = Documents.GetRandomCpf();
         var email = Emails.New;
 
         // Act
-        var first = client.CreateCustomer(cpf: cpf, email: email);
-        var second = client.CreateCustomer(cpf: cpf, email: email);
+        var first = client01.CreateCustomer(cpf: cpf, email: email);
+        var second = client02.CreateCustomer(cpf: cpf, email: email);
 
         var responses = await Task.WhenAll(first, second);
 
@@ -164,5 +165,26 @@ public partial class IntegrationTests : IntegrationTestBase
 
         // Assert
         wallet.Balance.Should().Be(10_00);
+    }
+
+    [Test]
+    public async Task Should_assert_correct_wallet_balances_on_creating_two_customers_in_parallel_requests()
+    {
+        // Arrange
+        var client01 = _api.GetClient();
+        var client02 = _api.GetClient();
+
+        // Act
+        var first = client01.CreateCustomer(cpf: Documents.GetRandomCpf(), email: Emails.New);
+        var second = client02.CreateCustomer(cpf: Documents.GetRandomCpf(), email: Emails.New);
+
+        var responses = await Task.WhenAll(first, second);
+
+        // Assert
+        responses.Should().AllSatisfy(t => t.IsSuccess());
+
+        await using var ctx = _api.GetDbContext();
+        var sum = await ctx.Wallets.SumAsync(w => w.Balance);
+        sum.Should().Be(0);
     }
 }

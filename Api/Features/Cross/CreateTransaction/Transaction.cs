@@ -26,6 +26,11 @@ public class Transaction : Entity
         Amount = amount;
         CreatedAt = DateTime.Now;
 
+        if (type == TransactionType.WelcomeBonus)
+        {
+            AddDomainEvent(new TransferCreatedDomainEvent(Id));
+        }
+
         if (type == TransactionType.Transfer)
         {
             AddDomainEvent(new TransferCreatedDomainEvent(Id));
