@@ -41,13 +41,12 @@ public class CreateUserService(PicPayDbContext ctx, IPasswordHasher hasher) : IP
 
     public async Task CreateWelcomeBonus(long amount, Wallet targetWallet)
     {
-        var userId = await ctx.Users.Where(u => u.Role == UserRole.Adm).Select(u => u.Id).FirstAsync();
-        var sourceWallet = await ctx.Wallets.FromSql($"SELECT * FROM picpay.wallets WHERE user_id = {userId} FOR UPDATE").FirstAsync();
+        var admWallet = await ctx.GetAdmWalletAsync();
 
-        sourceWallet.Take(amount);
+        admWallet.Take(amount);
         targetWallet.Put(amount);
 
-        var transaction = new Transaction(sourceWallet.Id, targetWallet.Id, TransactionType.WelcomeBonus, amount);
+        var transaction = new Transaction(admWallet.Id, targetWallet.Id, TransactionType.WelcomeBonus, amount);
         ctx.Add(transaction);
     }
 }

@@ -163,84 +163,74 @@ Utilizar modelo C4?
 Casos de uso mapeados, facilitando a implementação e os testes.
 
 ### Cadastro de Clientes ou Lojistas
-    - Ver se o documento é válido
-    - Ver se o email é válido
-    - Ver se a senha informada é forte
-    - Ver se o documento ou email já está sendo usado por outro usuário
-    - Dois requests com os mesmos dados feitos no mesmo instante devem cadastrar apenas um usuário
+- Ver se o documento é válido
+- Ver se o email é válido
+- Ver se a senha informada é forte
+- Ver se o documento ou email já está sendo usado por outro usuário
+- Dois requests com os mesmos dados feitos no mesmo instante devem cadastrar apenas um usuário
 
 ### Login
-    - Não deve logar quando o usuário não existir
-    - Não deve logar quando a senha estiver incorreta
+- Não deve logar quando o usuário não existir
+- Não deve logar quando a senha estiver incorreta
 
 ### Bônus de Boas-Vindas
-    - Clientes novos devem receber um bônus de R$ 10,00
-    - A criação de clientes em paralelo deve manter os saldos consistentes
-    - Uma notificação deve ser enviada com a menssagem: "Bônus de Boas-Vindas no valor de R$ 10,00"
-
-
-
-
-
+- Clientes novos devem receber um bônus de R$ 10,00
+- A criação de clientes em paralelo deve manter os saldos consistentes
+- Uma notificação deve ser enviada com a menssagem: "Bônus de Boas-Vindas no valor de R$ 10,00"
 
 ### Transferência de dinheiro
-
-Realizada via POST /transfers
-{
-    "amount": 15874,
-    "target": "d25c18d5-5bf3-49fb-8d9c-67021738152f"
-}
-
 - Chamada não autenticada deve receber 403
 
 - Apenas Clientes podem transferir
-    - Lojista deve receber 401
     - Adm deve receber 401
+    - Lojista deve receber 401
 
-- Não pode transferir valor <= zero
-    - Validar amount enviado
-
-- Não pode transferir para si próprio
-    - Validar o target e o id do usuário logado
+- Não pode transferir valor <= 0
 
 - Nâo pode transferir pra uma Carteira inexistente
-    - Validar no banco se o target existe
+
+- Não pode transferir para si próprio
 
 - Não pode transferir sem saldo suficiente
-    - Validar se tem saldo suficiente
 
 - Não pode transferir caso seja não autorizado
-    - Caso chamada pro Auth retorne não autorizado, retornar erro
 
 - Não pode transferir caso o autorizador esteja fora do ar
-    - Caso chamada pro Auth erro/timeout, retornar erro
 
-- (lock) Não deve transferir em paralelo, gastando mais que o saldo
+- Não deve transferir em paralelo, gastando mais que o saldo
+    - Tenho R$ 10,00 de saldo, não posso realizar duas transferências de R$ 8,00 ao mesmo tempo
+    - Apenas uma delas deve ser feita, a outra deve retornar erro
+    - Se forem duas de R$ 4,00 ambas devem ser realizadas com sucesso
 
-- (lock) Quem recebe duas ao mesmo tempo deve acabar com o saldo correto
+- Quem recebe duas transferências ao mesmo tempo deve acabar com o saldo correto
+    - Um lojista recebendo vários pagamentos de maneira simultânea deve se manter com saldo consistente
+    - O lojista possui saldo de R$ 5,00
+    - Dois clientes transferem R$ 8,00 cada pro lojista ao mesmo tempo
+    - O saldo final do lojista deve ser de R$ 21,00
 
-- (lock) Quem enviar e recebe ao mesmo tempo deve acabar com o saldo correto
+- Quem enviar pra X e receber de Y ao mesmo tempo deve acabar com o saldo correto
+    - Maria possui R$ 5,00 de saldo, Zezinho possui R$ 8,00 e o lojista Gilbirdelson possui R$ 10,00
+    - Maria envia R$ 2,00 pra Gilbirdelson e, no exato mesmo instante, Zezinho envia R$ 6,00 pra Maria
+    - Maria deve terminar com saldo de R$ 9,00
+    - Gilbirdelson com R$ 12,00
+    - Zezinho com R$ 2,00
 
-- (lock) Quando A tenta enviar pra B e B tentar enviar pra A, ao mesmo tempo
-    - Npgsql.PostgresException : 40P01: deadlock detected
+- Quem enviar pra X e receber de X ao mesmo tempo deve acabar com o saldo correto
+    - Maria possui R$ 10,00 de saldo e Zezinho possui R$ 10,00
+    - Maria envia R$ 6,00 pra Zezinho e, no exato mesmo instante, Zezinho envia R$ 2,00 pra Maria
+    - Maria deve terminar com saldo de R$ 6,00 e Zezinho com R$ 14,00
+    - Se não tratado, isso pode gerar um deadlock no banco de dados
+
+- Cliente pode transferir para um lojista
+
+- Cliente pode transferir para outro cliente
 
 - Ao final, o recebedor deve ser notificado da transação
 
-- Cliente pode transferir para um Lojista
-    - Cliente possui R$ 100 de saldo
-    - Lojista possui R$ 1400 de saldo
-    - ACT -> Transferência de R$ 60
-    - Cliente fica com R$ 40 e Lojista com R$ 1460
-    - Transação + evento criados
-    - Criar TestCases com vários valores diferentes
 
-- Cliente pode transferir para outro Cliente
-    - Cliente A possui R$ 100 de saldo
-    - Cliente B possui R$ 1400 de saldo
-    - ACT -> Transferência de R$ 60
-    - Cliente fica com R$ 40 e Lojista com R$ 1460
-    - Transação + evento criados
-    - Criar TestCases com vários valores diferentes
+
+
+
 
 ### Extratos e consistência financeira
 

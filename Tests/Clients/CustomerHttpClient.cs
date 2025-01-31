@@ -6,6 +6,8 @@ public class CustomerHttpClient(HttpClient http)
 {
     public readonly HttpClient Http = http;
 
+    public string UserName { get; set; }
+
     public async Task<OneOf<TransferOut, ErrorOut>> Transfer(long amount, Guid walletId)
     {
         var client = new TransferClient(Http);

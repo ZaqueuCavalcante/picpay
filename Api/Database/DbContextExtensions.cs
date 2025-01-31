@@ -1,3 +1,5 @@
+using PicPay.Api.Features.Cross.CreateUser;
+
 namespace PicPay.Api.Database;
 
 public static class DbContextExtensions
@@ -10,6 +12,19 @@ public static class DbContextExtensions
         }
 
         await ctx.SaveChangesAsync();
+    }
+
+    public static async Task<List<Wallet>> GetWalletsForTransferAsync(this PicPayDbContext ctx, Guid sourceUserId, Guid targetWalletId)
+    {
+        return await ctx.Wallets
+            .FromSql($"SELECT * FROM picpay.wallets WHERE user_id = {sourceUserId} OR id = {targetWalletId} FOR UPDATE")
+            .ToListAsync();
+    }
+
+    public static async Task<Wallet> GetAdmWalletAsync(this PicPayDbContext ctx)
+    {
+        var userId = await ctx.Users.Where(u => u.Role == UserRole.Adm).Select(u => u.Id).FirstAsync();
+        return await ctx.Wallets.FromSql($"SELECT * FROM picpay.wallets WHERE user_id = {userId} FOR UPDATE").FirstAsync();
     }
 
     public static async Task<string?> GetWalletOwnerName(this PicPayDbContext ctx, Guid walletId)

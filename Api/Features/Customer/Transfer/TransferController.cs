@@ -27,7 +27,7 @@ internal class RequestsExamples : IExamplesProvider<TransferIn>
 {
     TransferIn IExamplesProvider<TransferIn>.GetExamples()
     {
-        return new TransferIn(789_42, Guid.NewGuid());
+        return new TransferIn(5_55, Guid.NewGuid());
     }
 }
 
@@ -47,5 +47,10 @@ internal class ErrorsExamples : IMultipleExamplesProvider<ErrorOut>
     public IEnumerable<SwaggerExample<ErrorOut>> GetExamples()
     {
         yield return new InvalidTransferAmount().ToExampleErrorOut();
+        yield return new InvalidTargetWallet().ToExampleErrorOut();
+        yield return new WalletNotFound().ToExampleErrorOut();
+        yield return new InsufficientWalletBalance().ToExampleErrorOut();
+        yield return new AuthorizeServiceDown().ToExampleErrorOut();
+        yield return new TransactionNotAuthorized().ToExampleErrorOut();
     }
 }

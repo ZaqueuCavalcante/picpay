@@ -62,7 +62,7 @@ public static class ApiFactoryExtensions
 
         await client.Login(email, password);
 
-        return new(client);
+        return new(client) { UserName = name };
     }
 
     public static async Task<MerchantHttpClient> LoggedAsMerchant(this ApiFactory factory)
