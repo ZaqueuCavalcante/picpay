@@ -4,7 +4,7 @@ public class GetNotificationsService(PicPayDbContext ctx) : IPicPayService
 {
     public async Task<List<GetNotificationOut>> Get(Guid userId)
     {
-        var notifications = await ctx.Notifications
+        var notifications = await ctx.Notifications.AsNoTracking()
             .Where(n => n.UserId == userId)
             .OrderByDescending(n => n.CreatedAt)
             .ToListAsync();

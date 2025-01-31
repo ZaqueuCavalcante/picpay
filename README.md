@@ -158,6 +158,9 @@ Utilizar modelo C4?
     - status
     - created_at
 
+
+
+
 ## Casos de Uso
 
 Casos de uso mapeados, facilitando a implementação e os testes.
@@ -227,8 +230,8 @@ Casos de uso mapeados, facilitando a implementação e os testes.
 
 - Ao final, o recebedor deve ser notificado da transação
 
-
-
+### Notificações do Usuário
+- Listar todas as notificações do usuário, ordenadas pela mais recente
 
 
 
@@ -236,6 +239,14 @@ Casos de uso mapeados, facilitando a implementação e os testes.
 
 - Todas as transações são imutáveis
 - Tudo deve ser salvo para fins de histórico e auditoria
+
+
+
+
+
+
+
+
 
 ## Testes
 
