@@ -223,7 +223,7 @@ public partial class IntegrationTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task Should_send_transfer_notification_with_success()
+    public async Task Should_send_transfer_created_notification_with_success()
     {
         // Arrange
         var sourceClient = await _api.LoggedAsCustomer();
@@ -243,7 +243,7 @@ public partial class IntegrationTests : IntegrationTestBase
     }
 
     [Test]
-    public async Task Should_try_send_transfer_notification_with_error()
+    public async Task Should_try_send_transfer_created_notification_with_error()
     {
         // Arrange
         var sourceClient = await _api.LoggedAsCustomer();

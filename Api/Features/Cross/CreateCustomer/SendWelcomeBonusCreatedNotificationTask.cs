@@ -1,6 +1,7 @@
 using PicPay.Api.Features.Cross.Notify;
+using PicPay.Api.Features.Cross.CreateNotification;
 
-namespace PicPay.Api.Features.Cross.CreateNotification;
+namespace PicPay.Api.Features.Cross.CreateCustomer;
 
 [PicPayTaskDescription("Enviar notificação de Bônus de Boas-Vindas realizado")]
 public record SendWelcomeBonusCreatedNotificationTask(Guid TransactionId) : IPicPayTask;

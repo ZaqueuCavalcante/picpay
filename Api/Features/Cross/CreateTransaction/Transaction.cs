@@ -1,4 +1,5 @@
 using PicPay.Api.Features.Adm.Transfer;
+using PicPay.Api.Features.Cross.CreateCustomer;
 
 namespace PicPay.Api.Features.Cross.CreateTransaction;
 
@@ -28,7 +29,7 @@ public class Transaction : Entity
 
         if (type == TransactionType.WelcomeBonus)
         {
-            AddDomainEvent(new TransferCreatedDomainEvent(Id));
+            AddDomainEvent(new WelcomeBonusCreatedDomainEvent(Id));
         }
 
         if (type == TransactionType.Transfer)

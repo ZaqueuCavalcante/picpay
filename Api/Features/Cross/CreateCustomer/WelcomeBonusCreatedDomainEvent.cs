@@ -1,5 +1,3 @@
-using PicPay.Api.Features.Cross.CreateNotification;
-
 namespace PicPay.Api.Features.Cross.CreateCustomer;
 
 [DomainEventDescription("Bônus de Boas-Vindas realizado")]
@@ -9,6 +7,6 @@ public class WelcomeBonusCreatedDomainEventHandler(PicPayDbContext ctx) : IDomai
 {
     public async Task Handle(Guid eventId, WelcomeBonusCreatedDomainEvent evt)
     {
-        await ctx.SaveTasksAsync(eventId, new SendTransferCreatedNotificationTask(evt.TransactionId));
+        await ctx.SaveTasksAsync(eventId, new SendWelcomeBonusCreatedNotificationTask(evt.TransactionId));
     }
 }

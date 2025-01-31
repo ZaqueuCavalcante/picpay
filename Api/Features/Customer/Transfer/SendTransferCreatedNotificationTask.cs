@@ -1,11 +1,12 @@
 using PicPay.Api.Features.Cross.Notify;
+using PicPay.Api.Features.Cross.CreateNotification;
 
-namespace PicPay.Api.Features.Cross.CreateNotification;
+namespace PicPay.Api.Features.Adm.Transfer;
 
 [PicPayTaskDescription("Enviar notificação de Transferência realizada")]
 public record SendTransferCreatedNotificationTask(Guid TransactionId) : IPicPayTask;
 
-public class SendTransferNotificationTaskHandler(PicPayDbContext ctx, NotifyService service) : IPicPayTaskHandler<SendTransferCreatedNotificationTask>
+public class SendTransferCreatedNotificationTaskHandler(PicPayDbContext ctx, NotifyService service) : IPicPayTaskHandler<SendTransferCreatedNotificationTask>
 {
     public async Task Handle(SendTransferCreatedNotificationTask task)
     {

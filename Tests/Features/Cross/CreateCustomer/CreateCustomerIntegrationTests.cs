@@ -187,4 +187,20 @@ public partial class IntegrationTests : IntegrationTestBase
         var sum = await ctx.Wallets.SumAsync(w => w.Balance);
         sum.Should().Be(0);
     }
+
+    [Test]
+    public async Task Should_send_welcome_bonus_created_notification_with_success()
+    {
+        // Arrange
+        var client = await _api.LoggedAsCustomer();
+
+        // Act
+        await _worker.ProcessAll();
+
+        // Assert
+        var notifications = await client.GetNotifications();
+        notifications.Should().ContainSingle();
+        notifications.First().Status.Should().Be(NotificationStatus.Success);
+        notifications.First().Message.Should().Be("Bônus de Boas-Vindas no valor de R$ 10,00");
+    }
 }
