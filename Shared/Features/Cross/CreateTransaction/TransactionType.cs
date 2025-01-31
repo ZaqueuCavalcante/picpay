@@ -4,8 +4,8 @@ namespace PicPay.Shared;
 
 public enum TransactionType
 {
-    [Description("Bônus")]
-    Bonus,
+    [Description("Bônus de Boas-Vindas")]
+    WelcomeBonus,
 
     [Description("Transferência")]
     Transfer,

@@ -12,12 +12,6 @@ public class InvalidDocument : PicPayError
     public override string Message { get; set; } = "Documento inválido.";
 }
 
-public class InvalidBonusAmount : PicPayError
-{
-    public override string Code { get; set; } = nameof(InvalidBonusAmount);
-    public override string Message { get; set; } = "O valor do bônus deve ser maior que zero.";
-}
-
 public class InvalidTransferAmount : PicPayError
 {
     public override string Code { get; set; } = nameof(InvalidTransferAmount);

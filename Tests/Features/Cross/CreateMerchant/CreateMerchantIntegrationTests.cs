@@ -8,6 +8,26 @@ namespace PicPay.Tests.Integration;
 public partial class IntegrationTests : IntegrationTestBase
 {
     [Test]
+    public async Task Should_create_merchant()
+    {
+        // Arrange
+        var client = _api.GetClient();
+        var name = "Gilsielaine Motors LTDA";
+        var cnpj = Documents.GetRandomCnpj();
+        var email = Emails.New;
+
+        // Act
+        var response = await client.CreateMerchant(name: name, cnpj: cnpj, email: email);
+
+        // Assert
+        var merchant = response.ShouldBeSuccess();
+        merchant.Id.Should().NotBeEmpty();
+        merchant.Name.Should().Be(name);
+        merchant.Cnpj.Should().Be(cnpj);
+        merchant.Email.Should().Be(email);
+    }
+
+    [Test]
     public async Task Should_not_create_merchant_with_invalid_cnpj()
     {
         // Arrange
@@ -131,5 +151,18 @@ public partial class IntegrationTests : IntegrationTestBase
         CreateMerchantOut customer = responses.Single(t => t.IsSuccess()).GetSuccess();
         customer.Cnpj.Should().Be(cnpj);
         customer.Email.Should().Be(email);
+    }
+
+    [Test]
+    public async Task Should_not_give_welcome_bonus_to_merchant()
+    {
+        // Arrange
+        var client = await _api.LoggedAsMerchant();
+
+        // Act
+        var wallet = await client.GetWallet();
+
+        // Assert
+        wallet.Balance.Should().Be(0);
     }
 }

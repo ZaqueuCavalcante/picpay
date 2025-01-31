@@ -8,6 +8,26 @@ namespace PicPay.Tests.Integration;
 public partial class IntegrationTests : IntegrationTestBase
 {
     [Test]
+    public async Task Should_create_customer()
+    {
+        // Arrange
+        var client = _api.GetClient();
+        var name = "Edisberlson Gomes dos Santos";
+        var cpf = Documents.GetRandomCpf();
+        var email = Emails.New;
+
+        // Act
+        var response = await client.CreateCustomer(name: name, cpf: cpf, email: email);
+
+        // Assert
+        var customer = response.ShouldBeSuccess();
+        customer.Id.Should().NotBeEmpty();
+        customer.Name.Should().Be(name);
+        customer.Cpf.Should().Be(cpf);
+        customer.Email.Should().Be(email);
+    }
+
+    [Test]
     public async Task Should_not_create_customer_with_invalid_cpf()
     {
         // Arrange
@@ -131,5 +151,18 @@ public partial class IntegrationTests : IntegrationTestBase
         CreateCustomerOut customer = responses.Single(t => t.IsSuccess()).GetSuccess();
         customer.Cpf.Should().Be(cpf);
         customer.Email.Should().Be(email);
+    }
+
+    [Test]
+    public async Task Should_give_welcome_bonus_to_customer()
+    {
+        // Arrange
+        var client = await _api.LoggedAsCustomer();
+
+        // Act
+        var wallet = await client.GetWallet();
+
+        // Assert
+        wallet.Balance.Should().Be(10_00);
     }
 }

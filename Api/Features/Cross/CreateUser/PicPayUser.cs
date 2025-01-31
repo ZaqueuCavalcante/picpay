@@ -45,6 +45,8 @@ public class PicPayUser
 
     public void SetPasswordHash(string passwordHash) => PasswordHash = passwordHash;
 
+    public bool IsCustomer() => Role == UserRole.Customer;
+
     public CreateUserOut ToCreateOut() => new()
     {
         Id = Id,

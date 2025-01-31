@@ -13,7 +13,7 @@ public class NotifyController : ControllerBase
         bool notify;
         if (data != null)
         {
-            long[] fails = [50_00];
+            long[] fails = [1_23];
             var value = data.Message.OnlyNumbers();
             var amount = long.Parse(value.Length > 0 ? value : "0");
             notify = !fails.Contains(amount);

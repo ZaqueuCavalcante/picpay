@@ -21,10 +21,11 @@ public static class JsonExtensions
         oneOf.GetError().Message.Should().Be(expected.Message);
     }
 
-    public static void ShouldBeSuccess<S, E>(this OneOf<S, E> oneOf)
+    public static S ShouldBeSuccess<S, E>(this OneOf<S, E> oneOf)
     {
         oneOf.IsSuccess().Should().BeTrue();
         oneOf.IsError().Should().BeFalse();
+        return oneOf.GetSuccess();
     }
 
     public static void ShouldBeError<S>(this OneOf<S, PicPayError> oneOf, PicPayError expected)

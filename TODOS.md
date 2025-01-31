@@ -4,7 +4,6 @@
     - Customer
         - ✅ Validacao dos dados
         - ✅ Unicidade de email e cpf
-        - ✅ Bonus de R$ 10,00 ao fazer primeiro login
     - Merchant
         - ✅ Validacao dos dados
         - ✅ Unicidade de email e cnpj

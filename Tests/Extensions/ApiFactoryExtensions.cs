@@ -50,7 +50,7 @@ public static class ApiFactoryExtensions
         return new(client);
     }
 
-    public static async Task<CustomerHttpClient> LoggedAsCustomer(this ApiFactory factory, long? balance = 0)
+    public static async Task<CustomerHttpClient> LoggedAsCustomer(this ApiFactory factory)
     {
         var client = factory.GetClient();
 
@@ -62,17 +62,10 @@ public static class ApiFactoryExtensions
 
         await client.Login(email, password);
 
-        if (balance != null)
-        {
-            var wallet = await client.GetWallet();
-            var admClient = await factory.LoggedAsAdm();
-            await admClient.Bonus(balance.Value, wallet.Id);
-        }
-
         return new(client);
     }
 
-    public static async Task<MerchantHttpClient> LoggedAsMerchant(this ApiFactory factory, long? balance = 0)
+    public static async Task<MerchantHttpClient> LoggedAsMerchant(this ApiFactory factory)
     {
         var client = factory.GetClient();
 
@@ -83,13 +76,6 @@ public static class ApiFactoryExtensions
         await client.CreateMerchant(cnpj: cnpj, name: name, email: email, password: password);
 
         await client.Login(email, password);
-
-        if (balance != null)
-        {
-            var wallet = await client.GetWallet();
-            var admClient = await factory.LoggedAsAdm();
-            await admClient.Bonus(balance.Value, wallet.Id);
-        }
 
         return new(client);
     }
