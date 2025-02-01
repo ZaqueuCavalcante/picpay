@@ -2,6 +2,9 @@
 
 namespace PicPay.Shared;
 
+/// <summary>
+/// Tipo de carteira
+/// </summary>
 public enum WalletType
 {
     [Description("Admin")]

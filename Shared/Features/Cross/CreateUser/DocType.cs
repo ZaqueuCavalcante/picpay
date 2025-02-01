@@ -2,6 +2,9 @@
 
 namespace PicPay.Shared;
 
+/// <summary>
+/// Tipo de documento
+/// </summary>
 public enum DocType
 {
     [Description("CPF")]

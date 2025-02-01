@@ -2,6 +2,9 @@ namespace PicPay.Shared;
 
 public class CreateUserIn
 {
+    /// <summary>
+    /// Perfil de acesso do usuário
+    /// </summary>
     public UserRole Role { get; set; }
 
     /// <summary>

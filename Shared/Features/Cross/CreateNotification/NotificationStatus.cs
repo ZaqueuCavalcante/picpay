@@ -2,6 +2,9 @@
 
 namespace PicPay.Shared;
 
+/// <summary>
+/// Status de envio da notificação
+/// </summary>
 public enum NotificationStatus
 {
     [Description("Pendente")]

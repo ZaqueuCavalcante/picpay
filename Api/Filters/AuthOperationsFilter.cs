@@ -30,6 +30,7 @@ public class AuthOperationsFilter : IOperationFilter
             };
             operation.Security = [securityRequirement];
             operation.Responses.Add("401", new OpenApiResponse { Description = "Unauthorized" });
+            operation.Responses.Add("403", new OpenApiResponse { Description = "Forbidden" });
         }
     }
 }
