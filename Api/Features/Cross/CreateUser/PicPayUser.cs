@@ -51,7 +51,8 @@ public class PicPayUser
     {
         Id = Id,
         Name = Name,
-        Document = Document,
         Email = Email,
+        Document = Document,
+        WalletId = Wallet.Id,
     };
 }

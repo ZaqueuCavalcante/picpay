@@ -6,26 +6,29 @@ public class CreateUserOut
     public string Name { get; set; }
     public string Document { get; set; }
     public string Email { get; set; }
+    public Guid WalletId { get; set; }
 
     public CreateCustomerOut ToCreateCustomerOut()
     {
-        return new CreateCustomerOut
+        return new()
         {
             Id = Id,
             Name = Name,
-            Cpf = Document,
             Email = Email,
+            Cpf = Document,
+            WalletId = WalletId,
         };
     }
 
     public CreateMerchantOut ToCreateMerchantOut()
     {
-        return new CreateMerchantOut
+        return new()
         {
             Id = Id,
             Name = Name,
-            Cnpj = Document,
             Email = Email,
+            Cnpj = Document,
+            WalletId = WalletId,
         };
     }
 }

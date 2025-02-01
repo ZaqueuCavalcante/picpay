@@ -7,6 +7,7 @@ public class CustomerHttpClient(HttpClient http)
     public readonly HttpClient Http = http;
 
     public string UserName { get; set; }
+    public Guid WalletId { get; set; }
 
     public async Task<OneOf<TransferOut, ErrorOut>> Transfer(long amount, Guid walletId)
     {
@@ -22,5 +23,10 @@ public class CustomerHttpClient(HttpClient http)
     public async Task<List<GetNotificationOut>> GetNotifications()
     {
         return await Http.GetNotifications();
+    }
+
+    public async Task<List<GetExtractOut>> GetExtract()
+    {
+        return await Http.GetExtract();
     }
 }

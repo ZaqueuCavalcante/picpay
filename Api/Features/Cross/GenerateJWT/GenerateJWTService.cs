@@ -8,12 +8,13 @@ namespace PicPay.Api.Features.Cross.GenerateJWT;
 
 public class GenerateJWTService(AuthSettings settings) : IPicPayService
 {
-    public string Generate(PicPayUser user)
+    public string Generate(PicPayUser user, Guid walletId)
     {
         var claims = new List<Claim>
         {
             new("jti", Guid.NewGuid().ToString()),
             new("sub", user.Id.ToString()),
+            new("wid", walletId.ToString()),
             new("role", user.Role.ToString()),
             new("name", user.Name),
             new("email", user.Email!),

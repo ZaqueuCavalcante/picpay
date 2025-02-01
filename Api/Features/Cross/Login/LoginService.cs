@@ -13,6 +13,11 @@ public class LoginService(PicPayDbContext ctx, IPasswordHasher hasher, GenerateJ
         var success = hasher.Verify(user.Id, user.Email, data.Password, user.PasswordHash);
         if (!success) return new WrongPassword();
 
-        return new LoginOut { AccessToken = service.Generate(user) };
+        var walletId = await ctx.Wallets
+            .Where(w => w.UserId == user.Id)
+            .Select(w => w.Id)
+            .FirstAsync();
+
+        return new LoginOut { AccessToken = service.Generate(user, walletId) };
     }
 }

@@ -1,5 +1,6 @@
 using PicPay.Web.Features.Cross.Login;
 using PicPay.Web.Features.Cross.GetWallet;
+using PicPay.Web.Features.Cross.GetExtract;
 using PicPay.Web.Features.Cross.CreateCustomer;
 using PicPay.Web.Features.Cross.CreateMerchant;
 using PicPay.Web.Features.Cross.GetNotifications;
@@ -50,6 +51,12 @@ public static class CrossHttpClient
     public static async Task<List<GetNotificationOut>> GetNotifications(this HttpClient http)
     {
         var client = new GetNotificationsClient(http);
+        return await client.Get();
+    }
+
+    public static async Task<List<GetExtractOut>> GetExtract(this HttpClient http)
+    {
+        var client = new GetExtractClient(http);
         return await client.Get();
     }
 

@@ -32,7 +32,7 @@ public static class ApiFactoryExtensions
 
         var userIn = new CreateUserIn(
             UserRole.Adm,
-            "Admilson",
+            "PicPay",
             "22.896.431/0001-10",
             "admilson@picpay.com",
             "efd46375c2A74fe6b@cfc7d20f67e23ab"
@@ -58,11 +58,11 @@ public static class ApiFactoryExtensions
         var name = Person.GetRandomName();
         var email = Emails.New;
         var password = "bfD43ae@8c46cb9fd18";
-        await client.CreateCustomer(cpf: cpf, name: name, email: email, password: password);
+        CreateCustomerOut customer = await client.CreateCustomer(cpf: cpf, name: name, email: email, password: password);
 
         await client.Login(email, password);
 
-        return new(client) { UserName = name };
+        return new(client) { UserName = name, WalletId = customer.WalletId };
     }
 
     public static async Task<MerchantHttpClient> LoggedAsMerchant(this ApiFactory factory)
@@ -73,10 +73,10 @@ public static class ApiFactoryExtensions
         var name = Company.GetRandomName();
         var email = Emails.New;
         var password = "bfD43ae@8c46cb9fd18";
-        await client.CreateMerchant(cnpj: cnpj, name: name, email: email, password: password);
+        CreateMerchantOut merchant = await client.CreateMerchant(cnpj: cnpj, name: name, email: email, password: password);
 
         await client.Login(email, password);
 
-        return new(client);
+        return new(client) { WalletId = merchant.WalletId };
     }
 }

@@ -233,16 +233,14 @@ Casos de uso mapeados, facilitando a implementação e os testes.
 ### Notificações do Usuário
 - Listar todas as notificações do usuário, ordenadas pela mais recente
 
+### Extrato de Transações
+- Listar todas as transações do usuário, ordenadas pela mais recente
 
 
-### Extratos e consistência financeira
 
-- Todas as transações são imutáveis
+### Auditoria
+- Quem, fez o quê, onde e quando?
 - Tudo deve ser salvo para fins de histórico e auditoria
-
-
-
-
 
 
 

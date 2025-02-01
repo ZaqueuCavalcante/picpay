@@ -73,3 +73,15 @@
 
 
 - Varrer todos os arquivos, utilizar global usings
+
+
+
+
+Transaction
+    - Type      (Bônus de Boas-Vindas | Transferência recebida | Transferência enviada)
+    - Amount    (R$ 5,87 | -R$ 9,14) 
+    - Other     (PicPay | Customer | Merchant)
+    - CreatedAt (dd/mm/AAAA 21:06)
+
+
+
