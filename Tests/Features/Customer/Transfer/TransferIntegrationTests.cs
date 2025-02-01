@@ -10,12 +10,10 @@ public partial class IntegrationTests : IntegrationTestBase
     {
         // Arrange
         var sourceClient = await _api.LoggedAsCustomer();
-
         var targetClient = await _api.LoggedAsCustomer();
-        var targetWalletBefore = await targetClient.GetWallet();
 
         // Act
-        var response = await sourceClient.Transfer(3_25, targetWalletBefore.Id);
+        var response = await sourceClient.Transfer(3_25, targetClient.WalletId);
 
         // Assert
         var transfer = response.ShouldBeSuccess();
@@ -41,12 +39,10 @@ public partial class IntegrationTests : IntegrationTestBase
     {
         // Arrange
         var sourceClient = await _api.LoggedAsCustomer();
-
         var targetClient = await _api.LoggedAsMerchant();
-        var targetWalletBefore = await targetClient.GetWallet();
 
         // Act
-        var response = await sourceClient.Transfer(6_80, targetWalletBefore.Id);
+        var response = await sourceClient.Transfer(6_80, targetClient.WalletId);
 
         // Assert
         var transfer = response.ShouldBeSuccess();
@@ -100,10 +96,9 @@ public partial class IntegrationTests : IntegrationTestBase
     {
         // Arrange
         var client = await _api.LoggedAsCustomer();
-        var wallet = await client.GetWallet();
 
         // Act
-        var response = await client.Transfer(34_00, wallet.Id);
+        var response = await client.Transfer(34_00, client.WalletId);
 
         // Assert
         response.ShouldBeError(new InvalidTargetWallet());
@@ -130,12 +125,10 @@ public partial class IntegrationTests : IntegrationTestBase
     {
         // Arrange
         var sourceClient = await _api.LoggedAsCustomer();
-
         var targetClient = await _api.LoggedAsMerchant();
-        var targetWallet = await targetClient.GetWallet();
 
         // Act
-        var response = await sourceClient.Transfer(18_00, targetWallet.Id);
+        var response = await sourceClient.Transfer(18_00, targetClient.WalletId);
 
         // Assert
         response.ShouldBeError(new InsufficientWalletBalance());
@@ -146,12 +139,10 @@ public partial class IntegrationTests : IntegrationTestBase
     {
         // Arrange
         var sourceClient = await _api.LoggedAsCustomer();
-
         var targetClient = await _api.LoggedAsMerchant();
-        var targetWallet = await targetClient.GetWallet();
 
         // Act
-        var response = await sourceClient.Transfer(6_66, targetWallet.Id);
+        var response = await sourceClient.Transfer(6_66, targetClient.WalletId);
 
         // Assert
         response.ShouldBeError(new TransactionNotAuthorized());
@@ -162,12 +153,10 @@ public partial class IntegrationTests : IntegrationTestBase
     {
         // Arrange
         var sourceClient = await _api.LoggedAsCustomer();
-
         var targetClient = await _api.LoggedAsCustomer();
-        var targetWallet = await targetClient.GetWallet();
 
         // Act
-        var response = await sourceClient.Transfer(5_04, targetWallet.Id);
+        var response = await sourceClient.Transfer(5_04, targetClient.WalletId);
 
         // Assert
         response.ShouldBeError(new AuthorizeServiceDown());
@@ -178,14 +167,11 @@ public partial class IntegrationTests : IntegrationTestBase
     {
         // Arrange
         var sourceClient = await _api.LoggedAsCustomer();
-        var sourceWalletBefore = await sourceClient.GetWallet();
-
         var targetClient = await _api.LoggedAsCustomer();
-        var targetWalletBefore = await targetClient.GetWallet();
 
         // Act
-        var transfer01 = sourceClient.Transfer(8_00, targetWalletBefore.Id);
-        var transfer02 = sourceClient.Transfer(8_00, targetWalletBefore.Id);
+        var transfer01 = sourceClient.Transfer(8_00, targetClient.WalletId);
+        var transfer02 = sourceClient.Transfer(8_00, targetClient.WalletId);
 
         var transfers = await Task.WhenAll(transfer01, transfer02);
 
@@ -198,8 +184,8 @@ public partial class IntegrationTests : IntegrationTestBase
         var sourceWalletAfter = await sourceClient.GetWallet();
         var targetWalletAfter = await targetClient.GetWallet();
 
-        sourceWalletAfter.Balance.Should().Be(sourceWalletBefore.Balance - 8_00);
-        targetWalletAfter.Balance.Should().Be(targetWalletBefore.Balance + 8_00);
+        sourceWalletAfter.Balance.Should().Be(2_00);
+        targetWalletAfter.Balance.Should().Be(18_00);
     }
 
     [Test]
@@ -207,13 +193,11 @@ public partial class IntegrationTests : IntegrationTestBase
     {
         // Arrange
         var sourceClient = await _api.LoggedAsCustomer();
-
         var targetClient = await _api.LoggedAsMerchant();
-        var targetWalletBefore = await targetClient.GetWallet();
 
         // Act
-        var transfer01 = sourceClient.Transfer(4_00, targetWalletBefore.Id);
-        var transfer02 = sourceClient.Transfer(4_00, targetWalletBefore.Id);
+        var transfer01 = sourceClient.Transfer(4_00, targetClient.WalletId);
+        var transfer02 = sourceClient.Transfer(4_00, targetClient.WalletId);
 
         var transfers = await Task.WhenAll(transfer01, transfer02);
 
@@ -235,12 +219,11 @@ public partial class IntegrationTests : IntegrationTestBase
         var sourceClientB = await _api.LoggedAsCustomer();
 
         var targetClient = await _api.LoggedAsMerchant();
-        var targetWalletBefore = await targetClient.GetWallet();
-        await (await _api.LoggedAsCustomer()).Transfer(5_00, targetWalletBefore.Id);
+        await (await _api.LoggedAsCustomer()).Transfer(5_00, targetClient.WalletId);
 
         // Act
-        var transfer01 = sourceClientA.Transfer(8_00, targetWalletBefore.Id);
-        var transfer02 = sourceClientB.Transfer(8_00, targetWalletBefore.Id);
+        var transfer01 = sourceClientA.Transfer(8_00, targetClient.WalletId);
+        var transfer02 = sourceClientB.Transfer(8_00, targetClient.WalletId);
 
         var transfers = await Task.WhenAll(transfer01, transfer02);
 
@@ -264,16 +247,13 @@ public partial class IntegrationTests : IntegrationTestBase
         var sourceClientB = await _api.LoggedAsCustomer();
 
         var targetClient = await _api.LoggedAsMerchant();
-        var targetWalletBefore = await targetClient.GetWallet();
-        await sourceClientA.Transfer(5_00, targetWalletBefore.Id);
-        await sourceClientB.Transfer(2_00, targetWalletBefore.Id);
-        await (await _api.LoggedAsCustomer()).Transfer(3_00, targetWalletBefore.Id);
-
-        var sourceWalletABefore = await sourceClientA.GetWallet();
+        await sourceClientA.Transfer(5_00, targetClient.WalletId);
+        await sourceClientB.Transfer(2_00, targetClient.WalletId);
+        await (await _api.LoggedAsCustomer()).Transfer(3_00, targetClient.WalletId);
 
         // Act
-        var transfer01 = sourceClientA.Transfer(2_00, targetWalletBefore.Id);
-        var transfer02 = sourceClientB.Transfer(6_00, sourceWalletABefore.Id);
+        var transfer01 = sourceClientA.Transfer(2_00, targetClient.WalletId);
+        var transfer02 = sourceClientB.Transfer(6_00, sourceClientA.WalletId);
 
         var transfers = await Task.WhenAll(transfer01, transfer02);
 
@@ -294,14 +274,11 @@ public partial class IntegrationTests : IntegrationTestBase
     {
         // Arrange
         var clientA = await _api.LoggedAsCustomer();
-        var clientAWalletBefore = await clientA.GetWallet();
-
         var clientB = await _api.LoggedAsCustomer();
-        var clientBWalletBefore = await clientB.GetWallet();
 
         // Act
-        var transfer01 = clientA.Transfer(6_00, clientBWalletBefore.Id);
-        var transfer02 = clientB.Transfer(2_00, clientAWalletBefore.Id);
+        var transfer01 = clientA.Transfer(6_00, clientB.WalletId);
+        var transfer02 = clientB.Transfer(2_00, clientA.WalletId);
 
         var transfers = await Task.WhenAll(transfer01, transfer02);
 
@@ -320,11 +297,9 @@ public partial class IntegrationTests : IntegrationTestBase
     {
         // Arrange
         var sourceClient = await _api.LoggedAsCustomer();
-
         var targetClient = await _api.LoggedAsCustomer();
-        var targetWalletBefore = await targetClient.GetWallet();
 
-        await sourceClient.Transfer(4_20, targetWalletBefore.Id);
+        await sourceClient.Transfer(4_20, targetClient.WalletId);
 
         // Act
         await _worker.ProcessAll();
@@ -341,11 +316,9 @@ public partial class IntegrationTests : IntegrationTestBase
     {
         // Arrange
         var sourceClient = await _api.LoggedAsCustomer();
-
         var targetClient = await _api.LoggedAsMerchant();
-        var targetWalletBefore = await targetClient.GetWallet();
 
-        await sourceClient.Transfer(2_20, targetWalletBefore.Id);
+        await sourceClient.Transfer(2_20, targetClient.WalletId);
 
         // Act
         await _worker.ProcessAll();
@@ -362,11 +335,9 @@ public partial class IntegrationTests : IntegrationTestBase
     {
         // Arrange
         var sourceClient = await _api.LoggedAsCustomer();
-
         var targetClient = await _api.LoggedAsMerchant();
-        var targetWalletBefore = await targetClient.GetWallet();
 
-        await sourceClient.Transfer(1_23, targetWalletBefore.Id);
+        await sourceClient.Transfer(1_23, targetClient.WalletId);
 
         // Act
         await _worker.ProcessAll();

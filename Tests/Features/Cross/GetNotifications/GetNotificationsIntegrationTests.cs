@@ -25,12 +25,10 @@ public partial class IntegrationTests : IntegrationTestBase
     {
         // Arrange
         var sourceClient = await _api.LoggedAsCustomer();
-
         var targetClient = await _api.LoggedAsCustomer();
-        var targetWalletBefore = await targetClient.GetWallet();
 
         // Act
-        await sourceClient.Transfer(6_80, targetWalletBefore.Id);
+        await sourceClient.Transfer(6_80, targetClient.WalletId);
         await _worker.ProcessAll();
 
         // Assert
@@ -47,12 +45,10 @@ public partial class IntegrationTests : IntegrationTestBase
     {
         // Arrange
         var sourceClient = await _api.LoggedAsCustomer();
-
         var targetClient = await _api.LoggedAsMerchant();
-        var targetWalletBefore = await targetClient.GetWallet();
 
         // Act
-        await sourceClient.Transfer(6_80, targetWalletBefore.Id);
+        await sourceClient.Transfer(6_80, targetClient.WalletId);
         await _worker.ProcessAll();
 
         // Assert
@@ -67,13 +63,11 @@ public partial class IntegrationTests : IntegrationTestBase
     {
         // Arrange
         var sourceClient = await _api.LoggedAsCustomer();
-
         var targetClient = await _api.LoggedAsMerchant();
-        var targetWalletBefore = await targetClient.GetWallet();
 
         // Act
-        await sourceClient.Transfer(6_80, targetWalletBefore.Id);
-        await sourceClient.Transfer(1_25, targetWalletBefore.Id);
+        await sourceClient.Transfer(6_80, targetClient.WalletId);
+        await sourceClient.Transfer(1_25, targetClient.WalletId);
         await _worker.ProcessAll();
 
         // Assert
