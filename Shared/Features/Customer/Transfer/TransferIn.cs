@@ -8,7 +8,7 @@ public class TransferIn
     public long Amount { get; set; }
 
     /// <summary>
-    /// Carteira de destino da transferência
+    /// Id da carteira de destino da transferência
     /// </summary>
     public Guid WalletId { get; set; }
 

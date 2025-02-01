@@ -66,6 +66,7 @@ public class Notification
             Id = Id,
             Status = Status,
             Message = Message,
+            CreatedAt = CreatedAt,
         };
     }
 }
