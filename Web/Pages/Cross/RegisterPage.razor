@@ -4,16 +4,29 @@
 
 <PicPayPageTitle Title="Cadastro" />
 
-<MudContainer Class="mt-4 mb-8" MaxWidth="MaxWidth.ExtraSmall">
+<MudContainer Class="mt-4 mb-6" MaxWidth="MaxWidth.ExtraSmall">
     <MudOverlay @bind-Visible="@_loading" LightBackground="true" Absolute="false">
         <MudProgressCircular Color="Color.Info" Indeterminate="true" Size="Size.Large" />
     </MudOverlay>
     <MudForm @ref="@_form">
         <MudCard Class="px-4 pt-0 pb-4">
-            <MudImage Src="picpay-logo.png" Alt="PicPay" Elevation="25" Class="rounded-lg mx-20 mt-10 mb-10"/>
+            <MudImage Src="picpay-logo.png" Alt="PicPay" Elevation="25" Class="rounded-lg mx-20 mt-10 mb-6"/>
+
             <MudCardContent Class="px-0 mx-4 pt-8 pb-0">
+                <MudTabs @bind-ActivePanelIndex="@_index" Rounded="true" Outlined="true" Class="mb-4" Style="align-items:center">
+                    <MudTabPanel Text="Cliente" Icon="@Icons.Material.Filled.Person" />
+                    <MudTabPanel Text="Lojista" Icon="@Icons.Material.Filled.Shop" />
+                </MudTabs>
+
                 <PicPayTextField Label="Nome" @bind-Value="@_name" />
-                <PicPayTextField Label="Cpf" @bind-Value="@_cpf" Mask="@(new PatternMask("000.000.000-00"))" />
+                @if (_index == 0)
+                {
+                    <PicPayTextField Label="Cpf" @bind-Value="@_cpf" Mask="@(new PatternMask("000.000.000-00"))" />
+                }
+                else
+                {
+                    <PicPayTextField Label="Cnpj" @bind-Value="@_cnpj" Mask="@(new PatternMask("00.000.000/0000-00"))" />
+                }
                 <PicPayTextField Label="Email" @bind-Value="@_email" />
                 <PasswordTextField Required="true" @bind-Value="@_password" />
             </MudCardContent>
@@ -23,7 +36,7 @@
                     Size="Size.Large"
                     Color="Color.Primary"
                     Variant="Variant.Filled"
-                    Class="mx-auto mb-4 px-12 my-0"
+                    Class="mx-auto mt-2 mb-3 px-12 my-0"
                 >
                     Cadastrar
                 </MudButton>
@@ -35,14 +48,17 @@
 @inject ISnackbar Snackbar
 @inject NavigationManager Nav
 @inject CreateCustomerClient CreateCustomerClient
+@inject CreateMerchantClient CreateMerchantClient
 
 @code
 {
     private bool _loading;
     private MudForm _form;
 
+    private int _index;
     private string _name;
     private string _cpf;
+    private string _cnpj;
     private string _email;
     private string _password;
 
@@ -52,6 +68,20 @@
         if (!_form.IsValid) return;
 
         _loading = true;
+        if (_index == 0)
+        {
+            await CreateCustomer();
+        }
+        else
+        {
+            await CreateMerchant();
+        }
+
+        _loading = false;
+    }
+
+    private async Task CreateCustomer()
+    {
         var response = await CreateCustomerClient.Create(_name, _cpf, _email, _password);
         if (response.IsSuccess())
         {
@@ -61,6 +91,18 @@
         {
             Snackbar.Add(response.GetError().Message, Severity.Error);
         }
-        _loading = false;
+    }
+
+    private async Task CreateMerchant()
+    {
+        var response = await CreateMerchantClient.Create(_name, _cnpj, _email, _password);
+        if (response.IsSuccess())
+        {
+            // Redirect to login page
+        }
+        else
+        {
+            Snackbar.Add(response.GetError().Message, Severity.Error);
+        }
     }
 }
