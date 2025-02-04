@@ -13,7 +13,7 @@
             <MudImage Src="picpay-logo.png" Alt="PicPay" Elevation="25" Class="rounded-lg mx-20 mt-10 mb-6"/>
 
             <MudCardContent Class="px-0 mx-4 pt-8 pb-0">
-                <MudTabs @bind-ActivePanelIndex="@_index" Rounded="true" Outlined="true" Class="mb-4" Style="align-items:center">
+                <MudTabs @bind-ActivePanelIndex="@_index" Rounded="true" Outlined="true" Class="mb-8" Style="align-items:center">
                     <MudTabPanel Text="Cliente" Icon="@Icons.Material.Filled.Person" />
                     <MudTabPanel Text="Lojista" Icon="@Icons.Material.Filled.Shop" />
                 </MudTabs>
@@ -21,11 +21,11 @@
                 <PicPayTextField Label="Nome" @bind-Value="@_name" />
                 @if (_index == 0)
                 {
-                    <PicPayTextField Label="Cpf" @bind-Value="@_cpf" Mask="@(new PatternMask("000.000.000-00"))" />
+                    <MudTextField Class="pb-2" Margin="Margin.Dense" Immediate="true" Required="true" RequiredError="Informe!" Mask="@(new PatternMask("000.000.000-00"))" Label="Cpf" @bind-Value="@_cpf" Variant="@Variant.Outlined" />
                 }
                 else
                 {
-                    <PicPayTextField Label="Cnpj" @bind-Value="@_cnpj" Mask="@(new PatternMask("00.000.000/0000-00"))" />
+                    <MudTextField Class="pb-2" Margin="Margin.Dense" Immediate="true" Required="true" RequiredError="Informe!" Mask="@(new PatternMask("00.000.000/0000-00"))" Label="Cnpj" @bind-Value="@_cnpj" Variant="@Variant.Outlined" />
                 }
                 <PicPayTextField Label="Email" @bind-Value="@_email" />
                 <PasswordTextField Required="true" @bind-Value="@_password" />
