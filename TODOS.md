@@ -1,9 +1,7 @@
 # TODOS
 
 - Amarrar banco e gerar diagrama
-- Icons na doc
 - Refatorar domain events + tasks + processors
-- Rate limit
 - Auditoria
 - Testes de carga com K6
 

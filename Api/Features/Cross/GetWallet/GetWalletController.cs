@@ -8,7 +8,7 @@ namespace PicPay.Api.Features.Cross.GetWallet;
 public class GetWalletController(GetWalletService service) : ControllerBase
 {
     /// <summary>
-    /// Carteira
+    /// 💰 Carteira
     /// </summary>
     /// <remarks>
     /// Retorna a Carteira do usuário.

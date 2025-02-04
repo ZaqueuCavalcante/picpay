@@ -8,7 +8,7 @@ namespace PicPay.Api.Features.Cross.GetNotifications;
 public class GetNotificationsController(GetNotificationsService service) : ControllerBase
 {
     /// <summary>
-    /// Notificações
+    /// 🔔 Notificações
     /// </summary>
     /// <remarks>
     /// Retorna as Notificações do usuário.

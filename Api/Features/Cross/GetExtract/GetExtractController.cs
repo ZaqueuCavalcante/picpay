@@ -8,7 +8,7 @@ namespace PicPay.Api.Features.Cross.GetExtract;
 public class GetExtractController(GetExtractService service) : ControllerBase
 {
     /// <summary>
-    /// Extrato
+    /// 🧾 Extrato
     /// </summary>
     /// <remarks>
     /// Retorna o extrato de transações do usuário.

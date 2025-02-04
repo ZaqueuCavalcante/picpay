@@ -6,7 +6,7 @@ namespace PicPay.Api.Features.Adm.Transfer;
 public class TransferController(TransferService service) : ControllerBase
 {
     /// <summary>
-    /// Transferir
+    /// 💸 Transferir
     /// </summary>
     /// <remarks>
     /// Cria uma nova Transferência para a Carteira informada.
