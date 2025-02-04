@@ -47,6 +47,7 @@ internal class ResponseExamples : IMultipleExamplesProvider<CreateMerchantOut>
                 Name = "Gilbirdelson Lanches",
                 Cnpj = "55.774.025/0001-34",
                 Email = "gilbirdelson.lanches@gmail.com",
+				WalletId = Guid.NewGuid(),
 			}
 		);
     }

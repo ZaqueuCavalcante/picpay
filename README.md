@@ -1,14 +1,14 @@
-# Desafio do PicPay simplificado, feito em C# | DotNet
+# Desafio do PicPay Simplificado
 
 [![Tests](https://github.com/ZaqueuCavalcante/picpay/actions/workflows/tests.yml/badge.svg)](https://github.com/ZaqueuCavalcante/picpay/actions/workflows/tests.yml)
 
-Essa é minha resolução do [desafio proposto pelo PicPay](https://github.com/PicPay/picpay-desafio-backend):
+Essa é minha resolução do [desafio backend proposto pelo PicPay](https://github.com/PicPay/picpay-desafio-backend):
 
-- O PicPay Simplificado é uma plataforma de pagamentos simplificada.
+- O PicPay Simplificado é uma plataforma de pagamentos apenas com funcionalidades básicas.
 - Nela é possível depositar e realizar transferências de dinheiro entre usuários.
 - Temos 2 tipos de usuários, Clientes e Lojistas, ambos têm carteira com dinheiro e podem realizar transferências.
-- A realização de transferências depende de um serviço autorizador externo.
-- Em caso de sucesso, o recebedor deve ser notificado da transação, via um serviço externo de notificação.
+- A realização de transferências depende de um serviço autorizador externo, que determina se a operação pode acontecer ou não.
+- Em caso de sucesso da transferência, o recebedor deve ser notificado da transação, através de um serviço externo de notificação.
 - Ambos os serviços externos podem estar estar indisponíveis no momento que são chamados (precisamos tratar esses casos no código).
 
 Temos 3 pontos principais neste projeto:
@@ -17,41 +17,25 @@ Temos 3 pontos principais neste projeto:
 - A segurança dos dados também é fundamental (apenas você pode transferir/consultar seu dinheiro)
 - O envio de notificações deve ser feito de maneira assíncrona, tornando o sistema resiliente a falhas
 
-Segue um resumo do que implementei:
+Resumo do que você vai encontrar aqui:
 
-- API C#/DotNet + documentação com Scalar
-- 3548641861 Testes automatizados (com cenários reais de produção)
-- Deploy no Railway (Api + Postgres + Worker)
-- Processamento assíncrono de eventos e tarefas
-- Gestão de erros e reprocessamento de eventos/tarefas
-- Políticas de retry
-- Concorrência e paralelismo (lock)
-- Rinha de backend
-- Concorrência e consistência dos valores (lock)
-- Documentação da API com o Scalar
+- API C#/.Net + documentação com Scalar
+- Mais de 100 testes automatizados
 - CI/CD com o GitHub Actions
-- Logs
-- Observability
-- Docker compose
-- Testes de carga com K6
-- Rate limit
-- Diagrama do banco de dados
-- Testes automatizados rodando cenários iguais aos de produção
-- Report de cobertura de testes
-- Testes de mutação
-- Design Patterns
-- Foco em segurança e consistência
-- Ao final da suite de testes, garanto que a soma de todos os saldo da zero
+- Deploy no Railway (Api + Postgres + Worker)
+- Processamento assíncrono de eventos e tarefas em background
+- Gestão de erros e reprocessamento de eventos/tarefas
+- Concorrência e paralelismo + consistência financeira
 
-## Sumário
+## 0️⃣ Sumário
 
-- Regras de Negócio
+- 1️⃣ Regras de Negócio
+- 2️⃣ Arquitetura
 - Casos de Uso
 - Testes
-- Arquitetura
 - Referências
 
-## Regras de Negócio
+## 1️⃣ Regras de Negócio
 
 - Existem dois tipos de usuários no sistema: Clientes e Lojistas
 
@@ -69,96 +53,43 @@ Segue um resumo do que implementei:
     - O cliente ou lojista precisa receber uma notificação (email, sms) enviada por um serviço externo (https://util.devi.tools/api/v1/notify)
     - Eventualmente este serviço pode estar indisponível/instável
 
-> As seguintes regras eu que adicionei para deixar o projeto mais desafiador
+> 🆙 As regras a seguir foram adicionadas por mim, para deixar o projeto mais desafiador
 
 - Existe um terceiro tipo de usuário no sistema, o Adm:
     - Ele será responsável pela gestão do sistema como um todo, tendo acesso aos dados de clientes e lojistas
-    - Ele pode realizar um Depósito para uma carteira qualquer
 
 - A API terá autenticação e autorização:
-    - Endpoins para cadastro de clientes e lojistas
-    - Endpoint para login
-    - Garantir via testes de segurança que nenhum dado alheio possa ser acessado
+    - Endpoins para cadastro de usuários e para realização de login
 
-- A notificação será feita de maneira assíncrona
-    - Evento de pagamento efetuado
-    - Task para enviar email, sms, push-notification
-    - Retry automático de reenvio com delay
-    - Garantir que apenas uma transação seja enviada
+- A notificação será enviada de maneira assíncrona:
+    - Teremos um evento de Transferência Realizada, que vai disparar uma tarefa em background para enviar a notificação
+    - Vamos usar uma política de retentativa simples, caso o serviço externo retorne algum erro
 
-- Deve existir um front-end
-    - Clientes, Lojistas e Adm vão acessar
-    - Deve respeitar todas as políticas de acesso da API
-    - Mesma paleta de cores do PicPay
+- Bônus de Boas-Vindas:
+    - Todo Cliente que se cadastrar no PicPay, receberá um bônus no valor de R$ 10,00
 
-- Cliente deve poder acessar
+- Cliente deve poder acessar:
     - Seu saldo atual
     - Extrato com todas as suas transações
     - Listagem com todas as suas notificações
 
-- Lojista deve poder acessar
+- Lojista deve poder acessar:
     - Relatórios de transações, com filtros de datas, valores e clientes
     - Relatório de notificações, com pendentes, sucessos e erros
 
-- Adm deve poder acessar
-    - Tela de consistência financeira
+- Adm deve poder acessar:
+    - Dados de consistência financeira
     - Informações sobre Clientes e Lojistas
-    - Status de todos os serviços
-    - Filas, eventos e tasks
-    - Reprocessamento de tasks com erros
 
-## Conceitos e Decições
-
-- Usei TDD para desenvolver a maioria do código
-- Lock no banco de dados para concorrência e consistência
-- Outbox Pattern
-- Domain Events
-- Result Pattern
-- Vertical Slices Architecture
-
-## Arquitetura
-
-Utilizar modelo C4?
-Ícones específicos e intuitivos para cada serviço/usuário/conceito
+## 2️⃣ Arquitetura
 
 - Api
-    - EF Core
-    - 
 - Worker
-- Web
 - Vendors
 - Postgres
 
-- Users
-    - id
-    - name
-    - doc
-    - email
-    - password
-    - created_at
-
-- Wallets
-    - id
-    - user_id
-    - type
-    - balance
-    - created_at
-
-- Transactions
-    - id
-    - source_id
-    - target_id
-    - amount
-    - created_at
-
-- Notifications
-    - id
-    - user_id
-    - message
-    - status
-    - created_at
-
-
+* Eventos + Tasks
+* Diagrama do banco de dados
 
 
 ## Casos de Uso
@@ -180,6 +111,7 @@ Casos de uso mapeados, facilitando a implementação e os testes.
 - Clientes novos devem receber um bônus de R$ 10,00
 - A criação de clientes em paralelo deve manter os saldos consistentes
 - Uma notificação deve ser enviada com a menssagem: "Bônus de Boas-Vindas no valor de R$ 10,00"
+- Lojistas não devem receber esse bônus
 
 ### Transferência de dinheiro
 - Chamada não autenticada deve receber 403
@@ -228,15 +160,13 @@ Casos de uso mapeados, facilitando a implementação e os testes.
 
 - Cliente pode transferir para outro cliente
 
-- Ao final, o recebedor deve ser notificado da transação
+- Ao final, o recebedor (cliente ou lojista) deve ser notificado da transação
 
 ### Notificações do Usuário
 - Listar todas as notificações do usuário, ordenadas pela mais recente
 
 ### Extrato de Transações
 - Listar todas as transações do usuário, ordenadas pela mais recente
-
-
 
 ### Auditoria
 - Quem, fez o quê, onde e quando?
@@ -257,7 +187,11 @@ Casos de uso mapeados, facilitando a implementação e os testes.
 
 - Auth e Notify devem se comportar dinâmicamente
     - Passo algum parâmetro na query string que altera o valor do retorno no endpoint
-    - Uso de tabelas no banco?
+
+
+
+
+
 
 ## Referências
 

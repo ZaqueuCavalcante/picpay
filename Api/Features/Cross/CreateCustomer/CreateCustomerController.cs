@@ -47,6 +47,7 @@ internal class ResponseExamples : IMultipleExamplesProvider<CreateCustomerOut>
 				Name = "João da Silva",
                 Cpf = "084.128.108-48",
 				Email = "joao.da.silva@gmail.com",
+                WalletId = Guid.NewGuid(),
 			}
 		);
     }

@@ -1,5 +1,3 @@
-using PicPay.Api.Features.Cross.CreateNotification;
-
 namespace PicPay.Api.Features.Adm.Transfer;
 
 [DomainEventDescription("Transferência realizada")]
