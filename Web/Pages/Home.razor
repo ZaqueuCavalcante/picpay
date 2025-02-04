@@ -1,5 +1,31 @@
-﻿@page "/"
+﻿@using PicPay.Web.Features.Adm.Index
+@using PicPay.Web.Features.Customer.Index
+@using PicPay.Web.Features.Merchant.Index
+
+@page "/"
 
 <PageTitle>PicPay</PageTitle>
 
-<Index />
+<AuthorizeView Roles="@UserRole.Adm.ToString()">
+    <Authorized>
+        <AdmIndexPage />
+    </Authorized>
+</AuthorizeView>
+
+<AuthorizeView Roles="@UserRole.Customer.ToString()">
+    <Authorized>
+        <CustomerIndexPage />
+    </Authorized>
+</AuthorizeView>
+
+<AuthorizeView Roles="@UserRole.Merchant.ToString()">
+    <Authorized>
+        <MerchantIndexPage />
+    </Authorized>
+</AuthorizeView>
+
+<AuthorizeView Roles="Adm, Customer, Merchant">
+    <NotAuthorized>
+        <AnonymousIndexPage />
+    </NotAuthorized>
+</AuthorizeView>

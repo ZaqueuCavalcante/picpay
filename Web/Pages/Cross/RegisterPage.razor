@@ -85,7 +85,7 @@
         var response = await CreateCustomerClient.Create(_name, _cpf, _email, _password);
         if (response.IsSuccess())
         {
-            // Redirect to login page
+            Nav.NavigateTo("/login");
         }
         else
         {
@@ -98,7 +98,7 @@
         var response = await CreateMerchantClient.Create(_name, _cnpj, _email, _password);
         if (response.IsSuccess())
         {
-            // Redirect to login page
+            Nav.NavigateTo("/login");
         }
         else
         {
