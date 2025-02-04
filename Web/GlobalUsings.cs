@@ -9,5 +9,6 @@ global using System.Net.Http.Json;
 global using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 global using PicPay.Web.Features.Cross.Login;
+global using PicPay.Web.Features.Cross.GetWallet;
 global using PicPay.Web.Features.Cross.CreateCustomer;
 global using PicPay.Web.Features.Cross.CreateMerchant;

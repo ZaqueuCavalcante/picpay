@@ -1,5 +1,88 @@
 ﻿@namespace PicPay.Web.Features.Customer.Index
 
-<MudContainer MaxWidth="MaxWidth.Large">
-    <MudText>CUSTOMER</MudText>
+<MudContainer MaxWidth="MaxWidth.ExtraSmall">
+    <MudGrid Spacing="2">
+        <MudItem xs="12" sm="12" md="12" lg="12">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mt-4">
+                @if (_showBalance)
+                {
+                    <MudText Typo="Typo.h5" Color="Color.Success"><strong>@_wallet.Balance.ToMoneyFormat()</strong></MudText>
+                    <MudIconButton Icon="@Icons.Material.Filled.MoneyOff" Color="Color.Inherit" OnClick="() => _showBalance = false" />
+                }
+                else
+                {
+                    <MudText Typo="Typo.h5" Color="Color.Success"><strong>R$ • • •</strong></MudText>
+                    <MudIconButton Icon="@Icons.Material.Filled.AttachMoney" Color="Color.Inherit" OnClick="() => _showBalance = true" />
+                }
+            </MudStack>
+        </MudItem>
+
+        <MudItem xs="12" sm="12" md="12" lg="12">
+            <MudDivider />
+        </MudItem>
+
+        <MudItem xs="12" sm="12" md="12" lg="12">
+            <MudButton
+                Class="px-8 my-2"
+                StartIcon="@Icons.Material.Filled.QrCode"
+                IconSize="Size.Large"
+                Variant="Variant.Filled"
+                Color="Color.Primary"
+            >
+                <MudText Typo="Typo.h6">
+                    Pagar
+                </MudText>
+            </MudButton>
+        </MudItem>
+
+        <MudItem xs="12" sm="12" md="12" lg="12">
+            <MudDivider />
+        </MudItem>
+
+        <MudItem xs="12" sm="12" md="12" lg="12">
+            <MudButton
+                Class="px-8 my-2"
+                StartIcon="@Icons.Material.Filled.Receipt"
+                IconSize="Size.Large"
+                Variant="Variant.Filled"
+                Color="Color.Secondary"
+            >
+                <MudText Typo="Typo.h6">
+                    Extrato
+                </MudText>
+            </MudButton>
+        </MudItem>
+
+        <MudItem xs="12" sm="12" md="12" lg="12">
+            <MudDivider />
+        </MudItem>
+
+        <MudItem xs="12" sm="12" md="12" lg="12">
+            <MudButton
+                Class="px-8 my-2"
+                StartIcon="@Icons.Material.Filled.NotificationsNone"
+                IconSize="Size.Large"
+                Variant="Variant.Filled"
+                Color="Color.Tertiary"
+            >
+                <MudText Typo="Typo.h6">
+                    Notificações
+                </MudText>
+            </MudButton>
+        </MudItem>
+    </MudGrid>
 </MudContainer>
+
+@inject GetWalletClient GetWalletClient
+
+@code
+{
+    private bool _showBalance;
+
+    private GetWalletOut _wallet = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _wallet = await GetWalletClient.Get();
+    }
+}
