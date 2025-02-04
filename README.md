@@ -31,9 +31,8 @@ Resumo do que você vai encontrar aqui:
 
 - 1️⃣ Regras de Negócio
 - 2️⃣ Arquitetura
-- Casos de Uso
-- Testes
-- Referências
+- 3️⃣ Casos de Uso
+- 4️⃣ Referências
 
 ## 1️⃣ Regras de Negócio
 
@@ -67,6 +66,7 @@ Resumo do que você vai encontrar aqui:
 
 - Bônus de Boas-Vindas:
     - Todo Cliente que se cadastrar no PicPay, receberá um bônus no valor de R$ 10,00
+    - O valor desse bônus sairá da carteira do Adm
 
 - Cliente deve poder acessar:
     - Seu saldo atual
@@ -83,42 +83,85 @@ Resumo do que você vai encontrar aqui:
 
 ## 2️⃣ Arquitetura
 
-- Api
-- Worker
-- Vendors
-- Postgres
+O sistema é formado por 4 componentes:
+- API (ASP.NET)
+- Worker (Hangfire)
+- Vendors (serviços externos de autorização e notificação)
+- Banco (PostgreSQL)
 
-* Eventos + Tasks
-* Diagrama do banco de dados
+<p align="center">
+  <img src="./Docs/00_system.gif" width="600" style="display: block; margin: 0 auto" />
+</p>
 
+A API é responsável por executar a maioria dos fluxos de negócio, como cadastro, login e transferência.
 
-## Casos de Uso
+Durante o processamento de um request pela API, pode haver a emissão de algum evento de domínio.
+Esse evento é então processado pelo Worker em um processo separado, de forma que a API entrega a resposta pro cliente o mais rápido possível.
+O Worker então processa com o evento disparando alguma tarefa em background, como o envio da notificação de transferência recebida, por exemplo.
 
-Casos de uso mapeados, facilitando a implementação e os testes.
+Para os Vendors, criei uma API própria que vai servir de "mock" nos ambientes de desenvolvimento e testes.
+Essa API possui o endpoint do autorizador (/api/v2/authorize) e o endpoint do notificador (/api/v1/notify).
+Dessa forma, basta apontar para a url da API de Vendors nos testes. Em prod, basta usar as urls fornecidas pela PicPay.
+Também adicionei certa lógica dentro desses endpoints também, como por exemplo, sempre desautorizar transferências no valor de R$ 6,00.
 
-### Cadastro de Clientes ou Lojistas
-- Ver se o documento é válido
-- Ver se o email é válido
-- Ver se a senha informada é forte
-- Ver se o documento ou email já está sendo usado por outro usuário
-- Dois requests com os mesmos dados feitos no mesmo instante devem cadastrar apenas um usuário
+<p align="center">
+  <img src="./Docs/01_db_diagram.gif" width="600" style="display: block; margin: 0 auto" />
+</p>
+
+## 3️⃣ Casos de Uso
+
+A seguir temos todos os casos de uso do sistema.
+Cada um deles possui um respectivo teste automatizado validando seu comportamento.
+Coloquei prints de código em alguns a título de exemplo.
+
+### Cadastro de Clientes
+- Deve cadastrar com sucesso quando todos os dados forem válidos
+- Não deve cadastrar quando o CPF for inválido
+- Não deve cadastrar quando o email for inválido
+- Não deve cadastrar quando a senha for fraca
+- Não deve cadastrar quando o CPF já estiver vinculado com outro cliente
+- Não deve cadastrar quando o email já estiver vinculado com outro cliente
+- Dois requests com os mesmos CPF e email feitos no mesmo instante devem cadastrar apenas um usuário
+
+Esse último cenário é mostrado a seguir, onde disparo dois requests simultâneos com os mesmos dados, a fim de validar que o sistema vai cadastrar apenas um usuário e retornar erro no outro request.
+
+<p align="center">
+  <img src="./Docs/03_duplicated_customer.png" width="600" style="display: block; margin: 0 auto" />
+</p>
+
+### Cadastro de Lojistas
+- Deve cadastrar com sucesso quando todos os dados forem válidos
+- Não deve cadastrar quando o CNPJ for inválido
+- Não deve cadastrar quando o email for inválido
+- Não deve cadastrar quando a senha for fraca
+- Não deve cadastrar quando o CNPJ já estiver vinculado com outro lojista
+- Não deve cadastrar quando o email já estiver vinculado com outro lojista
+- Dois requests com os mesmos CNPJ e email feitos no mesmo instante devem cadastrar apenas um usuário
 
 ### Login
+- Deve conseguir logar tanto como cliente quanto como lojista
 - Não deve logar quando o usuário não existir
 - Não deve logar quando a senha estiver incorreta
 
 ### Bônus de Boas-Vindas
 - Clientes novos devem receber um bônus de R$ 10,00
-- A criação de clientes em paralelo deve manter os saldos consistentes
-- Uma notificação deve ser enviada com a menssagem: "Bônus de Boas-Vindas no valor de R$ 10,00"
 - Lojistas não devem receber esse bônus
+- A criação de clientes em paralelo deve manter o saldo de todas as carteiras consistente (soma zero)
+
+<p align="center">
+  <img src="./Docs/04_bonus_balances.png" width="600" style="display: block; margin: 0 auto" />
+</p>
+
+- Uma notificação deve ser enviada para o cliente com a menssagem: "Bônus de Boas-Vindas no valor de R$ 10,00"
+
+<p align="center">
+  <img src="./Docs/05_bonus_notification.png" width="600" style="display: block; margin: 0 auto" />
+</p>
 
 ### Transferência de dinheiro
-- Chamada não autenticada deve receber 403
+- Cliente pode transferir para um lojista
 
-- Apenas Clientes podem transferir
-    - Adm deve receber 401
-    - Lojista deve receber 401
+- Cliente pode transferir para outro cliente
 
 - Não pode transferir valor <= 0
 
@@ -130,18 +173,34 @@ Casos de uso mapeados, facilitando a implementação e os testes.
 
 - Não pode transferir caso seja não autorizado
 
+<p align="center">
+  <img src="./Docs/06_auth_return_false.png" width="600" style="display: block; margin: 0 auto" />
+</p>
+
 - Não pode transferir caso o autorizador esteja fora do ar
+
+<p align="center">
+  <img src="./Docs/07_auth_is_down.png" width="600" style="display: block; margin: 0 auto" />
+</p>
 
 - Não deve transferir em paralelo, gastando mais que o saldo
     - Tenho R$ 10,00 de saldo, não posso realizar duas transferências de R$ 8,00 ao mesmo tempo
     - Apenas uma delas deve ser feita, a outra deve retornar erro
     - Se forem duas de R$ 4,00 ambas devem ser realizadas com sucesso
 
+<p align="center">
+  <img src="./Docs/08_not_transfer_more_then_balance_in_parallel.png" width="600" style="display: block; margin: 0 auto" />
+</p>
+
 - Quem recebe duas transferências ao mesmo tempo deve acabar com o saldo correto
     - Um lojista recebendo vários pagamentos de maneira simultânea deve se manter com saldo consistente
     - O lojista possui saldo de R$ 5,00
     - Dois clientes transferem R$ 8,00 cada pro lojista ao mesmo tempo
     - O saldo final do lojista deve ser de R$ 21,00
+
+<p align="center">
+  <img src="./Docs/09_same_target.png" width="600" style="display: block; margin: 0 auto" />
+</p>
 
 - Quem enviar pra X e receber de Y ao mesmo tempo deve acabar com o saldo correto
     - Maria possui R$ 5,00 de saldo, Zezinho possui R$ 8,00 e o lojista Gilbirdelson possui R$ 10,00
@@ -150,17 +209,25 @@ Casos de uso mapeados, facilitando a implementação e os testes.
     - Gilbirdelson com R$ 12,00
     - Zezinho com R$ 2,00
 
+<p align="center">
+  <img src="./Docs/10_source_and_target.png" width="600" style="display: block; margin: 0 auto" />
+</p>
+
 - Quem enviar pra X e receber de X ao mesmo tempo deve acabar com o saldo correto
     - Maria possui R$ 10,00 de saldo e Zezinho possui R$ 10,00
     - Maria envia R$ 6,00 pra Zezinho e, no exato mesmo instante, Zezinho envia R$ 2,00 pra Maria
     - Maria deve terminar com saldo de R$ 6,00 e Zezinho com R$ 14,00
     - Se não tratado, isso pode gerar um deadlock no banco de dados
 
-- Cliente pode transferir para um lojista
-
-- Cliente pode transferir para outro cliente
+<p align="center">
+  <img src="./Docs/11_cross_transfers.png" width="600" style="display: block; margin: 0 auto" />
+</p>
 
 - Ao final, o recebedor (cliente ou lojista) deve ser notificado da transação
+
+<p align="center">
+  <img src="./Docs/12_transfer_notification.png" width="600" style="display: block; margin: 0 auto" />
+</p>
 
 ### Notificações do Usuário
 - Listar todas as notificações do usuário, ordenadas pela mais recente
@@ -178,18 +245,11 @@ Casos de uso mapeados, facilitando a implementação e os testes.
 
 ## Testes
 
-- Adicionar description nos testes, mostrar no log de execução
-- Testes com as APIs externas fora do ar (timeout baixo)
 - Testes de carga com o K6 (quantas transações podem ser efetuadas por s/min/h/dia)
 
-- Uso do pattern Facade nos testes, abstraindo as chamadas pra API
 - Para cada caso de uso, colocar um print ou code sniped do teste
 
 - Auth e Notify devem se comportar dinâmicamente
-    - Passo algum parâmetro na query string que altera o valor do retorno no endpoint
-
-
-
 
 
 
