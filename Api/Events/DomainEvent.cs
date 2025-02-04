@@ -24,4 +24,11 @@ public class DomainEvent
         Data = data.Serialize();
         OccurredAt = DateTime.Now;
     }
+
+    public void Processed(double duration)
+    {
+        ProcessedAt = DateTime.Now;
+        Duration = Convert.ToInt32(duration);
+        Status = Error.HasValue() ? DomainEventStatus.Error : DomainEventStatus.Success;
+    }
 }

@@ -32,7 +32,8 @@ Resumo do que você vai encontrar aqui:
 - 1️⃣ Regras de Negócio
 - 2️⃣ Arquitetura
 - 3️⃣ Casos de Uso
-- 4️⃣ Referências
+- 4️⃣ Processamento Assíncrono
+- 5️⃣ Referências
 
 ## 1️⃣ Regras de Negócio
 
@@ -54,9 +55,6 @@ Resumo do que você vai encontrar aqui:
 
 > 🆙 As regras a seguir foram adicionadas por mim, para deixar o projeto mais desafiador
 
-- Existe um terceiro tipo de usuário no sistema, o Adm:
-    - Ele será responsável pela gestão do sistema como um todo, tendo acesso aos dados de clientes e lojistas
-
 - A API terá autenticação e autorização:
     - Endpoins para cadastro de usuários e para realização de login
 
@@ -66,7 +64,7 @@ Resumo do que você vai encontrar aqui:
 
 - Bônus de Boas-Vindas:
     - Todo Cliente que se cadastrar no PicPay, receberá um bônus no valor de R$ 10,00
-    - O valor desse bônus sairá da carteira do Adm
+    - O valor desse bônus sairá da carteira do próprio PicPay
 
 - Cliente deve poder acessar:
     - Seu saldo atual
@@ -77,10 +75,6 @@ Resumo do que você vai encontrar aqui:
     - Seu saldo atual
     - Extrato com todas as suas transações
     - Listagem com todas as suas notificações
-
-- Adm deve poder acessar:
-    - Dados de consistência financeira
-    - Informações sobre Clientes e Lojistas
 
 ## 2️⃣ Arquitetura
 
@@ -125,8 +119,7 @@ Coloquei prints de código em alguns a título de exemplo.
 - Não deve cadastrar quando o CPF já estiver vinculado com outro cliente
 - Não deve cadastrar quando o email já estiver vinculado com outro cliente
 - Dois requests com os mesmos CPF e email feitos no mesmo instante devem cadastrar apenas um usuário
-
-Esse último cenário é mostrado a seguir, onde disparo dois requests simultâneos com os mesmos dados, a fim de validar que o sistema vai cadastrar apenas um usuário e retornar erro no outro request.
+    - Esse cenário é mostrado a seguir, onde disparo dois requests simultâneos com os mesmos dados, a fim de validar que o sistema vai cadastrar apenas um usuário e retornar erro no outro request.
 
 <p align="center">
   <img src="./Docs/03_duplicated_customer.png" width="600" style="display: block; margin: 0 auto" />
@@ -175,16 +168,14 @@ Esse último cenário é mostrado a seguir, onde disparo dois requests simultân
 - Não pode transferir sem saldo suficiente
 
 - Não pode transferir caso seja não autorizado
-
-Nesse caso configurei para o Autorizador retornar "false" quando receber o valor de R$ 6,66
+    - Nesse caso configurei para o Autorizador retornar "false" quando receber o valor de R$ 6,66
 
 <p align="center">
   <img src="./Docs/06_auth_return_false.png" width="600" style="display: block; margin: 0 auto" />
 </p>
 
 - Não pode transferir caso o autorizador esteja fora do ar
-
-Nesse caso configurei para o Autorizador retornar "504 Gateway Timeout" quando receber o valor de R$ 5,04
+    - Nesse caso configurei para o Autorizador retornar "504 Gateway Timeout" quando receber o valor de R$ 5,04
 
 <p align="center">
   <img src="./Docs/07_auth_is_down.png" width="600" style="display: block; margin: 0 auto" />
@@ -265,6 +256,7 @@ Nesse caso configurei para o Autorizador retornar "504 Gateway Timeout" quando r
   <img src="./Docs/16_merchant_extract.png" width="600" style="display: block; margin: 0 auto" />
 </p>
 
+## 4️⃣ Processamento Assíncrono
 
 
 
@@ -272,17 +264,8 @@ Nesse caso configurei para o Autorizador retornar "504 Gateway Timeout" quando r
 
 
 
-## Testes
 
-- Testes de carga com o K6 (quantas transações podem ser efetuadas por s/min/h/dia)
-
-- Para cada caso de uso, colocar um print ou code sniped do teste
-
-- Auth e Notify devem se comportar dinâmicamente
-
-
-
-## Referências
+## 5️⃣ Referências
 
 - Repositório original do desafio
     - https://github.com/PicPay/picpay-desafio-backend
@@ -295,9 +278,4 @@ Nesse caso configurei para o Autorizador retornar "504 Gateway Timeout" quando r
     - A Giuliana Bezerra desenvolve uma arquitetura robusta, com entrega assícrona das notificações
     - https://youtu.be/YcuscoiIN14
 
-## Final
-
-- Comente se vc conhece mais desafios de empresas
-- O que faltou no projeto?
-- Faca um fork do projeto e teste na sua maquina!
-- Contribua com o projeto, abra um PR la!
+Você conhece desafios de outras empresas? Deixe nos comentários!

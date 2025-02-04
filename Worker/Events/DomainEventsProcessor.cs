@@ -1,59 +1,53 @@
-using Dapper;
-using Npgsql;
-using Hangfire;
-using PicPay.Shared;
 using Newtonsoft.Json;
 using PicPay.Api.Events;
 using System.Diagnostics;
-using PicPay.Worker.Extensions;
+using PicPay.Api.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace PicPay.Worker.Events;
 
-public class DomainEventsProcessor(IConfiguration configuration, IServiceScopeFactory serviceScopeFactory)
+public class DomainEventsProcessor(IServiceScopeFactory serviceScopeFactory)
 {
     public async Task Run()
     {
         using var scope = serviceScopeFactory.CreateScope();
+        var ctx = scope.ServiceProvider.GetRequiredService<PicPayDbContext>();
 
-        await using var dataSource = NpgsqlDataSource.Create(configuration.Database().ConnectionString);
-        await using var connection = await dataSource.OpenConnectionAsync();
+        await Process(scope, ctx, Guid.NewGuid());
+    }
 
-        var events = await connection.QueryAsync<DomainEvent>(Sql, new { ProcessorId = Guid.NewGuid() });
+    private static async Task Process(IServiceScope scope, PicPayDbContext ctx, Guid processorId)
+    {
+        var events = await ctx.Events.FromSqlRaw(Sql, processorId).ToListAsync();
+        if (events.Count == 0) return;
 
+        await ctx.Database.BeginTransactionAsync();
         var sw = Stopwatch.StartNew();
 
         foreach (var evt in events)
         {
             sw.Restart();
 
-            dynamic data = GetData(evt);
-            dynamic handler = GetHandler(scope, evt);
-            string? error = null;
-
             try
             {
+                dynamic data = GetData(evt);
+                dynamic handler = GetHandler(scope, evt);
                 await handler.Handle(evt.Id, data);
             }
             catch (Exception ex)
             {
-                error = ex.Message + ex.InnerException?.Message;
+                evt.Error = ex.Message + ex.InnerException?.Message;
             }
 
-            var parameters = new
-            {
-                evt.Id,
-                error,
-                Duration = sw.Elapsed.TotalMilliseconds,
-                Status = error.HasValue() ? DomainEventStatus.Error.ToString() : DomainEventStatus.Success.ToString(),
-            };
             sw.Stop();
-            await connection.ExecuteAsync(Update, parameters);
+
+            evt.Processed(sw.Elapsed.TotalMilliseconds);
         }
 
-        if (events.Count() == 100)
-        {
-            BackgroundJob.Enqueue<DomainEventsProcessor>(x => x.Run());
-        }
+        await ctx.SaveChangesAsync();
+        await ctx.Database.CommitTransactionAsync();
+
+        await Process(scope, ctx, processorId);
     }
 
     private static dynamic GetData(DomainEvent evt)
@@ -72,24 +66,19 @@ public class DomainEventsProcessor(IConfiguration configuration, IServiceScopeFa
 
     private static readonly string Sql = @"
         UPDATE picpay.domain_events
-        SET processor_id = @ProcessorId, status = 'Processing'
+        SET processor_id = {0}, status = 'Processing'
         WHERE id IN (
             SELECT id
             FROM picpay.domain_events
             WHERE processor_id IS NULL
             ORDER BY occurred_at
-            LIMIT 100
+            LIMIT 1000
+            FOR UPDATE SKIP LOCKED
         );
 
-        SELECT id, type, data
+        SELECT *
         FROM picpay.domain_events
-        WHERE processor_id = @ProcessorId AND processed_at IS NULL
+        WHERE processor_id = {0} AND processed_at IS NULL
         ORDER BY occurred_at;
-    ";
-
-    private static readonly string Update = @"
-        UPDATE picpay.domain_events
-        SET processed_at = now(), status = @Status, error = @Error, duration = @Duration
-        WHERE id = @Id
     ";
 }

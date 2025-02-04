@@ -16,7 +16,12 @@ public class PicPayTasksProcessorDbListener(IConfiguration configuration) : Back
 
         connection.Notification += (o, e) =>
         {
-            BackgroundJob.Enqueue<PicPayTasksProcessor>(x => x.Run());
+            var processingJobs = JobStorage.Current.GetMonitoringApi().ProcessingJobs(0, int.MaxValue).Count(x => x.Value.Job.Type == typeof(PicPayTasksProcessor));
+            var enqueuedJobs = JobStorage.Current.GetMonitoringApi().EnqueuedJobs("default", 0, int.MaxValue).Count(x => x.Value.Job.Type == typeof(PicPayTasksProcessor));
+            if (processingJobs < 15 && enqueuedJobs < 5)
+            {
+                BackgroundJob.Enqueue<PicPayTasksProcessor>(x => x.Run());
+            }
         };
 
         await using (var cmd = new NpgsqlCommand("LISTEN new_task;", connection))

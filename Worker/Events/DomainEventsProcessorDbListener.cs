@@ -16,7 +16,12 @@ public class DomainEventsProcessorDbListener(IConfiguration configuration) : Bac
 
         connection.Notification += (o, e) =>
         {
-            BackgroundJob.Enqueue<DomainEventsProcessor>(x => x.Run());
+            var processingJobs = JobStorage.Current.GetMonitoringApi().ProcessingJobs(0, int.MaxValue).Count(x => x.Value.Job.Type == typeof(DomainEventsProcessor));
+            var enqueuedJobs = JobStorage.Current.GetMonitoringApi().EnqueuedJobs("default", 0, int.MaxValue).Count(x => x.Value.Job.Type == typeof(DomainEventsProcessor));
+            if (processingJobs < 3 && enqueuedJobs < 5)
+            {
+                BackgroundJob.Enqueue<DomainEventsProcessor>(x => x.Run());
+            }
         };
 
         await using (var cmd = new NpgsqlCommand("LISTEN new_domain_event;", connection))
