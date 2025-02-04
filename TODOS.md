@@ -1,6 +1,5 @@
 # TODOS
 
-- Refatorar domain events + tasks + processors
 - Testes de carga com K6
 
 - Send notification to balzor wasm

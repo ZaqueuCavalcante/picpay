@@ -221,11 +221,27 @@ Coloquei prints de código em alguns a título de exemplo.
   <img src="./Docs/11_cross_transfers.png" width="600" style="display: block; margin: 0 auto" />
 </p>
 
-- Ao final, o recebedor (cliente ou lojista) deve ser notificado da transação
+- Ao final, o recebedor (cliente ou lojista) deve ser notificado da transação via serviço externo
+    - O status igual a "Success" indica que o serviço notificador retornou ok no momento que foi chamado
 
 <p align="center">
   <img src="./Docs/12_transfer_notification.png" width="600" style="display: block; margin: 0 auto" />
 </p>
+
+- Caso o recebedor (cliente ou lojista) não seja notificado pelo serviço externo, a notificação ainda deve ficar acessível no endpoint de notificações
+    - Criei uma política de retentativa onde o endpoint do notificador é chamado até 3 vezes, com intervalo de 1 segundo entre as chamadas
+    - Caso todas retornem erro, a notificação é salva no banco de dados como não enviada (status = "Failed")
+    - Seria possível criar outra política que tenta enviar novamente a notificação após um tempo também
+
+<p align="center">
+  <img src="./Docs/17_notify_error.png" width="600" style="display: block; margin: 0 auto" />
+</p>
+
+
+
+
+
+
 
 ### Notificações do Cliente
 - Listar todas as notificações do cliente, ordenadas pela mais recente
@@ -233,7 +249,6 @@ Coloquei prints de código em alguns a título de exemplo.
 <p align="center">
   <img src="./Docs/13_custome_notifications.png" width="600" style="display: block; margin: 0 auto" />
 </p>
-
 
 ### Notificações do Lojista
 - Listar todas as notificações do lojista, ordenadas pela mais recente
