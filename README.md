@@ -74,8 +74,9 @@ Resumo do que você vai encontrar aqui:
     - Listagem com todas as suas notificações
 
 - Lojista deve poder acessar:
-    - Relatórios de transações, com filtros de datas, valores e clientes
-    - Relatório de notificações, com pendentes, sucessos e erros
+    - Seu saldo atual
+    - Extrato com todas as suas transações
+    - Listagem com todas as suas notificações
 
 - Adm deve poder acessar:
     - Dados de consistência financeira
@@ -99,14 +100,16 @@ Durante o processamento de um request pela API, pode haver a emissão de algum e
 Esse evento é então processado pelo Worker em um processo separado, de forma que a API entrega a resposta pro cliente o mais rápido possível.
 O Worker então processa com o evento disparando alguma tarefa em background, como o envio da notificação de transferência recebida, por exemplo.
 
-Para os Vendors, criei uma API própria que vai servir de "mock" nos ambientes de desenvolvimento e testes.
-Essa API possui o endpoint do autorizador (/api/v2/authorize) e o endpoint do notificador (/api/v1/notify).
-Dessa forma, basta apontar para a url da API de Vendors nos testes. Em prod, basta usar as urls fornecidas pela PicPay.
-Também adicionei certa lógica dentro desses endpoints também, como por exemplo, sempre desautorizar transferências no valor de R$ 6,00.
+O banco é bem simples, poucas tabelas já dão conta de todas as funcionalidades:
 
 <p align="center">
   <img src="./Docs/01_db_diagram.gif" width="600" style="display: block; margin: 0 auto" />
 </p>
+
+Para os Vendors, criei uma API própria que vai servir de "mock" nos ambientes de desenvolvimento e testes.
+Essa API possui o endpoint do autorizador (/api/v2/authorize) e o endpoint do notificador (/api/v1/notify).
+Dessa forma, basta apontar para a url da API de Vendors nos testes. Em prod, basta usar as urls fornecidas pela PicPay.
+Também adicionei certa lógica dentro desses endpoints também, como por exemplo, sempre desautorizar transferências no valor de R$ 6,00.
 
 ## 3️⃣ Casos de Uso
 
@@ -165,7 +168,7 @@ Esse último cenário é mostrado a seguir, onde disparo dois requests simultân
 
 - Não pode transferir valor <= 0
 
-- Nâo pode transferir pra uma Carteira inexistente
+- Nâo pode transferir pra uma carteira inexistente
 
 - Não pode transferir para si próprio
 
@@ -173,11 +176,15 @@ Esse último cenário é mostrado a seguir, onde disparo dois requests simultân
 
 - Não pode transferir caso seja não autorizado
 
+Nesse caso configurei para o Autorizador retornar "false" quando receber o valor de R$ 6,66
+
 <p align="center">
   <img src="./Docs/06_auth_return_false.png" width="600" style="display: block; margin: 0 auto" />
 </p>
 
 - Não pode transferir caso o autorizador esteja fora do ar
+
+Nesse caso configurei para o Autorizador retornar "504 Gateway Timeout" quando receber o valor de R$ 5,04
 
 <p align="center">
   <img src="./Docs/07_auth_is_down.png" width="600" style="display: block; margin: 0 auto" />
@@ -229,15 +236,37 @@ Esse último cenário é mostrado a seguir, onde disparo dois requests simultân
   <img src="./Docs/12_transfer_notification.png" width="600" style="display: block; margin: 0 auto" />
 </p>
 
-### Notificações do Usuário
-- Listar todas as notificações do usuário, ordenadas pela mais recente
+### Notificações do Cliente
+- Listar todas as notificações do cliente, ordenadas pela mais recente
 
-### Extrato de Transações
-- Listar todas as transações do usuário, ordenadas pela mais recente
+<p align="center">
+  <img src="./Docs/13_custome_notifications.png" width="600" style="display: block; margin: 0 auto" />
+</p>
 
-### Auditoria
-- Quem, fez o quê, onde e quando?
-- Tudo deve ser salvo para fins de histórico e auditoria
+
+### Notificações do Lojista
+- Listar todas as notificações do lojista, ordenadas pela mais recente
+
+<p align="center">
+  <img src="./Docs/14_merchant_notifications.png" width="600" style="display: block; margin: 0 auto" />
+</p>
+
+### Extrato de Transações do Cliente
+- Listar todas as transações do cliente, ordenadas pela mais recente
+
+<p align="center">
+  <img src="./Docs/15_customer_extract.png" width="600" style="display: block; margin: 0 auto" />
+</p>
+
+### Extrato de Transações do Lojista
+- Listar todas as transações do lojista, ordenadas pela mais recente
+
+<p align="center">
+  <img src="./Docs/16_merchant_extract.png" width="600" style="display: block; margin: 0 auto" />
+</p>
+
+
+
 
 
 
