@@ -1,24 +1,25 @@
-using Dapper;
-using Npgsql;
-using Hangfire;
-using PicPay.Shared;
 using Newtonsoft.Json;
 using PicPay.Api.Tasks;
 using System.Diagnostics;
-using PicPay.Worker.Extensions;
+using PicPay.Api.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace PicPay.Worker.Tasks;
 
-public class PicPayTasksProcessor(IConfiguration configuration, IServiceScopeFactory serviceScopeFactory)
+public class PicPayTasksProcessor(IServiceScopeFactory serviceScopeFactory)
 {
     public async Task Run()
     {
         using var scope = serviceScopeFactory.CreateScope();
+        var ctx = scope.ServiceProvider.GetRequiredService<PicPayDbContext>();
 
-        await using var dataSource = NpgsqlDataSource.Create(configuration.Database().ConnectionString);
-        await using var connection = await dataSource.OpenConnectionAsync();
+        await Process(scope, ctx, Guid.NewGuid());
+    }
 
-        var tasks = await connection.QueryAsync<PicPayTask>(Sql, new { ProcessorId = Guid.NewGuid() });
+    private static async Task Process(IServiceScope scope, PicPayDbContext ctx, Guid processorId)
+    {   
+        var tasks = await ctx.Tasks.FromSqlRaw(Sql, processorId).ToListAsync();
+        if (tasks.Count == 0) return;
 
         var sw = Stopwatch.StartNew();
 
@@ -26,35 +27,32 @@ public class PicPayTasksProcessor(IConfiguration configuration, IServiceScopeFac
         {
             sw.Restart();
 
-            dynamic data = GetData(task);
-            dynamic handler = GetHandler(scope, task);
-            string? error = null;
+            ctx.Attach(task);
+            await ctx.Database.BeginTransactionAsync();
 
             try
             {
+                dynamic data = GetData(task);
+                dynamic handler = GetHandler(scope, task);
                 await handler.Handle(data);
             }
             catch (Exception ex)
             {
-                error = ex.Message + ex.InnerException?.Message;
+                ctx.ChangeTracker.Clear();
+                ctx.Attach(task);
+                task.Error = ex.Message + ex.InnerException?.Message;
             }
 
-            var parameters = new
-            {
-                task.Id,
-                error,
-                Duration = sw.Elapsed.TotalMilliseconds,
-                Status = error.HasValue() ? PicPayTaskStatus.Error.ToString() : PicPayTaskStatus.Success.ToString(),
-            };
             sw.Stop();
 
-            await connection.ExecuteAsync(Update, parameters);
+            task.Processed(sw.Elapsed.TotalMilliseconds);
+
+            await ctx.SaveChangesAsync();
+            ctx.ChangeTracker.Clear();
+            await ctx.Database.CommitTransactionAsync();
         }
 
-        if (tasks.Count() == 100)
-        {
-            BackgroundJob.Enqueue<PicPayTasksProcessor>(x => x.Run());
-        }
+        await Process(scope, ctx, processorId);
     }
 
     private static dynamic GetData(PicPayTask task)
@@ -73,24 +71,19 @@ public class PicPayTasksProcessor(IConfiguration configuration, IServiceScopeFac
 
     private static readonly string Sql = @"
         UPDATE picpay.tasks
-        SET processor_id = @ProcessorId, status = 'Processing'
+        SET processor_id = {0}, status = 'Processing'
         WHERE id IN (
             SELECT id
             FROM picpay.tasks
             WHERE processor_id IS NULL
             ORDER BY created_at
             LIMIT 100
+            FOR UPDATE SKIP LOCKED
         );
 
-        SELECT id, type, data
+        SELECT *
         FROM picpay.tasks
-        WHERE processor_id = @ProcessorId AND processed_at IS NULL
+        WHERE processor_id = {0} AND processed_at IS NULL
         ORDER BY created_at;
-    ";
-
-    private static readonly string Update = @"
-        UPDATE picpay.tasks
-        SET processed_at = now(), status = @Status, error = @Error, duration = @Duration
-        WHERE id = @Id
     ";
 }

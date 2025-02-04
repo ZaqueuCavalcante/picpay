@@ -24,4 +24,11 @@ public class PicPayTask
         CreatedAt = DateTime.Now;
         EventId = eventId;
     }
+
+    public void Processed(double duration)
+    {
+        ProcessedAt = DateTime.Now;
+        Duration = Convert.ToInt32(duration);
+        Status = Error.HasValue() ? PicPayTaskStatus.Error : PicPayTaskStatus.Success;
+    }
 }
