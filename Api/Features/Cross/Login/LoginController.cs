@@ -1,6 +1,7 @@
 namespace PicPay.Api.Features.Cross.Login;
 
 [ApiController]
+[EnableRateLimiting(nameof(RateLimiterSettings.VerySmall))]
 [Consumes("application/json"), Produces("application/json")]
 public class LoginController(LoginService service) : ControllerBase
 {

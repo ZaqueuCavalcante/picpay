@@ -1,6 +1,7 @@
 namespace PicPay.Api.Features.Adm.Transfer;
 
 [ApiController, AuthCustomer]
+[EnableRateLimiting(nameof(RateLimiterSettings.Small))]
 [Consumes("application/json"), Produces("application/json")]
 public class TransferController(TransferService service) : ControllerBase
 {

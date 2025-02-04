@@ -19,12 +19,15 @@ public class Startup
         services.AddOpenApi();
         services.AddDocsConfigs();
         services.AddCorsConfigs();
+
+        services.AddRateLimiterConfigs();
     }
 
     public static void Configure(IApplicationBuilder app)
     {
-        app.UseRouting();
         app.UseCors();
+        app.UseRouting();
+        app.UseRateLimiter();
 
         app.UseAuthentication();
         app.UseAuthorization();

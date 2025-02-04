@@ -1,6 +1,7 @@
 namespace PicPay.Api.Features.Cross.CreateMerchant;
 
 [ApiController]
+[EnableRateLimiting(nameof(RateLimiterSettings.SuperVerySmall))]
 [Consumes("application/json"), Produces("application/json")]
 public class CreateMerchantController(CreateMerchantService service) : ControllerBase
 {

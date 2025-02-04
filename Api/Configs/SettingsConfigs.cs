@@ -8,5 +8,6 @@ public static class SettingsConfigs
         services.AddSingleton<NotifySettings>();
         services.AddSingleton<DatabaseSettings>();
         services.AddSingleton<AuthorizeSettings>();
+        services.AddSingleton<RateLimiterSettings>();
     }
 }

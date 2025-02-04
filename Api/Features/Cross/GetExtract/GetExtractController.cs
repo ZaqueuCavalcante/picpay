@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace PicPay.Api.Features.Cross.GetExtract;
 
 [ApiController, Authorize]
+[EnableRateLimiting(nameof(RateLimiterSettings.Medium))]
 [Consumes("application/json"), Produces("application/json")]
 public class GetExtractController(GetExtractService service) : ControllerBase
 {
