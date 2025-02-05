@@ -20,11 +20,10 @@ Temos 3 pontos principais neste projeto:
 Resumo do que você vai encontrar aqui:
 
 - API C#/.Net + documentação com Scalar
-- Mais de 100 testes automatizados
+- Testes automatizados
 - CI/CD com o GitHub Actions
 - Deploy no Railway (Api + Postgres + Worker)
 - Processamento assíncrono de eventos e tarefas em background
-- Gestão de erros e reprocessamento de eventos/tarefas
 - Concorrência e paralelismo + consistência financeira
 
 ## 0️⃣ Sumário
@@ -34,7 +33,8 @@ Resumo do que você vai encontrar aqui:
 - 3️⃣ Casos de Uso
 - 4️⃣ Processamento Assíncrono
 - 5️⃣ Documentação da API
-- 6️⃣ Referências
+- 6️⃣ Deploy
+- 7️⃣ Referências
 
 ## 1️⃣ Regras de Negócio
 
@@ -288,11 +288,27 @@ A documentação da API possui diversos exemplos de requests e responses para to
   <img src="./Docs/20_api_docs.gif" width="600" style="display: block; margin: 0 auto" />
 </p>
 
+## 6️⃣ Deploy
 
+Utilizei a plataforma Railway para realizar o deploy do Postgres + API + Worker.
 
+O banco foi o mais simples de subir, apenas 2 cliques e tava pronto.
 
+Pra API, vinculei o repositório do projeto no GitHub a um novo serviço no Railway, configurando que ele deve usar o arquivo Dockerfile.api para realizar o build da aplicação.
 
-## 6️⃣ Referências
+Pro Worker foi a mesma coisa, só que usando o Dockerfile.worker pro build.
+
+Todas as configurações são feitas via variáveis de ambiente. A API e o Worker se comunicam com o banco pela rede privada.
+
+A cada push pra master, uma action no GitHub é disparada e roda os testes do projeto. Caso todos passem, o Railway inicia o processo de build das aplicações e depois o de deploy.
+
+Ainda configurei os domínios da API (picpay.api.zaqbit.com) e do Worker (picpay.worker.zaqbit.com) para não usar os fornecidos pelo Railway.
+
+<p align="center">
+  <img src="./Docs/18_railway.png" width="600" style="display: block; margin: 0 auto" />
+</p>
+
+## 7️⃣ Referências
 
 - Repositório original do desafio
     - https://github.com/PicPay/picpay-desafio-backend
