@@ -33,7 +33,8 @@ Resumo do que você vai encontrar aqui:
 - 2️⃣ Arquitetura
 - 3️⃣ Casos de Uso
 - 4️⃣ Processamento Assíncrono
-- 5️⃣ Referências
+- 5️⃣ Documentação da API
+- 6️⃣ Referências
 
 ## 1️⃣ Regras de Negócio
 
@@ -279,7 +280,19 @@ Dessa forma não preciso ficar fazendo pooling no banco para buscar registros pe
 
 Quando um Listener é notificado, dispara um Processor que é responsável por carregar os registros pendentes do banco e realizar seu processamento no Worker de maneira atômica.
 
-## 5️⃣ Referências
+## 5️⃣ Documentação da API
+
+A documentação da API possui diversos exemplos de requests e responses para todos os endpoints. Ela pode ser acessada aqui: https://picpay.api.zaqbit.com/docs/v1
+
+<p align="center">
+  <img src="./Docs/20_api_docs.gif" width="600" style="display: block; margin: 0 auto" />
+</p>
+
+
+
+
+
+## 6️⃣ Referências
 
 - Repositório original do desafio
     - https://github.com/PicPay/picpay-desafio-backend
