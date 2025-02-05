@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PicPay.Worker.Tasks;
 
-public class PicPayTasksProcessor(IServiceScopeFactory serviceScopeFactory)
+public class TasksProcessor(IServiceScopeFactory serviceScopeFactory)
 {
     public async Task Run()
     {

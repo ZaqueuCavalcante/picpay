@@ -17,8 +17,8 @@ public class Startup(IConfiguration configuration)
 
         services.AddDapperConfigs();
 
-        services.AddHostedService<DomainEventsProcessorDbListener>();
-        services.AddHostedService<PicPayTasksProcessorDbListener>();
+        services.AddHostedService<DomainEventsDbListener>();
+        services.AddHostedService<TasksDbListener>();
 
         services.AddHangfire(x =>
         {
@@ -37,7 +37,7 @@ public class Startup(IConfiguration configuration)
     public void Configure(IApplicationBuilder app)
     {
         BackgroundJob.Enqueue<DomainEventsProcessor>(x => x.Run());
-        BackgroundJob.Enqueue<PicPayTasksProcessor>(x => x.Run());
+        BackgroundJob.Enqueue<TasksProcessor>(x => x.Run());
 
         app.UseRouting();
         app.UseStaticFiles();

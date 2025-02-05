@@ -237,12 +237,6 @@ Coloquei prints de código em alguns a título de exemplo.
   <img src="./Docs/17_notify_error.png" width="600" style="display: block; margin: 0 auto" />
 </p>
 
-
-
-
-
-
-
 ### Notificações do Cliente
 - Listar todas as notificações do cliente, ordenadas pela mais recente
 
@@ -273,12 +267,17 @@ Coloquei prints de código em alguns a título de exemplo.
 
 ## 4️⃣ Processamento Assíncrono
 
+O Processamente Assíncrono de eventos e tarefas é realizado pelo Worker. Existem duas tabelas no banco para o controle dessas operações:
 
+<p align="center">
+  <img src="./Docs/02_events_and_tasks.png" width="600" style="display: block; margin: 0 auto" />
+</p>
 
+O Worker possui dois Listeners, um para eventos e outro para tasks.
+Esses Listeners utilizam a feature de LISTEN/NOTIFY do Postgres para escutar quando um novo evento ou uma nova tarefa são inseridos nas tabelas.
+Dessa forma não preciso ficar fazendo pooling no banco para buscar registros pendentes de processamento.
 
-
-
-
+Quando um Listener é notificado, dispara um Processor que é responsável por carregar os registros pendentes do banco e realizar seu processamento no Worker de maneira atômica.
 
 ## 5️⃣ Referências
 
