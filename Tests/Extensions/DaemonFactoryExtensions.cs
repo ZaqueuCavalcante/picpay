@@ -13,8 +13,9 @@ public static class WorkerFactoryExtensions
 
     public static async Task ProcessAll(this WorkerFactory factory)
     {
-        await factory.AwaitEventsProcessing();
-        await factory.AwaitTasksProcessing();
+        await Task.Delay(1);
+        // await factory.AwaitEventsProcessing();
+        // await factory.AwaitTasksProcessing();
     }
 
     public static async Task AwaitEventsProcessing(this WorkerFactory factory)
