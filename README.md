@@ -93,7 +93,7 @@ A API é responsável por executar a maioria dos fluxos de negócio, como cadast
 
 Durante o processamento de um request pela API, pode haver a emissão de algum evento de domínio.
 Esse evento é então processado pelo Worker em um processo separado, de forma que a API entrega a resposta pro cliente o mais rápido possível.
-O Worker então processa com o evento disparando alguma tarefa em background, como o envio da notificação de transferência recebida, por exemplo.
+O Worker então processa o evento, disparando alguma tarefa em background, como o envio da notificação de transferência recebida, por exemplo.
 
 O banco é bem simples, poucas tabelas já dão conta de todas as funcionalidades:
 
@@ -104,7 +104,8 @@ O banco é bem simples, poucas tabelas já dão conta de todas as funcionalidade
 Para os Vendors, criei uma API própria que vai servir de "mock" nos ambientes de desenvolvimento e testes.
 Essa API possui o endpoint do autorizador (/api/v2/authorize) e o endpoint do notificador (/api/v1/notify).
 Dessa forma, basta apontar para a url da API de Vendors nos testes. Em prod, basta usar as urls fornecidas pela PicPay.
-Também adicionei certa lógica dentro desses endpoints também, como por exemplo, sempre desautorizar transferências no valor de R$ 6,00.
+
+Também adicionei certa lógica dentro desses endpoints, como por exemplo, sempre desautorizar transferências no valor de R$ 6,66.
 
 ## 3️⃣ Casos de Uso
 
@@ -290,7 +291,7 @@ A documentação da API possui diversos exemplos de requests e responses para to
 
 ## 6️⃣ Deploy
 
-Utilizei a plataforma Railway para realizar o deploy do Postgres + API + Worker.
+Utilizei a plataforma [Railway](https://railway.com?referralCode=zk) para realizar o deploy do Postgres + API + Worker.
 
 O banco foi o mais simples de subir, apenas 2 cliques e tava pronto.
 
