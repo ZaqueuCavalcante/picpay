@@ -321,4 +321,11 @@ Ainda configurei os domínios da API (picpay.api.zaqbit.com) e do Worker (picpay
     - A Giuliana Bezerra desenvolve uma arquitetura robusta, com entrega assícrona das notificações
     - https://youtu.be/YcuscoiIN14
 
-Você conhece desafios de outras empresas? Deixe nos comentários!
+- Resolvendo DESAFIO de VAGA BACKEND com Java Spring
+    - https://youtu.be/QXunBiLq2SM
+
+- Desafio PicPay NodeJS
+    - https://youtu.be/Y3_ZVg97po0
+
+- Resolvendo DESAFIO BACKEND do PicPay com Java e Spring Boot
+    - https://youtu.be/dttXo48oXt4
